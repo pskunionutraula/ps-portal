@@ -3937,6 +3937,10 @@
   var html5QrCodeScannerInstance = null;
   var isScanningActive = false;
 
+ // ================= IN-APP QR CAMERA SCANNER =================
+  var html5QrCodeScannerInstance = null;
+  var isScanningActive = false;
+
   function startInAppCameraScanner() {
     if (!loggedInPsUser) {
       showMsg("त्रुटि", "कृपया पहले पंचायत सहायक पोर्टल पर लॉगिन करें।", false);
@@ -3949,52 +3953,76 @@
       statusElem.style.color = "#2563eb";
     }
 
-    if (html5QrCodeScannerInstance === null) {
-      html5QrCodeScannerInstance = new Html5Qrcode("psQrReader");
+    // पिछला सेशन साफ़ करना
+    if (html5QrCodeScannerInstance) {
+      try { html5QrCodeScannerInstance.clear(); } catch(e) {}
     }
 
-    var config = { fps: 10, qrbox: { width: 220, height: 220 } };
+    html5QrCodeScannerInstance = new Html5Qrcode("psQrReader");
 
-    html5QrCodeScannerInstance.start(
-      { facingMode: "environment" }, // मोबाइल का बैक/रियर कैमरा
-      config,
-      function onScanSuccess(decodedText) {
-        // QR कोड मिलते ही कैमरा रोकें
-        stopInAppCameraScanner();
+    var qrConfig = { 
+      fps: 10, 
+      qrbox: { width: 220, height: 220 },
+      aspectRatio: 1.0
+    };
 
-        // QR से Event ID निकालना
-        var scannedEventId = "";
-        if (decodedText.indexOf("event_id=") !== -1) {
-          var match = decodedText.match(/event_id=([^&]+)/);
-          scannedEventId = match ? match[1] : decodedText;
-        } else if (decodedText.indexOf("EVT-") !== -1) {
-          var matchEvt = decodedText.match(/EVT-\d+/i);
-          scannedEventId = matchEvt ? matchEvt[0] : decodedText;
-        } else {
-          scannedEventId = decodedText.trim();
-        }
+    // मोबाइल कैमरों की पहचान कर बैक कैमरा चालू करना
+    Html5Qrcode.getCameras().then(function(cameras) {
+      if (cameras && cameras.length > 0) {
+        // आमतौर पर सूची का अंतिम कैमरा बैक (रियर) कैमरा होता है
+        var cameraId = cameras[cameras.length - 1].id;
 
+        html5QrCodeScannerInstance.start(
+          cameraId,
+          qrConfig,
+          function onScanSuccess(decodedText) {
+            stopInAppCameraScanner();
+
+            var scannedEventId = "";
+            if (decodedText.indexOf("event_id=") !== -1) {
+              var match = decodedText.match(/event_id=([^&]+)/);
+              scannedEventId = match ? match[1] : decodedText;
+            } else if (decodedText.indexOf("EVT-") !== -1) {
+              var matchEvt = decodedText.match(/EVT-\d+/i);
+              scannedEventId = matchEvt ? matchEvt[0] : decodedText;
+            } else {
+              scannedEventId = decodedText.trim();
+            }
+
+            if (statusElem) {
+              statusElem.innerText = "QR कोड मिल गया (" + scannedEventId + ")! उपस्थिति दर्ज हो रही है...";
+              statusElem.style.color = "#16a34a";
+            }
+
+            // लॉगिन किए हुए PS की हाजिरी स्वतः दर्ज करना
+            submitAutoAttendanceForPs(scannedEventId);
+          },
+          function onScanFailure(error) {
+            // निरंतर स्कैनिंग लूप
+          }
+        ).then(function() {
+          isScanningActive = true;
+          if (statusElem) {
+            statusElem.innerText = "📷 कैमरा चालू है। बैठक का QR कोड सामने लाएं।";
+            statusElem.style.color = "#16a34a";
+          }
+        }).catch(function(err) {
+          isScanningActive = false;
+          if (statusElem) {
+            statusElem.innerText = "⚠️ कैमरा शुरू नहीं हो सका। कृपया Chrome ब्राउज़र में खोलकर कैमरा परमिशन दें।";
+            statusElem.style.color = "#dc2626";
+          }
+        });
+      } else {
         if (statusElem) {
-          statusElem.innerText = "QR कोड मिल गया (" + scannedEventId + ")! उपस्थिति दर्ज हो रही है...";
-          statusElem.style.color = "#16a34a";
+          statusElem.innerText = "⚠️ डिवाइस में कोई कैमरा नहीं मिला।";
+          statusElem.style.color = "#dc2626";
         }
-
-        // लॉगिन किए हुए PS की हाजिरी स्वतः दर्ज करना
-        submitAutoAttendanceForPs(scannedEventId);
-      },
-      function onScanFailure(error) {
-        // स्कैनिंग चालू रहने दें
-      }
-    ).then(function() {
-      isScanningActive = true;
-      if (statusElem) {
-        statusElem.innerText = "📷 कैमरा चालू है। बैठक का QR कोड सामने लाएं।";
-        statusElem.style.color = "#16a34a";
       }
     }).catch(function(err) {
       isScanningActive = false;
       if (statusElem) {
-        statusElem.innerText = "⚠️ कैमरा शुरू करने में त्रुटि: कृपया ब्राउज़र में कैमरा परमिशन दें।";
+        statusElem.innerText = "⚠️ कैमरा परमिशन ब्लॉक है। कृपया ब्राउज़र सेटिंग्स में जाकर Camera Allow करें।";
         statusElem.style.color = "#dc2626";
       }
     });
