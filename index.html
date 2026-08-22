@@ -141,6 +141,93 @@
       100% { transform: scale(0.85); opacity: 1; }
     }
 
+    /* ================= ATTENDANCE SUCCESS POPUP STYLING ================= */
+  .att-success-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    animation: fadeInModal 0.25s ease;
+  }
+  .att-success-card {
+    background: var(--card-bg, #ffffff);
+    border: 2px solid #22c55e;
+    border-radius: 24px;
+    max-width: 400px;
+    width: 100%;
+    padding: 26px 20px;
+    text-align: center;
+    box-shadow: 0 20px 45px rgba(34, 197, 94, 0.25);
+    transform: scale(0.9);
+    animation: popUpCard 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes popUpCard {
+    to { transform: scale(1); }
+  }
+  @keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .att-success-icon-wrap {
+    width: 76px;
+    height: 76px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #ffffff;
+    font-size: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0.2);
+    animation: pulseRing 2s infinite;
+  }
+  @keyframes pulseRing {
+    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+    70% { box-shadow: 0 0 0 16px rgba(34, 197, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+  }
+  .att-slip-box {
+    background: var(--sub-box-bg, #f8fafc);
+    border: 1.5px dashed #22c55e;
+    border-radius: 14px;
+    padding: 14px;
+    margin: 16px 0;
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .att-slip-row {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    padding: 4px 0;
+  }
+  .att-slip-row:last-child {
+    border-bottom: none;
+  }
+  .att-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #ecfdf5;
+    color: #15803d;
+    border: 1px solid #86efac;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 4px;
+  }
+
     /* ================= 1. ULTRA-FAST MODERN LOADER ================= */
     #globalAppLoader {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -4183,15 +4270,17 @@
     }
   }
 
+ // ================= उपस्थिति सबमिशन एवं डिजिटल रसीद पर्ची =================
   function submitAutoAttendanceForPs(eventId) {
     if (!loggedInPsUser) return;
 
-    showLoader("आपकी उपस्थिति दर्ज की जा रही है...");
+    showLoader("आपकी उपस्थिति सत्यापित कर दर्ज की जा रही है...");
 
     google.script.run.withSuccessHandler(function(res) {
       hideLoader();
       if (res && res.success) {
-        showMsg("उपस्थिति दर्ज!", res.message || "आपकी उपस्थिति सफलतापूर्वक दर्ज हो गई है।", false);
+        // सफल होने पर आधुनिक डिजिटल हाजिरी रसीद दिखाना
+        showAttendanceSuccessModal(eventId, res.message);
       } else {
         showMsg("ध्यान दें", (res ? res.message : "उपस्थिति दर्ज करने में विफल"), false);
       }
@@ -4199,6 +4288,79 @@
       hideLoader();
       showMsg("सर्वर त्रुटि", err.toString(), false);
     }).submitQRAttendance(eventId, loggedInPsUser.email, loggedInPsUser.mobile);
+  }
+
+  // आकर्षक डिजिटल हाजिरी पर्ची पॉपअप फ़ंक्शन
+  function showAttendanceSuccessModal(eventId, serverMsg) {
+    var oldModal = document.getElementById('attSuccessModalOverlay');
+    if (oldModal) oldModal.remove();
+
+    var currentDateTime = new Date().toLocaleString('hi-IN', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', hour12: true
+    });
+
+    var psName = (loggedInPsUser && loggedInPsUser.name) ? loggedInPsUser.name : "पंचायत सहायक";
+    var psGp = (loggedInPsUser && loggedInPsUser.gp) ? loggedInPsUser.gp : "-";
+    var psBlock = (loggedInPsUser && loggedInPsUser.block) ? loggedInPsUser.block : "उतरौला";
+
+    var modalHtml = `
+      <div id="attSuccessModalOverlay" class="att-success-overlay">
+        <div class="att-success-card">
+          <div class="att-success-icon-wrap">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          
+          <h2 style="font-size:19px; color:#16a34a; font-weight:800; margin-bottom:4px;">
+            उपस्थिति सफलतापूर्वक दर्ज! 🎉
+          </h2>
+          <div class="att-verified-badge">
+            <i class="fa-solid fa-circle-check"></i> अधिकृत उपस्थिति सत्यापित
+          </div>
+
+          <div class="att-slip-box">
+            <div class="att-slip-row">
+              <span style="color:#64748b;">👤 नाम:</span>
+              <b style="color:var(--text-main);">${psName}</b>
+            </div>
+            <div class="att-slip-row">
+              <span style="color:#64748b;">🏛️ ग्राम पंचायत:</span>
+              <b style="color:var(--text-main);">${psGp}</b>
+            </div>
+            <div class="att-slip-row">
+              <span style="color:#64748b;">📍 ब्लॉक:</span>
+              <b>${psBlock}</b>
+            </div>
+            <div class="att-slip-row">
+              <span style="color:#64748b;">🎫 ईवेंट कोड:</span>
+              <b style="color:#2563eb;">${eventId}</b>
+            </div>
+            <div class="att-slip-row">
+              <span style="color:#64748b;">⏰ समय व दिनांक:</span>
+              <b>${currentDateTime}</b>
+            </div>
+          </div>
+
+          <p style="font-size:12.5px; color:#64748b; margin-bottom:18px; line-height:1.5;">
+            यूनियन बैठक में आपकी उपस्थिति दर्ज कर ली गई है। धन्यवाद!
+          </p>
+
+          <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #16a34a, #15803d); width:100%; font-size:14px; padding:11px; margin:0; border-radius:10px;" onclick="closeAttendanceSuccessModal()">
+            <i class="fa-solid fa-thumbs-up"></i> ठीक है, धन्यवाद
+          </button>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+  }
+
+  function closeAttendanceSuccessModal() {
+    var modal = document.getElementById('attSuccessModalOverlay');
+    if (modal) {
+      modal.style.opacity = '0';
+      setTimeout(function() { modal.remove(); }, 200);
+    }
   }
 </script>
 </body>
