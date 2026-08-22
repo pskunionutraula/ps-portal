@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Tiro+Devanagari+Hindi:ital@0;1&family=Yatra+One&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
@@ -573,6 +574,7 @@
           <button class="admin-tab-btn" id="psNavGrievanceBtn" onclick="switchPsTab('psGrievance')"><i class="fa-solid fa-headset"></i> 🚨 शिकायत व सहायता</button>
           <button class="admin-tab-btn" id="psNavLeaveBtn" onclick="switchPsTab('psLeave')"><i class="fa-solid fa-calendar-minus"></i> 📝 अवकाश आवेदन</button>
           <button class="admin-tab-btn" id="psNavLinksBtn" onclick="switchPsTab('psLinks')"><i class="fa-solid fa-globe"></i> 🌐 उपयोगी पोर्टल्स (Links)</button>
+          <button class="admin-tab-btn" id="psNavQrScanBtn" onclick="switchPsTab('psQrScan')"><i class="fa-solid fa-camera"></i> 📸 QR हाजिरी</button>
         </div>
 
         <!-- PS TAB 1: PS HOME -->
@@ -1205,6 +1207,37 @@
               </div>
             </div>
 
+          </div>
+        </div>
+      <!-- PS TAB: IN-APP LIVE QR CAMERA SCANNER -->
+        <div id="psQrScanTabContent" style="display:none;">
+          <div class="form-header-banner" style="background:linear-gradient(135deg, #15803d, #0f172a);">
+            <h2 style="font-size:18px; text-align:center;"><i class="fa-solid fa-qrcode"></i> लाइव बैठक QR उपस्थिति स्कैनर</h2>
+          </div>
+
+          <div style="background:var(--input-bg); border:2px solid var(--input-border); border-radius:12px; padding:18px; text-align:center; max-width:480px; margin:0 auto 20px auto;">
+            <p style="font-size:13px; color:var(--text-main); margin-bottom:12px; font-weight:600;">
+              <i class="fa-solid fa-shield-halved" style="color:#16a34a;"></i> केवल अधिकृत पंचायत सहायक के खाते से उपस्थिति दर्ज होगी।
+            </p>
+
+            <!-- Camera Viewfinder Box -->
+            <div id="psQrReaderWrapper" style="position:relative; width:100%; max-width:320px; margin:0 auto; border-radius:12px; overflow:hidden; border:3px solid #2563eb; background:#000; min-height:240px; display:flex; align-items:center; justify-content:center;">
+              <div id="psQrReader" style="width:100%;"></div>
+            </div>
+
+            <!-- Control Buttons -->
+            <div style="margin-top:15px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+              <button type="button" class="submit-btn" style="background:#16a34a; width:auto; font-size:13px; padding:8px 18px; margin:0; display:inline-flex; align-items:center; gap:6px;" onclick="startInAppCameraScanner()">
+                <i class="fa-solid fa-camera-rotate"></i> कैमरा शुरू करें
+              </button>
+              <button type="button" class="submit-btn" style="background:#dc2626; width:auto; font-size:13px; padding:8px 18px; margin:0; display:inline-flex; align-items:center; gap:6px;" onclick="stopInAppCameraScanner()">
+                <i class="fa-solid fa-stop"></i> बंद करें
+              </button>
+            </div>
+
+            <div id="psScanStatusMessage" style="margin-top:12px; font-size:13px; font-weight:bold; color:#2563eb;">
+              कैमरा शुरू करने के लिए ऊपर बटन दबाएं और बैठक के QR कोड को सामने लाएं।
+            </div>
           </div>
         </div>
     </div>
@@ -2213,6 +2246,11 @@
   function switchPsTab(tab) {
     sessionStorage.setItem('psk_ps_tab', tab);
 
+    // यदि यूजर किसी दूसरे टैब पर जाए तो कैमरा तुरंत बंद करें
+    if (tab !== 'psQrScan') {
+      stopInAppCameraScanner();
+    }
+
     document.getElementById('psHomeTabContent').style.display = (tab === 'psHome') ? 'block' : 'none';
     document.getElementById('psDetailsTabContent').style.display = (tab === 'psDetails') ? 'block' : 'none';
     document.getElementById('psClusterTabContent').style.display = (tab === 'psCluster') ? 'block' : 'none';
@@ -2220,6 +2258,9 @@
     document.getElementById('psGrievanceTabContent').style.display = (tab === 'psGrievance') ? 'block' : 'none';
     document.getElementById('psLeaveTabContent').style.display = (tab === 'psLeave') ? 'block' : 'none';
     document.getElementById('psLinksTabContent').style.display = (tab === 'psLinks') ? 'block' : 'none';
+    if (document.getElementById('psQrScanTabContent')) {
+      document.getElementById('psQrScanTabContent').style.display = (tab === 'psQrScan') ? 'block' : 'none';
+    }
 
     document.getElementById('psNavHomeBtn').classList.toggle('active', tab === 'psHome');
     document.getElementById('psNavDetailsBtn').classList.toggle('active', tab === 'psDetails');
@@ -2228,18 +2269,14 @@
     document.getElementById('psNavGrievanceBtn').classList.toggle('active', tab === 'psGrievance');
     document.getElementById('psNavLeaveBtn').classList.toggle('active', tab === 'psLeave');
     document.getElementById('psNavLinksBtn').classList.toggle('active', tab === 'psLinks');
-
-    if (tab === 'psGrievance') loadMyTickets();
-    if (tab === 'psLeave') {
-      var today = new Date();
-      var todayStr = today.toISOString().split('T')[0];
-      var sInput = document.getElementById('leaveSingleDate');
-      if (sInput && !sInput.value) sInput.value = todayStr;
-      var startInput = document.getElementById('leaveStartDate');
-      var endInput = document.getElementById('leaveEndDate');
-      if (startInput && !startInput.value) startInput.value = todayStr;
-      if (endInput && !endInput.value) endInput.value = todayStr;
+    if (document.getElementById('psNavQrScanBtn')) {
+      document.getElementById('psNavQrScanBtn').classList.toggle('active', tab === 'psQrScan');
     }
+
+    if (tab === 'psQrScan') {
+      startInAppCameraScanner(); // टैब पर क्लिक करते ही कैमरा ऑटोमैटिक शुरू होगा
+    }
+    if (tab === 'psGrievance') loadMyTickets();
   }
 
   // लिंक्स सर्च फ़िल्टर
@@ -3887,6 +3924,100 @@
     sessionStorage.removeItem('psk_admin_tab');
     document.getElementById('adminDashboardView').style.display = 'none';
     showHomeView();
+  }
+  // ================= IN-APP QR CAMERA SCANNER =================
+  var html5QrCodeScannerInstance = null;
+  var isScanningActive = false;
+
+  function startInAppCameraScanner() {
+    if (!loggedInPsUser) {
+      showMsg("त्रुटि", "कृपया पहले पंचायत सहायक पोर्टल पर लॉगिन करें।", false);
+      return;
+    }
+
+    var statusElem = document.getElementById('psScanStatusMessage');
+    if (statusElem) {
+      statusElem.innerText = "कैमरा लोड हो रहा है, कृपया अनुमति (Allow) दें...";
+      statusElem.style.color = "#2563eb";
+    }
+
+    if (html5QrCodeScannerInstance === null) {
+      html5QrCodeScannerInstance = new Html5Qrcode("psQrReader");
+    }
+
+    var config = { fps: 10, qrbox: { width: 220, height: 220 } };
+
+    html5QrCodeScannerInstance.start(
+      { facingMode: "environment" }, // मोबाइल का बैक/रियर कैमरा
+      config,
+      function onScanSuccess(decodedText) {
+        // QR कोड मिलते ही कैमरा रोकें
+        stopInAppCameraScanner();
+
+        // QR से Event ID निकालना
+        var scannedEventId = "";
+        if (decodedText.indexOf("event_id=") !== -1) {
+          var match = decodedText.match(/event_id=([^&]+)/);
+          scannedEventId = match ? match[1] : decodedText;
+        } else if (decodedText.indexOf("EVT-") !== -1) {
+          var matchEvt = decodedText.match(/EVT-\d+/i);
+          scannedEventId = matchEvt ? matchEvt[0] : decodedText;
+        } else {
+          scannedEventId = decodedText.trim();
+        }
+
+        if (statusElem) {
+          statusElem.innerText = "QR कोड मिल गया (" + scannedEventId + ")! उपस्थिति दर्ज हो रही है...";
+          statusElem.style.color = "#16a34a";
+        }
+
+        // लॉगिन किए हुए PS की हाजिरी स्वतः दर्ज करना
+        submitAutoAttendanceForPs(scannedEventId);
+      },
+      function onScanFailure(error) {
+        // स्कैनिंग चालू रहने दें
+      }
+    ).then(function() {
+      isScanningActive = true;
+      if (statusElem) {
+        statusElem.innerText = "📷 कैमरा चालू है। बैठक का QR कोड सामने लाएं।";
+        statusElem.style.color = "#16a34a";
+      }
+    }).catch(function(err) {
+      isScanningActive = false;
+      if (statusElem) {
+        statusElem.innerText = "⚠️ कैमरा शुरू करने में त्रुटि: कृपया ब्राउज़र में कैमरा परमिशन दें।";
+        statusElem.style.color = "#dc2626";
+      }
+    });
+  }
+
+  function stopInAppCameraScanner() {
+    if (html5QrCodeScannerInstance && isScanningActive) {
+      html5QrCodeScannerInstance.stop().then(function() {
+        isScanningActive = false;
+        var statusElem = document.getElementById('psScanStatusMessage');
+        if (statusElem) statusElem.innerText = "कैमरा बंद कर दिया गया है।";
+      }).catch(function(err) {});
+    }
+  }
+
+  function submitAutoAttendanceForPs(eventId) {
+    if (!loggedInPsUser) return;
+
+    showLoader("आपकी उपस्थिति दर्ज की जा रही है...");
+
+    google.script.run.withSuccessHandler(function(res) {
+      hideLoader();
+      if (res.success) {
+        showMsg("उपस्थिति दर्ज!", res.message, false);
+      } else {
+        showMsg("ध्यान दें", res.message, false);
+      }
+    }).withFailureHandler(function(err) {
+      hideLoader();
+      showMsg("सर्वर त्रुटि", err.toString(), false);
+    }).submitQRAttendance(eventId, loggedInPsUser.email, loggedInPsUser.mobile);
   }
 </script>
 </body>
