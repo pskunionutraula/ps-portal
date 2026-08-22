@@ -464,26 +464,34 @@
     <!-- FORM / CONTENT CONTAINER -->
     <div class="form-container">
 
-      <!-- 0. QR SCAN ATTENDANCE -->
+      <!-- 0. QR SCAN ATTENDANCE (EXTERNAL SCAN RESTRICTION) -->
       <div id="qrScanAttendanceSection" style="display:none;">
-        <div class="form-header-banner" style="background:linear-gradient(135deg, #15803d, #0f172a);">
-          <h2 style="font-size:18px; text-align:center;"><i class="fa-solid fa-qrcode"></i> लाइव बैठक उपस्थिति फ़ॉर्म</h2>
+        <div class="form-header-banner" style="background:linear-gradient(135deg, #dc2626, #0f172a);">
+          <h2 style="font-size:18px; text-align:center;"><i class="fa-solid fa-triangle-exclamation"></i> उपस्थिति सूचना</h2>
         </div>
-        <div style="background:var(--sub-box-bg); border:2px solid #0284c7; border-radius:10px; padding:15px; margin-bottom:20px; text-align:center;">
-          <h3 style="color:#38bdf8; font-size:18px;" id="qrScanEventTitle">बैठक लोड हो रही है...</h3>
-          <p style="font-size:13px; margin-top:4px;" id="qrScanEventDetails"></p>
+        
+        <div style="background:var(--input-bg); border:2px solid #dc2626; border-radius:12px; padding:22px; margin-bottom:20px; text-align:center; box-shadow:0 8px 25px rgba(220,38,38,0.12);">
+          <div style="font-size:44px; color:#dc2626; margin-bottom:10px;">
+            <i class="fa-solid fa-camera-rotate"></i>
+          </div>
+          
+          <h3 style="color:#dc2626; font-size:17px; font-weight:800; margin-bottom:6px;">
+            बाहरी स्कैनर से उपस्थिति मान्य नहीं है!
+          </h3>
+          
+          <div style="background:var(--sub-box-bg); border:1.5px dashed #2563eb; border-radius:8px; padding:12px; margin:14px 0; text-align:center;">
+            <div style="font-size:15px; font-weight:bold; color:#2563eb;" id="qrScanEventTitle">बैठक लोड हो रही है...</div>
+            <div style="font-size:12.5px; color:var(--text-main); margin-top:4px;" id="qrScanEventDetails"></div>
+          </div>
+
+          <p style="font-size:14px; line-height:1.7; font-weight:600; color:var(--text-main); margin-bottom:18px;">
+            कृपया अपनी उपस्थिति दर्ज करने के लिए पहले <b>PS पोर्टल लॉगिन करें</b> और पोर्टल के अंदर दिए गए <b>"📸 QR हाजिरी"</b> स्कैनर से इस QR कोड को स्कैन करें।
+          </p>
+
+          <button type="button" class="submit-btn" style="background:#16a34a; width:auto; font-size:14px; padding:10px 24px; display:inline-flex; align-items:center; gap:8px; margin:0 auto;" onclick="openPsLoginModal()">
+            <i class="fa-solid fa-right-to-bracket"></i> PS पोर्टल लॉगिन करें
+          </button>
         </div>
-        <form onsubmit="handleQRAttendanceSubmit(event)">
-          <div class="field-group">
-            <label>1. पंजीकृत ईमेल आईडी <span class="req">*</span></label>
-            <input type="email" id="qrScanEmail" class="field-input" placeholder="Gmail ID" required>
-          </div>
-          <div class="field-group">
-            <label>2. पंजीकृत मोबाइल नंबर <span class="req">*</span></label>
-            <input type="tel" id="qrScanMobile" class="field-input" placeholder="10 अंकों का मोबाइल नंबर" pattern="[0-9]{10}" maxlength="10" required>
-          </div>
-          <button type="submit" id="btnQRSubmit" class="submit-btn" style="background:#16a34a;"><i class="fa-solid fa-check-circle"></i> उपस्थिति दर्ज करें</button>
-        </form>
       </div>
 
       <!-- 1. PUBLIC HOME PAGE -->
