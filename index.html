@@ -483,11 +483,62 @@
 
     .cluster-card-box { background: var(--input-bg); border: 2px solid var(--input-border); border-radius: 10px; padding: 16px; margin-bottom: 15px; text-align: left; line-height: 1.8; font-size: 13.5px; }
 
-    #printTemplateArea { display: none; }
+   /* ================= 100% सटीक 1-पेज प्रिंट एवं PDF स्टाइल ================= */
+    #printTemplateArea {
+      display: none;
+    }
+
     @media print {
-      body * { visibility: hidden; }
-      #printTemplateArea, #printTemplateArea * { visibility: visible; }
-      #printTemplateArea { display: block; position: absolute; left: 0; top: 0; width: 100%; }
+      @page {
+        size: A4 portrait;
+        margin: 8mm 10mm 8mm 10mm;
+      }
+
+      html, body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: auto !important;
+        height: auto !important;
+        width: 100% !important;
+        overflow: visible !important;
+      }
+
+      /* वेब पोर्टल के सभी तत्वों को प्रिंट से पूरी तरह हटाना ताकि खाली पन्ने न बनें */
+      #globalAppLoader,
+      #notifDrawer,
+      #publicFormView,
+      #adminDashboardView,
+      .modal-backdrop,
+      .hub-portal-modal {
+        display: none !important;
+      }
+
+      /* केवल प्रिंट वाले मैटर को सटीक दिखाना */
+      #printTemplateArea {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+
+      #printTemplateArea * {
+        box-sizing: border-box;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      table {
+        page-break-inside: auto;
+      }
+      tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+      }
     }
 
     @media (max-width: 768px) {
@@ -3119,19 +3170,17 @@ function openModal(id) {
 
     box.innerHTML = html;
   }
-
-  function printPsClusterPDF() {
-    var headerHTML = '<div style="text-align:center; border-bottom:3px double #2563eb; padding-bottom:10px; margin-bottom:15px;">' +
-      '<h2 style="color:#2563eb; font-size:22px; margin-bottom:4px; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
-      '<h3 style="color:#000; font-size:16px; font-weight:bold; margin-bottom:4px;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
-      '<p style="color:#000; font-size:14px; font-weight:bold; margin:0;">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>' +
+function printPsClusterPDF() {
+    var headerHTML = '<div style="text-align:center; border-bottom:2px solid #2563eb; padding-bottom:6px; margin-bottom:10px;">' +
+      '<h2 style="color:#2563eb; font-size:18px; margin:0 0 2px 0; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
+      '<h3 style="color:#000; font-size:14px; margin:0 0 2px 0; font-weight:bold;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
+      '<p style="color:#000; font-size:12px; margin:0; font-weight:bold;">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>' +
       '</div>';
     var content = document.getElementById('psClusterDetailsCard').innerHTML;
     var printArea = document.getElementById('printTemplateArea');
-    printArea.innerHTML = '<div style="padding:20px; font-family:sans-serif; line-height:1.8;">' + headerHTML + '<h3 style="text-align:center; color:#2563eb; margin-bottom:12px;">ग्राम पंचायत एवं क्लस्टर विवरण</h3>' + content + '</div>';
+    printArea.innerHTML = '<div style="padding:10px; font-family:sans-serif; line-height:1.6; font-size:13px;">' + headerHTML + '<h4 style="text-align:center; color:#2563eb; margin:6px 0 10px 0; font-size:15px;">ग्राम पंचायत एवं क्लस्टर विवरण</h4>' + content + '</div>';
     window.print();
   }
-
   // ================= PS TAB SWITCHER =================
   // PS टैब स्विच
   function switchPsTab(tab) {
@@ -3487,10 +3536,10 @@ function openModal(id) {
     showMsg("रीसेट", "फ़ॉर्म खाली कर दिया गया है। आप नया अवकाश आवेदन तैयार कर सकते हैं।", false);
   }
 
-  function printLeaveApplicationPDF() {
+ function printLeaveApplicationPDF() {
     var content = document.getElementById('leaveLetterContent').innerHTML;
     var printArea = document.getElementById('printTemplateArea');
-    printArea.innerHTML = '<div style="padding:30px; font-family:serif; line-height:1.9; font-size:14px; color:#000000;">' + content + '</div>';
+    printArea.innerHTML = '<div style="padding:15px 20px; font-family:serif; line-height:1.75; font-size:14px; color:#000000;">' + content + '</div>';
     window.print();
   }
 
@@ -4139,18 +4188,17 @@ function openModal(id) {
   }
 
   // ================= 5. UNIVERSAL MODAL PRINT & DELETE =================
-  function printUniversalModalPDF() {
-    var headerHTML = '<div style="text-align:center; border-bottom:3px double #2563eb; padding-bottom:10px; margin-bottom:15px;">' +
-      '<h2 style="color:#2563eb; font-size:22px; margin-bottom:4px; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
-      '<h3 style="color:#000; font-size:16px; font-weight:bold; margin-bottom:4px;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
-      '<p style="color:#000; font-size:14px; font-weight:bold; margin:0;">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>' +
+ function printUniversalModalPDF() {
+    var headerHTML = '<div style="text-align:center; border-bottom:2px solid #2563eb; padding-bottom:6px; margin-bottom:10px;">' +
+      '<h2 style="color:#2563eb; font-size:18px; margin:0 0 2px 0; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
+      '<h3 style="color:#000; font-size:14px; margin:0 0 2px 0; font-weight:bold;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
+      '<p style="color:#000; font-size:12px; margin:0; font-weight:bold;">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>' +
       '</div>';
     var content = document.getElementById('detailsCardContent').innerHTML;
     var printArea = document.getElementById('printTemplateArea');
-    printArea.innerHTML = '<div style="padding:20px; font-family:sans-serif; line-height:1.8;">' + headerHTML + content + '</div>';
+    printArea.innerHTML = '<div style="padding:10px; font-family:sans-serif; line-height:1.6; font-size:13px;">' + headerHTML + content + '</div>';
     window.print();
   }
-
   function confirmUniversalDelete(type, rowIndex) {
     document.getElementById('deleteTargetType').value = type;
     document.getElementById('deleteTargetRowIndex').value = rowIndex;
@@ -4680,19 +4728,19 @@ function openModal(id) {
     var title = document.getElementById('displayQRTitle').innerText;
     var details = document.getElementById('displayQRDetails').innerText;
     var imgSrc = document.getElementById('displayQRImage').src;
-    var headerHTML = '<div style="text-align:center; border-bottom:3px double #2563eb; padding-bottom:10px; margin-bottom:20px;">' +
-      '<h2 style="color:#2563eb; font-size:24px; margin-bottom:4px; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
-      '<h3 style="color:#000; font-size:18px; font-weight:bold; margin-bottom:4px;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
-      '<p style="color:#000; font-size:15px; font-weight:bold; margin:0;">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>' +
+    var headerHTML = '<div style="text-align:center; border-bottom:2px solid #2563eb; padding-bottom:8px; margin-bottom:12px;">' +
+      '<h2 style="color:#2563eb; font-size:20px; margin:0 0 3px 0; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
+      '<h3 style="color:#000; font-size:15px; margin:0 0 3px 0; font-weight:bold;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
+      '<p style="color:#000; font-size:13px; margin:0; font-weight:bold;">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>' +
       '</div>';
-    var qrContent = '<div style="text-align:center; padding:20px; border:2px solid #2563eb; border-radius:12px; margin-top:20px;">' +
-      '<h2 style="color:#2563eb; font-size:22px; margin-bottom:8px;">' + escapeHtml(title) + '</h2>' +
-      '<p style="font-size:15px; font-weight:bold; margin-bottom:15px;">' + escapeHtml(details) + '</p>' +
-      '<img src="' + imgSrc + '" style="width:280px; height:280px; border:4px solid #2563eb; border-radius:10px;">' +
-      '<h3 style="color:#dc2626; margin-top:15px; font-size:16px;">कृपया अपने मोबाइल कैमरे से QR कोड स्कैन करके उपस्थिति दर्ज करें</h3>' +
+    var qrContent = '<div style="text-align:center; padding:15px; border:2px solid #2563eb; border-radius:10px; margin-top:10px;">' +
+      '<h2 style="color:#2563eb; font-size:18px; margin:0 0 6px 0;">' + escapeHtml(title) + '</h2>' +
+      '<p style="font-size:13px; font-weight:bold; margin-bottom:12px;">' + escapeHtml(details) + '</p>' +
+      '<img src="' + imgSrc + '" style="width:230px; height:230px; border:3px solid #2563eb; border-radius:8px;">' +
+      '<h3 style="color:#dc2626; margin-top:12px; font-size:14px;">कृपया अपने मोबाइल कैमरे से QR कोड स्कैन करके उपस्थिति दर्ज करें</h3>' +
       '</div>';
     var printArea = document.getElementById('printTemplateArea');
-    printArea.innerHTML = '<div style="padding:20px; font-family:sans-serif;">' + headerHTML + qrContent + '</div>';
+    printArea.innerHTML = '<div style="padding:10px; font-family:sans-serif;">' + headerHTML + qrContent + '</div>';
     window.print();
   }
 
