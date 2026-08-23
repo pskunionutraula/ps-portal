@@ -168,12 +168,92 @@
     .hero-quote-card h2 { font-family: 'Rozha One', serif; color: #38bdf8; font-size: 22px; margin-bottom: 8px; }
     .hero-quote-card p { font-size: 14.5px; color: #f8fafc; line-height: 1.6; font-weight: 600; }
 
-    .home-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
-    .home-stat-box { background: var(--input-bg); border: 2px solid var(--input-border); border-radius: 10px; padding: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-    .home-stat-box .num { font-size: 28px; font-weight: 800; color: #2563eb; font-family: 'Rozha One', serif; }
-    body.dark-mode .home-stat-box .num { color: #60a5fa; }
-    .home-stat-box .lbl { font-size: 13px; font-weight: bold; color: var(--text-main); margin-top: 4px; }
+   /* ================= MODERN STATS CARDS ================= */
+    .home-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 15px 0 22px 0;
+    }
+    .modern-stat-card {
+      position: relative;
+      background: var(--input-bg);
+      border-radius: 12px;
+      padding: 16px 14px;
+      border: 1.5px solid var(--input-border);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.25s ease;
+      overflow: hidden;
+    }
+    .modern-stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+    .modern-stat-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 4px 0 0 4px;
+    }
+    .stat-card-gp::before { background: linear-gradient(180deg, #2563eb, #38bdf8); }
+    .stat-card-ps::before { background: linear-gradient(180deg, #16a34a, #4ade80); }
+    .stat-card-reg::before { background: linear-gradient(180deg, #7c3aed, #a855f7); }
 
+    .stat-icon-wrapper {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+    .modern-stat-card:hover .stat-icon-wrapper {
+      transform: scale(1.08);
+    }
+    .stat-card-gp .stat-icon-wrapper { background: #eff6ff; color: #2563eb; }
+    .stat-card-ps .stat-icon-wrapper { background: #ecfdf5; color: #16a34a; }
+    .stat-card-reg .stat-icon-wrapper { background: #f3e8ff; color: #7c3aed; }
+
+    body.dark-mode .stat-card-gp .stat-icon-wrapper { background: rgba(37, 99, 235, 0.18); color: #60a5fa; }
+    body.dark-mode .stat-card-ps .stat-icon-wrapper { background: rgba(22, 163, 74, 0.18); color: #4ade80; }
+    body.dark-mode .stat-card-reg .stat-icon-wrapper { background: rgba(124, 58, 237, 0.18); color: #c084fc; }
+
+    .stat-info-content {
+      flex: 1;
+      text-align: left;
+    }
+    .stat-number-val {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.1;
+      font-family: 'Rozha One', 'Poppins', sans-serif;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+    .stat-card-gp .stat-number-val { color: #2563eb; }
+    .stat-card-ps .stat-number-val { color: #16a34a; }
+    .stat-card-reg .stat-number-val { color: #7c3aed; }
+
+    body.dark-mode .stat-card-gp .stat-number-val { color: #60a5fa; }
+    body.dark-mode .stat-card-ps .stat-number-val { color: #4ade80; }
+    body.dark-mode .stat-card-reg .stat-number-val { color: #c084fc; }
+
+    .stat-label-text {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      opacity: 0.85;
+      line-height: 1.3;
+    }
     .section-banner-title { font-family: 'Yatra One', serif; font-size: 18px; color: #2563eb; border-bottom: 2.5px solid var(--card-border); padding-bottom: 6px; margin-bottom: 14px; text-align: center; }
     body.dark-mode .section-banner-title { color: #60a5fa; }
     .shayari-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-bottom: 22px; }
@@ -411,10 +491,39 @@
           <p>"डिजिटल उत्तर प्रदेश के निर्माण में गाँव-गाँव तक योजनाओं को पहुँचाने वाले पंचायत सहायक ही वास्तविक नायक हैं। अपने अधिकारों और सुरक्षित भविष्य के लिए हमारी एकजुटता ही हमारी सबसे बड़ी शक्ति है।"</p>
         </div>
 
-        <div class="home-stats-grid">
-          <div class="home-stat-box"><div class="num" id="homeRegisteredCount">0</div><div class="lbl"><i class="fa-solid fa-users"></i> कुल पंजीकृत पंचायत सहायक</div></div>
-          <div class="home-stat-box"><div class="num" id="homeApprovedCount">0</div><div class="lbl"><i class="fa-solid fa-user-check"></i> स्वीकृत पंचायत सहायक</div></div>
-          <div class="home-stat-box"><div class="num" id="homeSurveyCount">0</div><div class="lbl"><i class="fa-solid fa-clipboard-check"></i> पूर्ण सर्वे फ़ॉर्म जमा</div></div>
+      <div class="home-stats-grid">
+          <!-- 1. कुल ग्राम पंचायत -->
+          <div class="modern-stat-card stat-card-gp">
+            <div class="stat-icon-wrapper">
+              <i class="fa-solid fa-landmark"></i>
+            </div>
+            <div class="stat-info-content">
+              <div class="stat-number-val" id="homeGpCount">0</div>
+              <div class="stat-label-text">कुल ग्राम पंचायत</div>
+            </div>
+          </div>
+
+          <!-- 2. कुल पंचायत सहायक -->
+          <div class="modern-stat-card stat-card-ps">
+            <div class="stat-icon-wrapper">
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <div class="stat-info-content">
+              <div class="stat-number-val" id="homeAppointedPsCount">0</div>
+              <div class="stat-label-text">कुल पंचायत सहायक</div>
+            </div>
+          </div>
+
+          <!-- 3. पोर्टल पर कुल पंजीकृत पंचायत सहायक -->
+          <div class="modern-stat-card stat-card-reg">
+            <div class="stat-icon-wrapper">
+              <i class="fa-solid fa-users-gear"></i>
+            </div>
+            <div class="stat-info-content">
+              <div class="stat-number-val" id="homePortalRegisteredCount">0</div>
+              <div class="stat-label-text">पोर्टल पर कुल पंजीकृत</div>
+            </div>
+          </div>
         </div>
 
         <div class="slogan-banner-box"><i class="fa-solid fa-flag"></i> "ग्राम पंचायत की शान हैं हम, डिजिटल क्रांति की जान हैं हम!"</div>
@@ -1609,6 +1718,75 @@
 <div id="printTemplateArea"></div>
 
 <script>
+
+  // अपना Apps Script Web App URL यहाँ पेस्ट करें
+  var BACKEND_API_URL = "https://script.google.com/macros/s/AKfycbxEeWFzEP5-eWGDVqPxFa0-KQnHrX5EZ2N-ewhato88zHytpdc0MA38sIz4EZiCxtA/exec";
+
+  // URL से ईवेंट ID प्राप्त करने का तरीका
+  var urlParams = new URLSearchParams(window.location.search);
+  var eventIdFromUrl = urlParams.get('event_id') || "";
+  var systemWebAppUrl = window.location.href.split('?')[0];
+
+  // GitHub Pages API Bridge
+  var google = {
+    script: {
+      run: {
+        _successHandler: null,
+        _failureHandler: null,
+        withSuccessHandler: function(fn) {
+          var o = Object.create(this);
+          o._successHandler = fn;
+          return o;
+        },
+        withFailureHandler: function(fn) {
+          var o = Object.create(this);
+          o._failureHandler = fn;
+          return o;
+        },
+        _callApi: function(action, payload) {
+          var self = this;
+          fetch(BACKEND_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: action, payload: payload })
+          })
+          .then(function(r) { return r.json(); })
+          .then(function(res) {
+            if (self._successHandler) self._successHandler(res);
+          })
+          .catch(function(err) {
+            if (self._failureHandler) self._failureHandler(err);
+            else if (self._successHandler) self._successHandler({ success: false, message: err.toString() });
+          });
+        },
+        getPublicHomeStats: function() { this._callApi('getPublicHomeStats', {}); },
+        verifyPSLogin: function(email, mobile) { this._callApi('verifyPSLogin', { email: email, mobile: mobile }); },
+        loginAdminSecure: function(userId, password) { this._callApi('loginAdminSecure', { userId: userId, password: password }); },
+        getAdminDashboardDataSecure: function(token) { this._callApi('getAdminDashboardDataSecure', { token: token }); },
+        processNewRegistration: function(data) { this._callApi('processNewRegistration', data); },
+        processMainSurveyForm: function(data) { this._callApi('processMainSurveyForm', data); },
+        submitGrievanceTicket: function(data) { this._callApi('submitGrievanceTicket', data); },
+        getPsGrievanceTickets: function(email) { this._callApi('getPsGrievanceTickets', { email: email }); },
+        submitLeaveApplication: function(data) { this._callApi('submitLeaveApplication', data); },
+        getEventDetailsForScan: function(eventId) { this._callApi('getEventDetailsForScan', { eventId: eventId }); },
+        submitQRAttendance: function(eventId, email, mobile) { this._callApi('submitQRAttendance', { eventId: eventId, email: email, mobile: mobile }); },
+        addNoticeSecure: function(token, text) { this._callApi('addNoticeSecure', { token: token, text: text }); },
+        editNoticeSecure: function(token, rowIndex, text) { this._callApi('editNoticeSecure', { token: token, rowIndex: rowIndex, text: text }); },
+        deleteNoticeSecure: function(token, rowIndex) { this._callApi('deleteNoticeSecure', { token: token, rowIndex: rowIndex }); },
+        updateRegistrationStatusSecure: function(token, rowIndex, status) { this._callApi('updateRegistrationStatusSecure', { token: token, rowIndex: rowIndex, status: status }); },
+        grantSurveyUpdateApprovalSecure: function(token, rowIndex) { this._callApi('grantSurveyUpdateApprovalSecure', { token: token, rowIndex: rowIndex }); },
+        createEventSecure: function(token, title, date, location) { this._callApi('createEventSecure', { token: token, title: title, date: date, location: location }); },
+        updateGrievanceStatusSecure: function(token, rowIndex, status, remark) { this._callApi('updateGrievanceStatusSecure', { token: token, rowIndex: rowIndex, status: status, remark: remark }); },
+        deleteRecordSecure: function(token, rowIndex) { this._callApi('deleteRecordSecure', { token: token, rowIndex: rowIndex }); },
+        deleteRegistrationRecordSecure: function(token, rowIndex) { this._callApi('deleteRegistrationRecordSecure', { token: token, rowIndex: rowIndex }); },
+        deleteClusterRecordSecure: function(token, rowIndex) { this._callApi('deleteClusterRecordSecure', { token: token, rowIndex: rowIndex }); },
+        updateClusterRecordSecure: function(token, recordData) { this._callApi('updateClusterRecordSecure', { token: token, recordData: recordData }); },
+        updateRegisteredUserSecure: function(token, recordData) { this._callApi('updateRegisteredUserSecure', { token: token, recordData: recordData }); },
+        updateSurveyRecordSecure: function(token, recordData) { this._callApi('updateSurveyRecordSecure', { token: token, recordData: recordData }); },
+        deleteLeaveRecordSecure: function(token, rowIndex) { this._callApi('deleteLeaveRecordSecure', { token: token, rowIndex: rowIndex }); }
+      }
+    }
+  };
   var chart1Instance = null;
   var chart2Instance = null;
   var adminSessionToken = "";
@@ -1624,8 +1802,7 @@
   var cachedAdminLeaves = [];
   var loggedInPsUser = null;
   var loggedInPsCluster = null;
-  var eventIdFromUrl = "<?= eventIdFromUrl ?>";
-  var systemWebAppUrl = "<?= webAppUrl ?>";
+ 
   var activeNotifications = [];
 
   function escapeHtml(str) {
@@ -1662,11 +1839,61 @@
       document.body.classList.add('dark-mode');
       updateThemeToggleUI(true);
     }
+    
+    // 1. यदि URL में QR ईवेंट ID मौजूद है
     if (eventIdFromUrl && eventIdFromUrl.trim() !== "") {
       openQRAttendanceView(eventIdFromUrl);
-    } else {
-      loadPublicHomeStats();
+      return;
     }
+
+    // 2. ऑटो-रिस्टोर: एडमिन पोर्टल सेशन चेक करें
+    var savedAdminToken = sessionStorage.getItem('psk_admin_token');
+    var activeView = sessionStorage.getItem('psk_active_view');
+
+    if (activeView === 'admin' && savedAdminToken) {
+      adminSessionToken = savedAdminToken;
+      showLoader("एडमिन सत्र पुनः लोड हो रहा है...");
+      google.script.run.withSuccessHandler(function(res) {
+        if (res && res.success) {
+          restoreAdminDashboard(res);
+          var lastAdminTab = sessionStorage.getItem('psk_admin_tab') || 'survey';
+          switchAdminTab(lastAdminTab);
+          hideLoader();
+        } else {
+          hideLoader();
+          logoutAdmin();
+        }
+      }).withFailureHandler(function() {
+        hideLoader();
+        logoutAdmin();
+      }).getAdminDashboardDataSecure(savedAdminToken);
+      return;
+    }
+
+    // 3. ऑटो-रिस्टोर: पंचायत सहायक (PS) पोर्टल सेशन चेक करें
+    var savedPsEmail = sessionStorage.getItem('psk_ps_email');
+    var savedPsMobile = sessionStorage.getItem('psk_ps_mobile');
+
+    if (activeView === 'ps' && savedPsEmail && savedPsMobile) {
+      showLoader("पंचायत सहायक पोर्टल पुनः लोड हो रहा है...");
+      google.script.run.withSuccessHandler(function(res) {
+        hideLoader();
+        if (res && res.success && res.isApproved) {
+          restorePsPortal(res);
+          var lastPsTab = sessionStorage.getItem('psk_ps_tab') || 'psHome';
+          switchPsTab(lastPsTab);
+        } else {
+          logoutPS();
+        }
+      }).withFailureHandler(function() {
+        hideLoader();
+        logoutPS();
+      }).verifyPSLogin(savedPsEmail, savedPsMobile);
+      return;
+    }
+
+    // 4. डिफ़ॉल्ट: सामान्य होम पेज लोड करें
+    loadPublicHomeStats();
   };
 
   function toggleTheme() {
@@ -1787,9 +2014,10 @@
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       google.script.run.withSuccessHandler(function(res) {
         if (res.success) {
-          document.getElementById('homeRegisteredCount').innerText = res.stats.totalRegistered;
-          document.getElementById('homeApprovedCount').innerText = res.stats.approvedRegistered;
-          document.getElementById('homeSurveyCount').innerText = res.stats.totalSurveysSubmitted;
+          document.getElementById('homeGpCount').innerText = res.stats.totalGramPanchayat;
+          document.getElementById('homeAppointedPsCount').innerText = res.stats.totalAppointedPS;
+          document.getElementById('homePortalRegisteredCount').innerText = res.stats.totalRegisteredPS;
+          
           renderNoticesHTML('publicNoticesListContainer', res.notices);
 
           var publicNotifs = [];
@@ -1845,6 +2073,67 @@
   }
 
   // ================= PS PORTAL JS =================
+  // ================= PS PORTAL JS =================
+
+  // PS डेटा लोड करने का हेल्पर फ़ंक्शन (रीफ़्रेश और लॉगिन दोनों के लिए)
+  function restorePsPortal(res) {
+    loggedInPsUser = res.userData;
+    loggedInPsUser.alreadySubmitted = res.alreadySubmitted;
+    loggedInPsUser.canUpdate = res.canUpdate;
+    loggedInPsUser.previousSurveyData = res.previousSurveyData;
+    loggedInPsCluster = res.clusterData;
+
+    document.getElementById('psPortalWelcomeName').innerText = "नमस्ते, " + escapeHtml(loggedInPsUser.fullName) + " जी";
+    document.getElementById('psPortalGramInfo').innerText = "ग्राम पंचायत: " + escapeHtml(loggedInPsUser.gramPanchayat) + " | विकास खंड: उतरौला";
+
+    document.getElementById('psDetEmail').innerText = loggedInPsUser.email;
+    document.getElementById('psDetName').innerText = loggedInPsUser.fullName;
+    document.getElementById('psDetGuardian').innerText = loggedInPsUser.guardianName;
+    document.getElementById('psDetGramPanchayat').innerText = loggedInPsUser.gramPanchayat;
+    document.getElementById('psDetBlock').innerText = loggedInPsUser.block;
+    document.getElementById('psDetDistrict').innerText = loggedInPsUser.district;
+    document.getElementById('psDetMobile').innerText = loggedInPsUser.mobile;
+    document.getElementById('psDetAadhaar').innerText = loggedInPsUser.aadhaarMasked;
+
+    document.getElementById('email').value = loggedInPsUser.email;
+    document.getElementById('district').value = loggedInPsUser.district;
+    document.getElementById('block').value = loggedInPsUser.block;
+    document.getElementById('gramPanchayat').value = loggedInPsUser.gramPanchayat;
+    document.getElementById('fullName').value = loggedInPsUser.fullName;
+    document.getElementById('guardianName').value = loggedInPsUser.guardianName;
+    document.getElementById('mobile').value = loggedInPsUser.mobile;
+
+    renderPsClusterCard(loggedInPsCluster, loggedInPsUser);
+    renderNoticesHTML('psNoticesListContainer', res.notices);
+
+    var psNotifs = [];
+    if (res.canUpdate) {
+      psNotifs.push({
+        title: "सर्वे अद्यतन अनुमति स्वीकृत",
+        desc: "एडमिन द्वारा सर्वे फ़ॉर्म अपडेट करने की अनुमति प्रदान कर दी गई है।",
+        icon: '<i class="fa-solid fa-unlock" style="color:#16a34a;"></i>',
+        type: 'success',
+        badge: 'Active',
+        action: function() { handlePsSurveyClick(); }
+      });
+    }
+    if (res.notices && res.notices.length > 0) {
+      psNotifs.push({
+        title: "नया ब्लॉक नोटिस",
+        desc: res.notices[0].noticeText,
+        time: res.notices[0].timestamp,
+        icon: '<i class="fa-solid fa-bullhorn" style="color:#2563eb;"></i>',
+        type: 'info',
+        action: function() { switchPsTab('psHome'); }
+      });
+    }
+    updateNotificationBadge(psNotifs);
+
+    document.getElementById('homeViewSection').style.display = 'none';
+    document.getElementById('psPortalSection').style.display = 'block';
+  }
+
+  // PS लॉगिन फ़ंक्शन
   function submitPsLogin() {
     var email = document.getElementById('psLoginEmail').value.trim();
     var passMob = document.getElementById('psLoginMobile').value.trim();
@@ -1856,60 +2145,15 @@
       hideLoader();
       closeModal('psLoginModal');
       if (res.success && res.isApproved) {
-        loggedInPsUser = res.userData;
-        loggedInPsUser.alreadySubmitted = res.alreadySubmitted;
-        loggedInPsUser.canUpdate = res.canUpdate;
-        loggedInPsUser.previousSurveyData = res.previousSurveyData;
-        loggedInPsCluster = res.clusterData;
+        
+        // --- यहाँ नया बदलाव हुआ है (सेशन सुरक्षित करना) ---
+        sessionStorage.setItem('psk_ps_email', email);
+        sessionStorage.setItem('psk_ps_mobile', passMob);
+        sessionStorage.setItem('psk_active_view', 'ps');
+        sessionStorage.setItem('psk_ps_tab', 'psHome');
+        // ------------------------------------------------
 
-        document.getElementById('psPortalWelcomeName').innerText = "नमस्ते, " + escapeHtml(loggedInPsUser.fullName) + " जी";
-        document.getElementById('psPortalGramInfo').innerText = "ग्राम पंचायत: " + escapeHtml(loggedInPsUser.gramPanchayat) + " | विकास खंड: उतरौला";
-
-        document.getElementById('psDetEmail').innerText = loggedInPsUser.email;
-        document.getElementById('psDetName').innerText = loggedInPsUser.fullName;
-        document.getElementById('psDetGuardian').innerText = loggedInPsUser.guardianName;
-        document.getElementById('psDetGramPanchayat').innerText = loggedInPsUser.gramPanchayat;
-        document.getElementById('psDetBlock').innerText = loggedInPsUser.block;
-        document.getElementById('psDetDistrict').innerText = loggedInPsUser.district;
-        document.getElementById('psDetMobile').innerText = loggedInPsUser.mobile;
-        document.getElementById('psDetAadhaar').innerText = loggedInPsUser.aadhaarMasked;
-
-        document.getElementById('email').value = loggedInPsUser.email;
-        document.getElementById('district').value = loggedInPsUser.district;
-        document.getElementById('block').value = loggedInPsUser.block;
-        document.getElementById('gramPanchayat').value = loggedInPsUser.gramPanchayat;
-        document.getElementById('fullName').value = loggedInPsUser.fullName;
-        document.getElementById('guardianName').value = loggedInPsUser.guardianName;
-        document.getElementById('mobile').value = loggedInPsUser.mobile;
-
-        renderPsClusterCard(loggedInPsCluster, loggedInPsUser);
-        renderNoticesHTML('psNoticesListContainer', res.notices);
-
-        var psNotifs = [];
-        if (res.canUpdate) {
-          psNotifs.push({
-            title: "सर्वे अद्यतन अनुमति स्वीकृत",
-            desc: "एडमिन द्वारा सर्वे फ़ॉर्म अपडेट करने की अनुमति प्रदान कर दी गई है।",
-            icon: '<i class="fa-solid fa-unlock" style="color:#16a34a;"></i>',
-            type: 'success',
-            badge: 'Active',
-            action: function() { handlePsSurveyClick(); }
-          });
-        }
-        if (res.notices && res.notices.length > 0) {
-          psNotifs.push({
-            title: "नया ब्लॉक नोटिस",
-            desc: res.notices[0].noticeText,
-            time: res.notices[0].timestamp,
-            icon: '<i class="fa-solid fa-bullhorn" style="color:#2563eb;"></i>',
-            type: 'info',
-            action: function() { switchPsTab('psHome'); }
-          });
-        }
-        updateNotificationBadge(psNotifs);
-
-        document.getElementById('homeViewSection').style.display = 'none';
-        document.getElementById('psPortalSection').style.display = 'block';
+        restorePsPortal(res);
         switchPsTab('psHome');
         loadMyTickets();
       } else {
@@ -1968,6 +2212,8 @@
 
   // ================= PS TAB SWITCHER =================
   function switchPsTab(tab) {
+    sessionStorage.setItem('psk_ps_tab', tab);
+
     document.getElementById('psHomeTabContent').style.display = (tab === 'psHome') ? 'block' : 'none';
     document.getElementById('psDetailsTabContent').style.display = (tab === 'psDetails') ? 'block' : 'none';
     document.getElementById('psClusterTabContent').style.display = (tab === 'psCluster') ? 'block' : 'none';
@@ -2052,7 +2298,12 @@
   }
 
   function logoutPS() {
-    loggedInPsUser = null; loggedInPsCluster = null;
+    loggedInPsUser = null; 
+    loggedInPsCluster = null;
+    sessionStorage.removeItem('psk_ps_email');
+    sessionStorage.removeItem('psk_ps_mobile');
+    sessionStorage.removeItem('psk_active_view');
+    sessionStorage.removeItem('psk_ps_tab');
     document.getElementById('psPortalSection').style.display = 'none';
     showHomeView();
   }
@@ -2333,6 +2584,78 @@
   }
 
   // ================= ADMIN DASHBOARD JS =================
+  // ================= ADMIN DASHBOARD JS =================
+
+  // 1. एडमिन डैशबोर्ड डेटा लोड करने का हेल्पर फ़ंक्शन (रीफ़्रेश और लॉगिन दोनों के लिए)
+  function restoreAdminDashboard(res) {
+    document.getElementById('publicFormView').style.display = 'none';
+    document.getElementById('adminDashboardView').style.display = 'block';
+
+    document.getElementById('statTotal').innerText = res.stats.totalSurveys;
+    document.getElementById('statApprovedUsers').innerText = res.stats.approvedUsers;
+    document.getElementById('statPendingUsers').innerText = res.stats.pendingUsers;
+    document.getElementById('statWifi').innerText = res.stats.wifiAvailable;
+    document.getElementById('statElec').innerText = res.stats.electricityAvailable;
+    document.getElementById('statWater').innerText = res.stats.drinkingWaterAvailable;
+
+    document.getElementById('pendingCount').innerText = res.pendingRegistrations.length;
+    document.getElementById('totalRegTabCount').innerText = res.allRegistrations.length;
+    document.getElementById('totalClusterTabCount').innerText = res.clusterRecords.length;
+    document.getElementById('totalLoginLogsCount').innerText = res.stats.totalLoginLogs;
+    document.getElementById('pendingGrievanceCount').innerText = res.pendingGrievanceCount;
+
+    if (res.webAppUrl) systemWebAppUrl = res.webAppUrl;
+
+    cachedSurveyRecords = res.surveyRecords || [];
+    cachedAllRegistrations = res.allRegistrations || [];
+    cachedPendingRegs = res.pendingRegistrations || [];
+    cachedClusterRecords = res.clusterRecords || [];
+    cachedLoginLogs = res.loginLogs || [];
+    cachedAdminNotices = res.adminNotices || [];
+    cachedAdminGrievances = res.adminGrievances || [];
+    cachedAdminEvents = res.adminEvents || [];
+    cachedAdminAttendance = res.adminAttendanceRecords || [];
+    cachedAdminLeaves = res.adminLeaveRecords || [];
+
+    document.getElementById('totalLeaveCount').innerText = cachedAdminLeaves.length;
+
+    initCharts(res.stats);
+    renderAdminTable(cachedSurveyRecords);
+    renderRegisteredTable(cachedAllRegistrations);
+    renderClusterTable(cachedClusterRecords);
+    renderLoginLogsTable(cachedLoginLogs);
+    renderPendingTable(cachedPendingRegs);
+    renderAdminNoticesTable(cachedAdminNotices);
+    renderAdminGrievancesTable(cachedAdminGrievances);
+    populateEventFilterDropdown(cachedAdminEvents);
+    renderAdminAttendanceTable(cachedAdminAttendance);
+    renderAdminLeaveTable(cachedAdminLeaves);
+
+    var adminNotifs = [];
+    if (res.pendingRegistrations.length > 0) {
+      adminNotifs.push({
+        title: "लंबित पंजीकरण आवेदन",
+        desc: res.pendingRegistrations.length + " नए पंचायत सहायकों के पंजीकरण स्वीकृति हेतु लंबित हैं।",
+        icon: '<i class="fa-solid fa-user-clock" style="color:#f59e0b;"></i>',
+        type: 'warning',
+        badge: res.pendingRegistrations.length + ' Pending',
+        action: function() { switchAdminTab('approval'); }
+      });
+    }
+    if (res.pendingGrievanceCount > 0) {
+      adminNotifs.push({
+        title: "नई शिकायत टिकट",
+        desc: res.pendingGrievanceCount + " शिकायतें समीक्षा हेतु प्रतीक्षारत हैं।",
+        icon: '<i class="fa-solid fa-headset" style="color:#dc2626;"></i>',
+        type: 'warning',
+        badge: res.pendingGrievanceCount + ' New',
+        action: function() { switchAdminTab('grievance'); }
+      });
+    }
+    updateNotificationBadge(adminNotifs);
+  }
+
+  // 2. एडमिन लॉगिन फ़ंक्शन
   function submitAdminLogin() {
     var u = document.getElementById('adminUserId').value.trim();
     var p = document.getElementById('adminPassword').value.trim();
@@ -2343,74 +2666,15 @@
     google.script.run.withSuccessHandler(function(res) {
       if (res && res.success) {
         adminSessionToken = res.sessionToken;
+
+        // --- रीफ़्रेश होने पर एडमिन सेशन याद रखने के लिए सुरक्षित करना ---
+        sessionStorage.setItem('psk_admin_token', adminSessionToken);
+        sessionStorage.setItem('psk_active_view', 'admin');
+        sessionStorage.setItem('psk_admin_tab', 'survey');
+        // -------------------------------------------------------------
+
         closeAdminLoginModal();
-
-        document.getElementById('publicFormView').style.display = 'none';
-        document.getElementById('adminDashboardView').style.display = 'block';
-
-        document.getElementById('statTotal').innerText = res.stats.totalSurveys;
-        document.getElementById('statApprovedUsers').innerText = res.stats.approvedUsers;
-        document.getElementById('statPendingUsers').innerText = res.stats.pendingUsers;
-        document.getElementById('statWifi').innerText = res.stats.wifiAvailable;
-        document.getElementById('statElec').innerText = res.stats.electricityAvailable;
-        document.getElementById('statWater').innerText = res.stats.drinkingWaterAvailable;
-
-        document.getElementById('pendingCount').innerText = res.pendingRegistrations.length;
-        document.getElementById('totalRegTabCount').innerText = res.allRegistrations.length;
-        document.getElementById('totalClusterTabCount').innerText = res.clusterRecords.length;
-        document.getElementById('totalLoginLogsCount').innerText = res.stats.totalLoginLogs;
-        document.getElementById('pendingGrievanceCount').innerText = res.pendingGrievanceCount;
-
-        if (res.webAppUrl) systemWebAppUrl = res.webAppUrl;
-
-        cachedSurveyRecords = res.surveyRecords || [];
-        cachedAllRegistrations = res.allRegistrations || [];
-        cachedPendingRegs = res.pendingRegistrations || [];
-        cachedClusterRecords = res.clusterRecords || [];
-        cachedLoginLogs = res.loginLogs || [];
-        cachedAdminNotices = res.adminNotices || [];
-        cachedAdminGrievances = res.adminGrievances || [];
-        cachedAdminEvents = res.adminEvents || [];
-        cachedAdminAttendance = res.adminAttendanceRecords || [];
-        cachedAdminLeaves = res.adminLeaveRecords || [];
-
-        document.getElementById('totalLeaveCount').innerText = cachedAdminLeaves.length;
-
-        initCharts(res.stats);
-        renderAdminTable(cachedSurveyRecords);
-        renderRegisteredTable(cachedAllRegistrations);
-        renderClusterTable(cachedClusterRecords);
-        renderLoginLogsTable(cachedLoginLogs);
-        renderPendingTable(cachedPendingRegs);
-        renderAdminNoticesTable(cachedAdminNotices);
-        renderAdminGrievancesTable(cachedAdminGrievances);
-        populateEventFilterDropdown(cachedAdminEvents);
-        renderAdminAttendanceTable(cachedAdminAttendance);
-        renderAdminLeaveTable(cachedAdminLeaves);
-
-        var adminNotifs = [];
-        if (res.pendingRegistrations.length > 0) {
-          adminNotifs.push({
-            title: "लंबित पंजीकरण आवेदन",
-            desc: res.pendingRegistrations.length + " नए पंचायत सहायकों के पंजीकरण स्वीकृति हेतु लंबित हैं।",
-            icon: '<i class="fa-solid fa-user-clock" style="color:#f59e0b;"></i>',
-            type: 'warning',
-            badge: res.pendingRegistrations.length + ' Pending',
-            action: function() { switchAdminTab('approval'); }
-          });
-        }
-        if (res.pendingGrievanceCount > 0) {
-          adminNotifs.push({
-            title: "नई शिकायत टिकट",
-            desc: res.pendingGrievanceCount + " शिकायतें समीक्षा हेतु प्रतीक्षारत हैं।",
-            icon: '<i class="fa-solid fa-headset" style="color:#dc2626;"></i>',
-            type: 'warning',
-            badge: res.pendingGrievanceCount + ' New',
-            action: function() { switchAdminTab('grievance'); }
-          });
-        }
-        updateNotificationBadge(adminNotifs);
-
+        restoreAdminDashboard(res);
         switchAdminTab('survey');
         hideLoader();
       } else {
@@ -2471,6 +2735,8 @@
   }
 
   function switchAdminTab(tab) {
+    sessionStorage.setItem('psk_admin_tab', tab);
+
     document.getElementById('surveyTabContent').style.display = (tab === 'survey') ? 'block' : 'none';
     document.getElementById('registeredTabContent').style.display = (tab === 'registered') ? 'block' : 'none';
     document.getElementById('clusterTabContent').style.display = (tab === 'cluster') ? 'block' : 'none';
@@ -2767,6 +3033,27 @@
     for (var i = 0; i < records.length; i++) {
       var c = records[i];
       var tr = document.createElement('tr');
+
+      // WhatsApp पर पूरा विवरण भेजने हेतु मैसेज फ़ॉर्मेट
+      var waClusterText = "🏛️ *ग्राम पंचायत व क्लस्टर प्रशासनिक विवरण*\n" +
+        "────────────────────────\n" +
+        "📍 *जनपद:* " + (c.district || "बलरामपुर") + "\n" +
+        "🏢 *विकास खंड:* " + (c.block || "उतरौला") + "\n" +
+        "📌 *क्लस्टर:* " + (c.clusterName || "-") + "\n" +
+        "🏛️ *क्लस्टर HQ:* " + (c.clusterHq || "-") + "\n" +
+        "🏡 *ग्राम पंचायत:* " + (c.gramPanchayat || "-") + "\n" +
+        "🔢 *LGD कोड:* " + (c.lgdCode || "-") + "\n\n" +
+        "👤 *BDO:* " + (c.bdoName || "श्री संजय कुमार") + " (" + (c.bdoMobile || "-") + ")\n" +
+        "👤 *ADO (पं०):* " + (c.adoName || "-") + " (" + (c.adoMobile || "-") + ")\n" +
+        "👤 *सचिव:* " + (c.secretaryName || "-") + " (" + (c.secretaryMobile || "-") + ")\n\n" +
+        "👨‍💼 *पंचायत सहायक:* " + (c.psName || "-") + "\n" +
+        "📱 *मोबाइल नंबर:* " + (c.mobile || "-") + "\n" +
+        "📧 *ईमेल:* " + (c.email || "-") + "\n" +
+        "────────────────────────\n" +
+        "– *पंचायत सहायक कर्मचारी यूनियन, उतरौला (बलरामपुर)*";
+
+      var waLink = "https://api.whatsapp.com/send?text=" + encodeURIComponent(waClusterText);
+
       tr.innerHTML = '<td>' + (i + 1) + '</td>' +
         '<td><b>' + escapeHtml(c.clusterName || "-") + '</b></td>' +
         '<td>' + escapeHtml(c.clusterHq || "-") + '</td>' +
@@ -2774,7 +3061,8 @@
         '<td>' + escapeHtml(c.lgdCode || "-") + '</td>' +
         '<td>' + escapeHtml(c.secretaryName || "-") + ' (' + escapeHtml(c.secretaryMobile || "-") + ')</td>' +
         '<td>' + escapeHtml(c.psName || "-") + ' (' + escapeHtml(c.mobile || "-") + ')</td>' +
-        '<td>' +
+        '<td style="white-space:nowrap;">' +
+          '<a href="' + waLink + '" target="_blank" class="btn-action-whatsapp" title="WhatsApp पर पूरा विवरण भेजें"><i class="fa-brands fa-whatsapp"></i></a>' +
           '<button class="btn-action-view" title="देखें (PDF)" onclick="viewClusterModal(' + i + ')"><i class="fa-solid fa-eye"></i></button>' +
           '<button class="btn-action-edit" title="संपादित करें" onclick="openEditClusterModal(' + i + ')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="confirmUniversalDelete(\'cluster\', ' + c.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
@@ -3378,11 +3666,13 @@
       '<p style="text-indent:30px; text-align:justify; margin:8px 0;">' +
       'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। इसके लिए ' + pWord + ' ' + abhAriWord + '।' +
       '</p>' +
-      '<div style="margin-top:30px; text-align:center; line-height:1.6;">' +
-      '  <b>(' + escapeHtml(l.fullName) + ')</b><br>' +
-      '  पंचायत सहायक कम डाटा एंट्री ऑपरेटर<br>' +
-      '  ग्राम पंचायत: ' + escapeHtml(l.gramPanchayat) + '<br>' +
-      '  मो०: ' + escapeHtml(l.mobile) +
+      '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
+      '  <div style="text-align:center; min-width:220px; line-height:1.6;">' +
+      '    <b>(' + escapeHtml(l.fullName) + ')</b><br>' +
+      '    पंचायत सहायक कम डाटा एंट्री ऑपरेटर<br>' +
+      '    ग्राम पंचायत: ' + escapeHtml(l.gramPanchayat) + '<br>' +
+      '    मो०: ' + escapeHtml(l.mobile) +
+      '  </div>' +
       '</div>';
 
     document.getElementById('detailsCardContent').innerHTML = html;
@@ -3591,6 +3881,9 @@
 
   function logoutAdmin() {
     adminSessionToken = "";
+    sessionStorage.removeItem('psk_admin_token');
+    sessionStorage.removeItem('psk_active_view');
+    sessionStorage.removeItem('psk_admin_tab');
     document.getElementById('adminDashboardView').style.display = 'none';
     showHomeView();
   }
