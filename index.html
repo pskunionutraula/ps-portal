@@ -469,6 +469,33 @@
       .shayari-grid { grid-template-columns: 1fr; }
       .top-strip { justify-content: center; text-align: center; }
     }
+
+    /* ================= लैग-फ्री स्मूद CSS ================= */
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+    html {
+      scroll-behavior: smooth;
+      text-rendering: optimizeSpeed;
+    }
+    body {
+      contain: content;
+    }
+    .modern-stat-card, .btn-side-action, .link-card, .table-responsive, .modern-scanner-card {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+   // ================= 0ms इंस्टेंट सर्च और स्मूद लोडर =================
+  var searchDebounceTimeout = null;
+  function debounceTableSearch(callback, delay) {
+    clearTimeout(searchDebounceTimeout);
+    searchDebounceTimeout = setTimeout(callback, delay || 120);
+  }
   </style>
 </head>
 <body>
