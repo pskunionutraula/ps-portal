@@ -938,37 +938,7 @@
           <div class="form-header-banner" style="background:linear-gradient(135deg, #0284c7, #0f172a);">
             <h2 style="font-size:18px; text-align:center;"><i class="fa-solid fa-globe"></i> पंचायत सहायक शासकीय एवं नागरिक सेवा पोर्टल डायरेक्टरी</h2>
           </div>
-         <!-- PS TAB: IN-APP LIVE QR CAMERA SCANNER -->
-        <div id="psQrScanTabContent" style="display:none;">
-          <div class="form-header-banner" style="background:linear-gradient(135deg, #15803d, #0f172a);">
-            <h2 style="font-size:18px; text-align:center;"><i class="fa-solid fa-qrcode"></i> लाइव बैठक QR उपस्थिति स्कैनर</h2>
-          </div>
-
-          <div style="background:var(--input-bg); border:2px solid var(--input-border); border-radius:12px; padding:18px; text-align:center; max-width:480px; margin:0 auto 20px auto;">
-            <p style="font-size:13px; color:var(--text-main); margin-bottom:12px; font-weight:600;">
-              <i class="fa-solid fa-shield-halved" style="color:#16a34a;"></i> केवल अधिकृत पंचायत सहायक के खाते से उपस्थिति दर्ज होगी।
-            </p>
-
-            <!-- Camera Viewfinder Box -->
-            <div id="psQrReaderWrapper" style="position:relative; width:100%; max-width:320px; margin:0 auto; border-radius:12px; overflow:hidden; border:3px solid #2563eb; background:#000; min-height:240px; display:flex; align-items:center; justify-content:center;">
-              <div id="psQrReader" style="width:100%;"></div>
-            </div>
-
-            <!-- Control Buttons -->
-            <div style="margin-top:15px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-              <button type="button" class="submit-btn" style="background:#16a34a; width:auto; font-size:13px; padding:8px 18px; margin:0; display:inline-flex; align-items:center; gap:6px;" onclick="startInAppCameraScanner()">
-                <i class="fa-solid fa-camera-rotate"></i> कैमरा शुरू करें
-              </button>
-              <button type="button" class="submit-btn" style="background:#dc2626; width:auto; font-size:13px; padding:8px 18px; margin:0; display:inline-flex; align-items:center; gap:6px;" onclick="stopInAppCameraScanner()">
-                <i class="fa-solid fa-stop"></i> बंद करें
-              </button>
-            </div>
-
-            <div id="psScanStatusMessage" style="margin-top:12px; font-size:13px; font-weight:bold; color:#2563eb;">
-              कैमरा शुरू करने के लिए ऊपर बटन दबाएं और बैठक के QR कोड को सामने लाएं।
-            </div>
-          </div>
-        </div>
+        
           <!-- Search Filter -->
           <div class="links-search-box">
             <input type="text" id="linkSearchInput" onkeyup="filterPortalLinks()" class="links-search-input" placeholder="🔍 किसी भी पोर्टल या सेवा का नाम खोजें (उदा. e-district, राशन, पेंशन)...">
@@ -1240,6 +1210,38 @@
               </div>
             </div>
 
+          </div>
+        </div>
+
+      <!-- ================= यहाँ नया QR स्कैनर कोड जोड़ें (START) ================= -->
+        <div id="psQrScanTabContent" style="display:none;">
+          <div class="form-header-banner" style="background:linear-gradient(135deg, #15803d, #0f172a);">
+            <h2 style="font-size:18px; text-align:center;"><i class="fa-solid fa-qrcode"></i> लाइव बैठक QR उपस्थिति स्कैनर</h2>
+          </div>
+
+          <div style="background:var(--input-bg); border:2px solid var(--input-border); border-radius:12px; padding:18px; text-align:center; max-width:480px; margin:0 auto 20px auto;">
+            <p style="font-size:13px; color:var(--text-main); margin-bottom:12px; font-weight:600;">
+              <i class="fa-solid fa-shield-halved" style="color:#16a34a;"></i> केवल अधिकृत पंचायत सहायक के खाते से उपस्थिति दर्ज होगी।
+            </p>
+
+            <!-- Camera Viewfinder Box -->
+            <div id="psQrReaderWrapper" style="position:relative; width:100%; max-width:320px; margin:0 auto; border-radius:12px; overflow:hidden; border:3px solid #2563eb; background:#000; min-height:240px; display:flex; align-items:center; justify-content:center;">
+              <div id="psQrReader" style="width:100%;"></div>
+            </div>
+
+            <!-- Control Buttons -->
+            <div style="margin-top:15px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+              <button type="button" class="submit-btn" style="background:#16a34a; width:auto; font-size:13px; padding:8px 18px; margin:0; display:inline-flex; align-items:center; gap:6px;" onclick="startInAppCameraScanner()">
+                <i class="fa-solid fa-camera-rotate"></i> कैमरा शुरू करें
+              </button>
+              <button type="button" class="submit-btn" style="background:#dc2626; width:auto; font-size:13px; padding:8px 18px; margin:0; display:inline-flex; align-items:center; gap:6px;" onclick="stopInAppCameraScanner()">
+                <i class="fa-solid fa-stop"></i> बंद करें
+              </button>
+            </div>
+
+            <div id="psScanStatusMessage" style="margin-top:12px; font-size:13px; font-weight:bold; color:#2563eb;">
+              कैमरा शुरू करने के लिए ऊपर बटन दबाएं और बैठक के QR कोड को सामने लाएं।
+            </div>
           </div>
         </div>
     </div>
