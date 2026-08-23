@@ -47,6 +47,93 @@
     }
     body.modal-open { overflow: hidden; }
 
+  
+    /* ================= आधुनिक QR स्कैनर UI और लेज़र एनीमेशन ================= */
+    .modern-scanner-card {
+      background: var(--card-bg, #ffffff);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 440px;
+      margin: 0 auto 25px auto;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .scanner-viewport-box {
+      position: relative;
+      width: 100%;
+      max-width: 300px;
+      height: 300px;
+      margin: 0 auto;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #090d16;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* कॉर्नर फ्रेम मार्कर */
+    .scan-corner {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border: 3.5px solid #22c55e;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .corner-tl { top: 12px; left: 12px; border-right: none; border-bottom: none; border-top-left-radius: 10px; }
+    .corner-tr { top: 12px; right: 12px; border-left: none; border-bottom: none; border-top-right-radius: 10px; }
+    .corner-bl { bottom: 12px; left: 12px; border-right: none; border-top: none; border-bottom-left-radius: 10px; }
+    .corner-br { bottom: 12px; right: 12px; border-left: none; border-top: none; border-bottom-right-radius: 10px; }
+    
+    /* नियॉन लेजर स्कैनिंग लाइन */
+    .scan-laser-line {
+      position: absolute;
+      top: 5%;
+      left: 4%;
+      width: 92%;
+      height: 3.5px;
+      background: linear-gradient(90deg, transparent, #22c55e, #4ade80, #22c55e, transparent);
+      box-shadow: 0 0 15px #22c55e, 0 0 25px #22c55e;
+      z-index: 9;
+      display: none;
+      animation: scanLaserCycle 2s infinite ease-in-out;
+    }
+    @keyframes scanLaserCycle {
+      0% { top: 6%; opacity: 0.3; }
+      50% { top: 92%; opacity: 1; }
+      100% { top: 6%; opacity: 0.3; }
+    }
+    /* लाइव स्टेटस पल्स */
+    .live-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 14px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #16a34a;
+      border-radius: 30px;
+      font-size: 12.5px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .live-dot-pulse {
+      width: 8px;
+      height: 8px;
+      background-color: #22c55e;
+      border-radius: 50%;
+      animation: pulseRadar 1.5s infinite;
+    }
+    @keyframes pulseRadar {
+      0% { transform: scale(0.85); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.4; }
+      100% { transform: scale(0.85); opacity: 1; }
+    }
+
     /* ================= 1. ULTRA-FAST MODERN LOADER ================= */
     #globalAppLoader {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -585,7 +672,7 @@
           <button class="admin-tab-btn" id="psNavGrievanceBtn" onclick="switchPsTab('psGrievance')"><i class="fa-solid fa-headset"></i> 🚨 शिकायत व सहायता</button>
           <button class="admin-tab-btn" id="psNavLeaveBtn" onclick="switchPsTab('psLeave')"><i class="fa-solid fa-calendar-minus"></i> 📝 अवकाश आवेदन</button>
           <button class="admin-tab-btn" id="psNavLinksBtn" onclick="switchPsTab('psLinks')"><i class="fa-solid fa-globe"></i> 🌐 उपयोगी पोर्टल्स (Links)</button>
-          <button class="admin-tab-btn" id="psNavQrScanBtn" onclick="switchPsTab('psQrScan')"><i class="fa-solid fa-camera"></i> 📸 QR हाजिरी</button>
+          <button class="admin-tab-btn" id="psNavQrScanBtn" onclick="switchPsTab('psQrScan')"><i class="fa-solid fa-qrcode"></i> 📸 QR स्कैन</button>
         </div>
 
         <!-- PS TAB 1: PS HOME -->
@@ -1222,33 +1309,44 @@
         </div>
 
       <!-- ================= यहाँ नया QR स्कैनर कोड जोड़ें (START) ================= -->
+        <!-- PS TAB: MODERN ADVANCED IN-APP QR SCANNER -->
         <div id="psQrScanTabContent" style="display:none;">
-          <div class="form-header-banner" style="background:linear-gradient(135deg, #15803d, #0f172a);">
+          <div class="form-header-banner" style="background:linear-gradient(135deg, #15803d, #0f172a); border-radius:14px; margin-bottom:20px;">
             <h2 style="font-size:18px; text-align:center;"><i class="fa-solid fa-qrcode"></i> लाइव बैठक QR उपस्थिति स्कैनर</h2>
           </div>
 
-          <div style="background:var(--input-bg); border:2px solid var(--input-border); border-radius:12px; padding:18px; text-align:center; max-width:480px; margin:0 auto 20px auto;">
-            <p style="font-size:13px; color:var(--text-main); margin-bottom:12px; font-weight:600;">
-              <i class="fa-solid fa-shield-halved" style="color:#16a34a;"></i> केवल अधिकृत पंचायत सहायक के खाते से उपस्थिति दर्ज होगी।
-            </p>
-
-            <!-- Camera Viewfinder Box -->
-            <div id="psQrReaderWrapper" style="position:relative; width:100%; max-width:320px; margin:0 auto; border-radius:12px; overflow:hidden; border:3px solid #2563eb; background:#000; min-height:240px; display:flex; align-items:center; justify-content:center;">
-              <div id="psQrReader" style="width:100%;"></div>
+          <div class="modern-scanner-card">
+            <div class="live-status-pill">
+              <span class="live-dot-pulse"></span> सुरक्षित उपस्थिति सिस्टम सक्रिय
             </div>
 
-            <!-- Control Buttons -->
-            <div style="margin-top:15px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-              <button type="button" class="submit-btn" style="background:#16a34a; width:auto; font-size:13px; padding:8px 18px; margin:0; display:inline-flex; align-items:center; gap:6px;" onclick="startInAppCameraScanner()">
+            <p style="font-size:13px; color:var(--text-main); margin-bottom:16px; font-weight:600;">
+              <i class="fa-solid fa-shield-halved" style="color:#16a34a;"></i> बैठक के अधिकृत QR कोड को कैमरे के सामने लाएं।
+            </p>
+
+            <!-- Futuristic Camera Viewfinder Box -->
+            <div class="scanner-viewport-box">
+              <div class="scan-corner corner-tl"></div>
+              <div class="scan-corner corner-tr"></div>
+              <div class="scan-corner corner-bl"></div>
+              <div class="scan-corner corner-br"></div>
+              
+              <div class="scan-laser-line" id="psScanLaser"></div>
+              <div id="psQrReader" style="width:100%; height:100%;"></div>
+            </div>
+
+            <!-- Modern Control Action Buttons -->
+            <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+              <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #16a34a, #15803d); width:auto; font-size:13.5px; padding:10px 22px; margin:0; display:inline-flex; align-items:center; gap:8px; border-radius:10px; box-shadow:0 4px 12px rgba(22,163,74,0.3);" onclick="startInAppCameraScanner()">
                 <i class="fa-solid fa-camera-rotate"></i> कैमरा शुरू करें
               </button>
-              <button type="button" class="submit-btn" style="background:#dc2626; width:auto; font-size:13px; padding:8px 18px; margin:0; display:inline-flex; align-items:center; gap:6px;" onclick="stopInAppCameraScanner()">
+              <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #dc2626, #b91c1c); width:auto; font-size:13.5px; padding:10px 22px; margin:0; display:inline-flex; align-items:center; gap:8px; border-radius:10px; box-shadow:0 4px 12px rgba(220,38,38,0.3);" onclick="stopInAppCameraScanner()">
                 <i class="fa-solid fa-stop"></i> बंद करें
               </button>
             </div>
 
-            <div id="psScanStatusMessage" style="margin-top:12px; font-size:13px; font-weight:bold; color:#2563eb;">
-              कैमरा शुरू करने के लिए ऊपर बटन दबाएं और बैठक के QR कोड को सामने लाएं।
+            <div id="psScanStatusMessage" style="margin-top:16px; font-size:13px; font-weight:700; color:#2563eb; background:var(--sub-box-bg); padding:10px; border-radius:8px; border:1px dashed var(--input-border);">
+              कैमरा शुरू करने के लिए ऊपर बटन दबाएं और QR कोड को बॉक्स के बीच में लाएं।
             </div>
           </div>
         </div>
@@ -3949,7 +4047,7 @@
   var html5QrCodeScannerInstance = null;
   var isScanningActive = false;
 
-  // ================= IN-APP QR CAMERA SCANNER =================
+ // ================= ADVANCED MODERN IN-APP SCANNER =================
   var html5QrCodeScannerInstance = null;
   var isScanningActive = false;
 
@@ -3960,8 +4058,10 @@
     }
 
     var statusElem = document.getElementById('psScanStatusMessage');
+    var laserElem = document.getElementById('psScanLaser');
+
     if (statusElem) {
-      statusElem.innerText = "कैमरा लोड हो रहा है, कृपया अनुमति (Allow) दें...";
+      statusElem.innerText = "कैमरा लोड हो रहा है, कृपया Allow (अनुमति) दें...";
       statusElem.style.color = "#2563eb";
     }
 
@@ -3973,7 +4073,7 @@
     html5QrCodeScannerInstance = new Html5Qrcode("psQrReader");
 
     var qrConfig = { 
-      fps: 10, 
+      fps: 15, 
       qrbox: { width: 220, height: 220 },
       aspectRatio: 1.0
     };
@@ -4010,7 +4110,12 @@
               return;
             }
 
-            // QR मिलते ही कैमरा रोकें
+            // QR स्कैन होते ही मोबाइल वाइब्रेट होगा (Haptic Feedback)
+            if (navigator.vibrate) {
+              navigator.vibrate([80, 50, 80]);
+            }
+
+            // QR मिलते ही कैमरा और लेज़र रोकें
             stopInAppCameraScanner();
 
             if (statusElem) {
@@ -4022,16 +4127,18 @@
             submitAutoAttendanceForPs(finalEventId);
           },
           function onScanFailure(error) {
-            // स्कैनिंग लूप
+            // निरंतर स्कैनिंग लूप
           }
         ).then(function() {
           isScanningActive = true;
+          if (laserElem) laserElem.style.display = "block"; // हरी लेज़र लाइन चालू
           if (statusElem) {
-            statusElem.innerText = "📷 कैमरा चालू है। बैठक का QR कोड सामने लाएं।";
+            statusElem.innerText = "📷 कैमरा सक्रिय है। बैठक का QR कोड सामने लाएं।";
             statusElem.style.color = "#16a34a";
           }
         }).catch(function(err) {
           isScanningActive = false;
+          if (laserElem) laserElem.style.display = "none";
           if (statusElem) {
             statusElem.innerText = "⚠️ कैमरा शुरू नहीं हो सका। कृपया Chrome में खोलकर कैमरा परमिशन दें।";
             statusElem.style.color = "#dc2626";
@@ -4045,6 +4152,7 @@
       }
     }).catch(function(err) {
       isScanningActive = false;
+      if (laserElem) laserElem.style.display = "none";
       if (statusElem) {
         statusElem.innerText = "⚠️ कैमरा परमिशन ब्लॉक है। कृपया ब्राउज़र सेटिंग्स में जाकर Camera Allow करें।";
         statusElem.style.color = "#dc2626";
@@ -4053,6 +4161,9 @@
   }
 
   function stopInAppCameraScanner() {
+    var laserElem = document.getElementById('psScanLaser');
+    if (laserElem) laserElem.style.display = "none"; // लेज़र लाइन बंद करना
+
     if (html5QrCodeScannerInstance && isScanningActive) {
       html5QrCodeScannerInstance.stop().then(function() {
         isScanningActive = false;
