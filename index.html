@@ -480,7 +480,68 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
     }
-    
+   /* ================= MODERN LOGIN POPUP (MODAL) STYLING ================= */
+  .custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .custom-modal-overlay.active {
+    display: flex;
+    opacity: 1;
+  }
+  .custom-modal-box {
+    background: var(--card-bg, #ffffff);
+    color: var(--text-main, #0f172a);
+    border: 1.5px solid var(--card-border, #3b82f6);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+    padding: 24px 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    position: relative;
+    transform: scale(0.92) translateY(15px);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .custom-modal-overlay.active .custom-modal-box {
+    transform: scale(1) translateY(0);
+  }
+  .modal-close-icon {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(100, 116, 139, 0.15);
+    border: none;
+    color: var(--text-main);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .modal-close-icon:hover {
+    background: #dc2626;
+    color: #ffffff;
+    transform: rotate(90deg);
+  }
   </style>
 </head>
 <body>
@@ -1880,6 +1941,63 @@
 </div>
 
 <div id="printTemplateArea"></div>
+
+  <!-- ================= 1. PS LOGIN POPUP MODAL ================= -->
+<div id="psLoginModalOverlay" class="custom-modal-overlay" onclick="closeModalOnOutsideClick(event, 'psLoginModalOverlay')">
+  <div class="custom-modal-box">
+    <button type="button" class="modal-close-icon" onclick="closePsLoginModal()"><i class="fa-solid fa-xmark"></i></button>
+    
+    <div style="text-align:center; margin-bottom:18px;">
+      <div style="width:52px; height:52px; background:linear-gradient(135deg,#2563eb,#1d4ed8); color:#fff; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 8px 18px rgba(37,99,235,0.3); margin-bottom:8px;">
+        <i class="fa-solid fa-user-check"></i>
+      </div>
+      <h3 style="font-size:18px; font-weight:800; color:var(--text-main);">पंचायत सहायक पोर्टल लॉगिन</h3>
+      <p style="font-size:12.5px; color:#64748b; margin-top:2px;">अपना पंजीकृत विवरण दर्ज करें</p>
+    </div>
+
+    <form onsubmit="handlePsLoginSubmit(event)">
+      <div class="field-group" style="margin-bottom:12px;">
+        <label style="font-size:13px; font-weight:600;"><i class="fa-solid fa-envelope"></i> पंजीकृत ईमेल आईडी <span style="color:#dc2626;">*</span></label>
+        <input type="email" id="modalPsLoginEmail" class="field-input" placeholder="उदाहरण: ps.agra@gmail.com" required style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--input-border); background:var(--input-bg); color:var(--text-main);">
+      </div>
+
+      <div class="field-group" style="margin-bottom:18px;">
+        <label style="font-size:13px; font-weight:600;"><i class="fa-solid fa-lock"></i> लॉगिन पासवर्ड / पिन <span style="color:#dc2626;">*</span></label>
+        <input type="password" id="modalPsLoginPassword" class="field-input" placeholder="पासवर्ड दर्ज करें" required style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--input-border); background:var(--input-bg); color:var(--text-main);">
+      </div>
+
+      <button type="submit" class="submit-btn" style="background:linear-gradient(135deg, #2563eb, #1d4ed8); width:100%; padding:11px; font-size:14.5px; border-radius:10px; border:none; color:#fff; font-weight:bold; cursor:pointer; box-shadow:0 6px 16px rgba(37,99,235,0.3);">
+        <i class="fa-solid fa-right-to-bracket"></i> लॉगिन करें
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ================= 2. ADMIN LOGIN POPUP MODAL ================= -->
+<div id="adminLoginModalOverlay" class="custom-modal-overlay" onclick="closeModalOnOutsideClick(event, 'adminLoginModalOverlay')">
+  <div class="custom-modal-box">
+    <button type="button" class="modal-close-icon" onclick="closeAdminLoginModal()"><i class="fa-solid fa-xmark"></i></button>
+    
+    <div style="text-align:center; margin-bottom:18px;">
+      <div style="width:52px; height:52px; background:linear-gradient(135deg,#dc2626,#991b1b); color:#fff; border-radius:14px; display:inline-flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 8px 18px rgba(220,38,38,0.3); margin-bottom:8px;">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h3 style="font-size:18px; font-weight:800; color:var(--text-main);">एडमिनिस्ट्रेटर लॉगिन</h3>
+      <p style="font-size:12.5px; color:#64748b; margin-top:2px;">केवल ब्लॉक/यूनियन पदाधिकारियों हेतु</p>
+    </div>
+
+    <form onsubmit="handleAdminLoginSubmit(event)">
+      <div class="field-group" style="margin-bottom:18px;">
+        <label style="font-size:13px; font-weight:600;"><i class="fa-solid fa-key"></i> एडमिन सुरक्षा पासकी (Passkey) <span style="color:#dc2626;">*</span></label>
+        <input type="password" id="modalAdminPassword" class="field-input" placeholder="सिक्योर एडमिन पासकी" required style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--input-border); background:var(--input-bg); color:var(--text-main);">
+      </div>
+
+      <button type="submit" class="submit-btn" style="background:linear-gradient(135deg, #dc2626, #b91c1c); width:100%; padding:11px; font-size:14.5px; border-radius:10px; border:none; color:#fff; font-weight:bold; cursor:pointer; box-shadow:0 6px 16px rgba(220,38,38,0.3);">
+        <i class="fa-solid fa-lock-open"></i> एडमिन पैनल खोलें
+      </button>
+    </form>
+  </div>
+</div>
 
 <script>
 
@@ -4217,6 +4335,91 @@
   function debounceTableSearch(callback, delay) {
     clearTimeout(searchDebounceTimeout);
     searchDebounceTimeout = setTimeout(callback, delay || 120);
+  }
+
+  // ================= POPUP MODAL CONTROLLER =================
+  function openPsLoginModal() {
+    closeAdminLoginModal();
+    var modal = document.getElementById('psLoginModalOverlay');
+    if (modal) {
+      modal.classList.add('active');
+      document.body.classList.add('modal-open');
+      setTimeout(function() {
+        var input = document.getElementById('modalPsLoginEmail');
+        if (input) input.focus();
+      }, 100);
+    }
+  }
+
+  function closePsLoginModal() {
+    var modal = document.getElementById('psLoginModalOverlay');
+    if (modal) modal.classList.remove('active');
+    document.body.classList.remove('modal-open');
+  }
+
+  function openAdminLoginModal() {
+    closePsLoginModal();
+    var modal = document.getElementById('adminLoginModalOverlay');
+    if (modal) {
+      modal.classList.add('active');
+      document.body.classList.add('modal-open');
+      setTimeout(function() {
+        var input = document.getElementById('modalAdminPassword');
+        if (input) input.focus();
+      }, 100);
+    }
+  }
+
+  function closeAdminLoginModal() {
+    var modal = document.getElementById('adminLoginModalOverlay');
+    if (modal) modal.classList.remove('active');
+    document.body.classList.remove('modal-open');
+  }
+
+  // बाहर (काले बैकड्रॉप) पर क्लिक करने पर पॉपअप बंद करना
+  function closeModalOnOutsideClick(event, modalId) {
+    if (event.target.id === modalId) {
+      if (modalId === 'psLoginModalOverlay') closePsLoginModal();
+      if (modalId === 'adminLoginModalOverlay') closeAdminLoginModal();
+    }
+  }
+
+  // Escape की दबाने पर पॉपअप बंद करना
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closePsLoginModal();
+      closeAdminLoginModal();
+    }
+  });
+
+  // पॉपअप फॉर्म सबमिशन फ़ंक्शन्स
+  function handlePsLoginSubmit(e) {
+    e.preventDefault();
+    var email = document.getElementById('modalPsLoginEmail').value.trim();
+    var pass = document.getElementById('modalPsLoginPassword').value.trim();
+    closePsLoginModal();
+    
+    // आपके मौजूदा PS लॉगिन फ़ंक्शन को कॉल करना
+    if (typeof authenticatePsUser === 'function') {
+      authenticatePsUser(email, pass);
+    } else {
+      showLoader("लॉगिन किया जा रहा है...");
+      google.script.run.withSuccessHandler(onPsLoginSuccess).withFailureHandler(onPsLoginFailure).psLoginSecure(email, pass);
+    }
+  }
+
+  function handleAdminLoginSubmit(e) {
+    e.preventDefault();
+    var pass = document.getElementById('modalAdminPassword').value.trim();
+    closeAdminLoginModal();
+
+    // आपके मौजूदा एडमिन लॉगिन फ़ंक्शन को कॉल करना
+    if (typeof handleAdminAuthSubmit === 'function') {
+      handleAdminAuthSubmit(pass);
+    } else {
+      showLoader("एडमिन वेरीफाई किया जा रहा है...");
+      google.script.run.withSuccessHandler(onAdminLoginSuccess).withFailureHandler(onAdminLoginFailure).adminAuthSecure(pass);
+    }
   }
 </script>
 </body>
