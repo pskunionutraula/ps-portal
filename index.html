@@ -135,35 +135,109 @@
     }
 
     /* ================= 1. ULTRA-FAST MODERN LOADER ================= */
-    #globalAppLoader {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-      display: none; justify-content: center; align-items: center; z-index: 999999;
-      opacity: 0; transition: opacity 0.2s ease-in-out;
-    }
-    #globalAppLoader.active { display: flex; opacity: 1; }
-    .modern-loader-card {
-      background: var(--card-bg); border: 2px solid rgba(59, 130, 246, 0.6);
-      padding: 24px 30px; border-radius: 18px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-      text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px;
-      max-width: 320px; width: 88%; animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-    .spinner-ring-wrapper { position: relative; width: 56px; height: 56px; display: flex; justify-content: center; align-items: center; }
-    .spinner-outer-ring {
-      position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 4px solid transparent;
-      border-top-color: #2563eb; border-right-color: #38bdf8; animation: spinRing 0.75s linear infinite;
-    }
-    .spinner-inner-ring {
-      position: absolute; width: 75%; height: 75%; border-radius: 50%; border: 3px solid transparent;
-      border-bottom-color: #16a34a; border-left-color: #f59e0b; animation: spinRingRev 0.6s linear infinite;
-    }
-    .spinner-center-icon { font-size: 17px; color: #3b82f6; animation: pulseIcon 1.2s ease-in-out infinite; }
-    @keyframes spinRing { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    @keyframes spinRingRev { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
-    @keyframes pulseIcon { 0%, 100% { transform: scale(0.9); opacity: 0.75; } 50% { transform: scale(1.15); opacity: 1; } }
-    .loader-status-text { font-size: 15px; font-weight: 700; color: var(--text-main); }
-    .loader-sub-text { font-size: 12px; color: #94a3b8; font-weight: 600; }
+   /* ================= 1. ULTRA-FAST MODERN LOADER (उच्चतम z-index व स्पिनर फिक्स) ================= */
+#globalAppLoader {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  background: rgba(15, 23, 42, 0.8) !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999999 !important; /* मोडल के ऊपर दिखने के लिए */
+  opacity: 1 !important;
+}
+
+#globalAppLoader.active {
+  display: flex !important;
+}
+
+.modern-loader-card {
+  background: var(--card-bg, #ffffff);
+  border: 2px solid #3b82f6;
+  padding: 24px 28px;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 320px;
+  width: 88%;
+}
+
+.spinner-ring-wrapper {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner-outer-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  border-top-color: #2563eb;
+  border-right-color: #38bdf8;
+  animation: spinRing 0.75s linear infinite !important;
+}
+
+.spinner-inner-ring {
+  position: absolute;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  border: 3.5px solid transparent;
+  border-bottom-color: #16a34a;
+  border-left-color: #f59e0b;
+  animation: spinRingRev 0.6s linear infinite !important;
+}
+
+.spinner-center-icon {
+  font-size: 18px;
+  color: #3b82f6;
+  animation: pulseIcon 1.2s ease-in-out infinite;
+}
+
+@keyframes spinRing {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spinRingRev {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+@keyframes pulseIcon {
+  0%, 100% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.loader-status-text {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.loader-sub-text {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-top: 3px;
+}
 
     /* ================= 2. NOTIFICATION DRAWER & BADGE ================= */
     .notif-wrapper { position: relative; display: inline-block; }
@@ -2018,23 +2092,22 @@ body.modal-open {
   }
 
   function showLoader(message) {
-    var loader = document.getElementById('globalAppLoader');
-    var textElem = document.getElementById('globalLoaderText');
-    if (textElem) textElem.innerText = message || "कृपया प्रतीक्षा करें...";
-    if (loader) {
-      loader.style.display = 'flex';
-      requestAnimationFrame(function() { loader.classList.add('active'); });
-    }
+  var loader = document.getElementById('globalAppLoader');
+  var textElem = document.getElementById('globalLoaderText');
+  if (textElem) textElem.innerText = message || "कृपया प्रतीक्षा करें...";
+  if (loader) {
+    loader.style.display = 'flex';
+    loader.classList.add('active');
   }
+}
 
-  function hideLoader() {
-    var loader = document.getElementById('globalAppLoader');
-    if (loader) {
-      loader.classList.remove('active');
-      setTimeout(function() { loader.style.display = 'none'; }, 180);
-    }
+function hideLoader() {
+  var loader = document.getElementById('globalAppLoader');
+  if (loader) {
+    loader.classList.remove('active');
+    loader.style.display = 'none';
   }
-
+}
   window.onload = function() {
     var savedTheme = localStorage.getItem('ps_union_theme');
     if (savedTheme === 'dark') {
