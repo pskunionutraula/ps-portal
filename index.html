@@ -553,12 +553,51 @@ body.modal-open {
 
     .cluster-card-box { background: var(--input-bg); border: 2px solid var(--input-border); border-radius: 10px; padding: 16px; margin-bottom: 15px; text-align: left; line-height: 1.8; font-size: 13.5px; }
 
-    #printTemplateArea { display: none; }
-    @media print {
-      body * { visibility: hidden; }
-      #printTemplateArea, #printTemplateArea * { visibility: visible; }
-      #printTemplateArea { display: block; position: absolute; left: 0; top: 0; width: 100%; }
-    }
+   /* ================= 100% सटीक 1-पेज A4 प्रिंटिंग फिक्स ================= */
+#printTemplateArea {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm 12mm 15mm; /* मानक A4 प्रिंट मार्जिन */
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: auto !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    overflow: visible !important;
+  }
+
+  /* प्रिंट एरिया के अलावा बाकी पूरी वेबसाइट को पूरी तरह हटाना (नो ब्लैंक पेज) */
+  body > *:not(#printTemplateArea) {
+    display: none !important;
+  }
+
+  #printTemplateArea {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    break-after: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* टेबल व टेक्स्ट ब्रेक कंट्रोल */
+  #printTemplateArea * {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
 
     @media (max-width: 768px) {
       .content-layout { flex-direction: column; }
@@ -2858,12 +2897,18 @@ function openAdminLoginModal() {
     showMsg("रीसेट", "फ़ॉर्म खाली कर दिया गया है। आप नया अवकाश आवेदन तैयार कर सकते हैं।", false);
   }
 
-  function printLeaveApplicationPDF() {
-    var content = document.getElementById('leaveLetterContent').innerHTML;
-    var printArea = document.getElementById('printTemplateArea');
-    printArea.innerHTML = '<div style="padding:30px; font-family:serif; line-height:1.9; font-size:14px; color:#000000;">' + content + '</div>';
-    window.print();
-  }
+  ffunction printLeaveApplicationPDF() {
+  var content = document.getElementById('leaveLetterContent').innerHTML;
+  var printArea = document.getElementById('printTemplateArea');
+  
+  // सटीक 1 पेज A4 फॉर्मेटिंग
+  printArea.innerHTML = 
+    '<div style="width:100%; max-width:700px; margin:0 auto; padding:5px 0; font-family:\'Tiro Devanagari Hindi\', serif; line-height:1.65; font-size:13.5px; color:#000000;">' + 
+      content + 
+    '</div>';
+    
+  window.print();
+}
 
   function downloadLeaveAsWord() {
     var content = document.getElementById('leaveLetterContent').innerHTML;
