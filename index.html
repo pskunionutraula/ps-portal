@@ -2827,6 +2827,7 @@ function autoGenerateLeaveLetter() {
   var gender = document.getElementById('leaveGender').value || 'male';
   var isFemale = (gender === 'female');
 
+  // विधिक व लिंग व्याकरण शब्द
   var pWord = isFemale ? "प्रार्थिनी" : "प्रार्थी";
   var asamarthWord = isFemale ? "असमर्थ रहेगी" : "असमर्थ रहेगा";
   var abhAriSentence = isFemale 
@@ -2834,10 +2835,11 @@ function autoGenerateLeaveLetter() {
     : "इसके लिए प्रार्थी आपका सदैव आभारी रहेगा।";
   var bhavadiyaWord = isFemale ? "भवदीया" : "भवदीय";
 
+  // "के कारण" दो बार आने से रोकने का समाधान
   var cleanReason = escapeHtml(reasonVal);
   var reasonText = cleanReason.includes("के कारण") ? cleanReason : (cleanReason + " के कारण");
 
-  // तारीख (DD/MM/YYYY या YYYY-MM-DD) हेल्पर
+  // तारीख (DD/MM/YYYY या YYYY-MM-DD) को सही Date ऑब्जेक्ट में बदलने का हेल्पर
   function parseCustomDate(dStr) {
     if (!dStr) return null;
     var s = String(dStr).trim().split(' ')[0];
@@ -2888,15 +2890,6 @@ function autoGenerateLeaveLetter() {
   var now = new Date();
   var todayStr = ("0" + now.getDate()).slice(-2) + "/" + ("0" + (now.getMonth() + 1)).slice(-2) + "/" + now.getFullYear();
 
-  // डिजिटल साइन बॉक्स HTML
-  var digitalSignBox = 
-    '<div style="display:inline-block; border:1px dashed #16a34a; background:#f0fdf4; border-radius:6px; padding:6px 10px; margin:8px 0; text-align:left; font-size:11px; color:#166534; line-height:1.4;">' +
-      '<div style="font-weight:bold; color:#15803d;"><i class="fa-solid fa-circle-check"></i> डिजिटल हस्ताक्षरित (Digitally Signed)</div>' +
-      '<div><b>हस्ताक्षरकर्ता:</b> ' + escapeHtml(loggedInPsUser.fullName) + '</div>' +
-      '<div><b>दिनांक:</b> ' + todayStr + '</div>' +
-      '<div><b>सत्यापन:</b> ग्राम सचिवालय पोर्टल</div>' +
-    '</div>';
-
   var letterHtml = 
     '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + todayStr + '</div>' +
     '<div><b>सेवा में,</b></div>' +
@@ -2914,10 +2907,9 @@ function autoGenerateLeaveLetter() {
     '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
       'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। ' + abhAriSentence +
     '</p>' +
-    '<div style="margin-top:30px; display:flex; justify-content:flex-end;">' +
-      '<div style="text-align:center; min-width:240px; line-height:1.6;">' +
-        '<b>' + bhavadiyaWord + '</b><br>' +
-        digitalSignBox + '<br>' +
+    '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
+      '<div style="text-align:center; min-width:220px; line-height:1.6;">' +
+        '<b>' + bhavadiyaWord + '</b><br><br>' +
         '<b>(' + escapeHtml(loggedInPsUser.fullName) + ')</b><br>' +
         'पंचायत सहायक कम डाटा एंट्री ऑपरेटर<br>' +
         'ग्राम पंचायत: ' + escapeHtml(loggedInPsUser.gramPanchayat) + '<br>' +
@@ -4077,17 +4069,9 @@ function viewAdminLeaveModal(index) {
 
   var dateStr = formatDisplayDate(l.timestamp);
 
+  // "के कारण" दो बार आने से रोकने का समाधान
   var cleanReason = escapeHtml(l.reason);
   var reasonText = cleanReason.includes("के कारण") ? cleanReason : (cleanReason + " के कारण");
-
-  // डिजिटल साइन बॉक्स HTML
-  var digitalSignBox = 
-    '<div style="display:inline-block; border:1px dashed #16a34a; background:#f0fdf4; border-radius:6px; padding:6px 10px; margin:8px 0; text-align:left; font-size:11px; color:#166534; line-height:1.4;">' +
-      '<div style="font-weight:bold; color:#15803d;"><i class="fa-solid fa-circle-check"></i> डिजिटल हस्ताक्षरित (Digitally Signed)</div>' +
-      '<div><b>हस्ताक्षरकर्ता:</b> ' + escapeHtml(l.fullName) + '</div>' +
-      '<div><b>दिनांक:</b> ' + dateStr + '</div>' +
-      '<div><b>सत्यापन:</b> ग्राम सचिवालय पोर्टल</div>' +
-    '</div>';
 
   var html = 
     '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + dateStr + '</div>' +
@@ -4110,10 +4094,9 @@ function viewAdminLeaveModal(index) {
     '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
       'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। ' + abhAriSentence +
     '</p>' +
-    '<div style="margin-top:30px; display:flex; justify-content:flex-end;">' +
-      '<div style="text-align:center; min-width:240px; line-height:1.6;">' +
-        '<b>' + bhavadiyaWord + '</b><br>' +
-        digitalSignBox + '<br>' +
+    '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
+      '<div style="text-align:center; min-width:220px; line-height:1.6;">' +
+        '<b>' + bhavadiyaWord + '</b><br><br>' +
         '<b>(' + escapeHtml(l.fullName) + ')</b><br>' +
         'पंचायत सहायक कम डाटा एंट्री ऑपरेटर<br>' +
         'ग्राम पंचायत: ' + escapeHtml(l.gramPanchayat) + '<br>' +
