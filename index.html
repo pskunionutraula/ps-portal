@@ -2839,6 +2839,21 @@ function autoGenerateLeaveLetter() {
   var cleanReason = escapeHtml(reasonVal);
   var reasonText = cleanReason.includes("के कारण") ? cleanReason : (cleanReason + " के कारण");
 
+  // तारीख (DD/MM/YYYY या YYYY-MM-DD) को सही Date ऑब्जेक्ट में बदलने का हेल्पर
+  function parseCustomDate(dStr) {
+    if (!dStr) return null;
+    var s = String(dStr).trim().split(' ')[0];
+    if (/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}$/.test(s)) {
+      var p = s.split(/[\/\-]/);
+      return new Date(parseInt(p[2], 10), parseInt(p[1], 10) - 1, parseInt(p[0], 10));
+    }
+    if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(s)) {
+      var p = s.split('-');
+      return new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+    }
+    return new Date(s);
+  }
+
   var durationType = document.getElementById('leaveDurationType').value;
   var dateRangeText = "";
   var daysPhrase = "";
@@ -2854,10 +2869,15 @@ function autoGenerateLeaveLetter() {
     var startDate = document.getElementById('leaveStartDate').value;
     var endDate = document.getElementById('leaveEndDate').value;
     if (!startDate || !endDate) return;
-    var d1 = new Date(startDate);
-    var d2 = new Date(endDate);
-    var diffDays = Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+    var d1 = parseCustomDate(startDate);
+    var d2 = parseCustomDate(endDate);
+
+    if (!d1 || !d2 || isNaN(d1.getTime()) || isNaN(d2.getTime())) return;
+
+    var diffDays = Math.round((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
     if (diffDays <= 0) return;
+
     totalDaysCount = diffDays;
     dateRangeText = "दिनांक " + formatDisplayDate(startDate) + " से " + formatDisplayDate(endDate) + " तक";
     daysPhrase = (diffDays === 1) ? "एक दिवस" : (diffDays < 10 ? '0' + diffDays : diffDays) + " दिवस";
@@ -2899,6 +2919,7 @@ function autoGenerateLeaveLetter() {
 
   document.getElementById('leaveLetterContent').innerHTML = letterHtml;
   letterCard.style.display = 'block';
+
 
     // WhatsApp Message Draft
     var waPlainMsg = "📋 *आकस्मिक अवकाश हेतु प्रार्थना पत्र*\n\n" +
