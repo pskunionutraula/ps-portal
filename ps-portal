@@ -2106,7 +2106,7 @@ body.modal-open {
 
 <div id="printTemplateArea"></div>
 
-  <!-- 1. प्रथम लॉगिन पर पासवर्ड व MPIN बदलने का पॉपअप -->
+ <!-- 1. प्रथम लॉगिन पर पासवर्ड व MPIN बदलने का मॉडर्न पॉपअप -->
 <div id="firstTimeSetupModal" class="custom-modal-overlay" style="display:none;">
   <div class="custom-modal-box">
     <div class="modal-header-modern">
@@ -2130,7 +2130,7 @@ body.modal-open {
       <div class="input-group-modern">
         <label><i class="fa-solid fa-mobile-screen-button"></i> 4-अंकों का सिक्योरिटी MPIN *</label>
         <input type="password" id="setupMpin" maxlength="4" pattern="\d{4}" inputmode="numeric" placeholder="जैसे: 1234">
-        <small style="color:#64748b; font-size:11px;">(30 मिनट के अंदर लौटने पर केवल यह MPIN लगेगा)</small>
+        <small style="color:#64748b; font-size:11px;">(30 मिनट के अंदर पोर्टल दोबारा खोलने पर केवल यह MPIN लगेगा)</small>
       </div>
       <button type="button" class="btn-modern-submit" onclick="submitCredentialsSetup()">
         <i class="fa-solid fa-circle-check"></i> सहेजें एवं आगे बढ़ें
@@ -4617,7 +4617,7 @@ window.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-  // ================= 30-मिनट टाइमर व MPIN लॉजिक =================
+// ================= 30-मिनट टाइमर व MPIN लॉजिक =================
 var SESSION_LIMIT_MS = 30 * 60 * 1000; // 30 मिनट
 
 function recordPsActivity() {
@@ -4682,7 +4682,7 @@ function verifyAndUnlockSession() {
       } else {
         alert(res.message || "गलत MPIN!");
       }
-    }).verifyPsMpin(user.email, pin);
+    }).verifyPsMpin(user.email || user.mobile, pin);
   }
 }
 
@@ -4716,7 +4716,7 @@ function submitCredentialsSetup() {
     } else {
       alert("त्रुटि: " + res.message);
     }
-  }).updatePsCredentials(user.email, oldP, newP, mpin);
+  }).updatePsCredentials(user.email || user.mobile, oldP, newP, mpin);
 }
 
 function forcePsLogout(msg) {
