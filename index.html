@@ -2114,11 +2114,13 @@ body.modal-open {
       <h3>सुरक्षा सेटअप (Password & MPIN)</h3>
       <p>प्रथम लॉगिन पर पासवर्ड बदलना एवं 4-अंकों का MPIN सेट करना अनिवार्य है।</p>
     </div>
-    <div class="modal-body-modern">
-      <div class="input-group-modern">
-        <label><i class="fa-solid fa-key"></i> पुराना पासवर्ड *</label>
-        <input type="password" id="setupOldPass" placeholder="पुराना पासवर्ड दर्ज करें">
-      </div>
+   <div class="modal-body-modern">
+  <input type="hidden" id="setupEmailHidden" value="">
+  
+  <div class="input-group-modern">
+    <label><i class="fa-solid fa-key"></i> पुराना पासवर्ड *</label>
+    <input type="password" id="setupOldPass" placeholder="पुराना पासवर्ड दर्ज करें">
+  </div>
       <div class="input-group-modern">
         <label><i class="fa-solid fa-lock"></i> नया पासवर्ड *</label>
         <input type="password" id="setupNewPass" placeholder="नया पासवर्ड बनाएँ">
@@ -2629,37 +2631,52 @@ function openAdminLoginModal() {
   }
 
   // PS लॉगिन फ़ंक्शन
-  function submitPsLogin() {
-    var email = document.getElementById('psLoginEmail').value.trim();
-    var passMob = document.getElementById('psLoginMobile').value.trim();
-    if (!email || !passMob) { showMsg("ध्यान दें", "ईमेल आईडी और मोबाइल नंबर दोनों दर्ज करें।", false); return; }
+function submitPsLogin() {
+  var email = document.getElementById('psLoginEmail').value.trim();
+  var passMob = document.getElementById('psLoginMobile').value.trim();
+  if (!email || !passMob) { 
+    showMsg("ध्यान दें", "ईमेल आईडी और पासवर्ड/मोबाइल दर्ज करें।", false); 
+    return; 
+  }
 
-    showLoader("लॉगिन सत्यापित किया जा रहा है...");
+  showLoader("लॉगिन सत्यापित किया जा रहा है...");
 
-    google.script.run.withSuccessHandler(function(res) {
-      hideLoader();
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    if (res.success && res.isApproved) {
       closeModal('psLoginModal');
-      if (res.success && res.isApproved) {
-        
-        // --- यहाँ नया बदलाव हुआ है (सेशन सुरक्षित करना) ---
-        sessionStorage.setItem('psk_ps_email', email);
-        sessionStorage.setItem('psk_ps_mobile', passMob);
-        sessionStorage.setItem('psk_active_view', 'ps');
-        sessionStorage.setItem('psk_ps_tab', 'psHome');
-        // ------------------------------------------------
 
+      // सेशन व यूजर डेटा सुरक्षित करना
+      sessionStorage.setItem('psk_ps_email', email);
+      sessionStorage.setItem('psk_ps_mobile', passMob);
+      sessionStorage.setItem('psk_active_view', 'ps');
+      sessionStorage.setItem('psk_ps_tab', 'psHome');
+      
+      localStorage.setItem('psUserLoggedIn', 'true');
+      localStorage.setItem('psUserData', JSON.stringify(res.userData || res));
+      localStorage.setItem('psLastActiveTime', Date.now().toString());
+
+      // जाँचें कि क्या पासवर्ड बदला गया है और 4-अंकों का MPIN सेट है
+      var isChanged = res.isPasswordChanged;
+      var hasMpin = res.mpin && String(res.mpin).length === 4;
+
+      if (!isChanged || !hasMpin) {
+        // प्रथम बार लॉगिन: पासवर्ड व MPIN सेटअप पॉपअप खोलें
+        document.getElementById('setupEmailHidden').value = email;
+        document.getElementById('firstTimeSetupModal').style.display = 'flex';
+      } else {
         restorePsPortal(res);
         switchPsTab('psHome');
         loadMyTickets();
-      } else {
-        showMsg("लॉगिन स्थिति", res.message, false);
       }
-    }).withFailureHandler(function(err) {
-      hideLoader();
-      showMsg("सर्वर त्रुटि", err.toString(), false);
-    }).verifyPSLogin(email, passMob);
-  }
-
+    } else {
+      showMsg("लॉगिन स्थिति", res.message, false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("सर्वर त्रुटि", err.toString(), false);
+  }).verifyPSLogin(email, passMob);
+}
   function renderPsClusterCard(cluster, psUser) {
     var box = document.getElementById('psClusterDetailsCard');
     if (!cluster) {
@@ -4617,12 +4634,108 @@ window.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// ================= 30-मिनट टाइमर व MPIN लॉजिक =================
+// ================= PS लॉगिन एवं सत्यापन =================
+function submitPsLogin() {
+  var email = document.getElementById('psLoginEmail').value.trim();
+  var passMob = document.getElementById('psLoginMobile').value.trim();
+  if (!email || !passMob) { 
+    showMsg("ध्यान दें", "ईमेल आईडी और पासवर्ड/मोबाइल दर्ज करें।", false); 
+    return; 
+  }
+
+  showLoader("लॉगिन सत्यापित किया जा रहा है...");
+
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    if (res.success && res.isApproved) {
+      closeModal('psLoginModal');
+
+      // सेशन डेटा सुरक्षित करना
+      sessionStorage.setItem('psk_ps_email', email);
+      sessionStorage.setItem('psk_ps_mobile', passMob);
+      sessionStorage.setItem('psk_active_view', 'ps');
+      sessionStorage.setItem('psk_ps_tab', 'psHome');
+      
+      localStorage.setItem('psUserLoggedIn', 'true');
+      localStorage.setItem('psUserData', JSON.stringify(res.userData || res));
+      localStorage.setItem('psLastActiveTime', Date.now().toString());
+
+      // जाँचें कि क्या पासवर्ड बदला गया है और 4-अंकों का MPIN सेट है
+      var isChanged = res.isPasswordChanged;
+      var hasMpin = res.mpin && String(res.mpin).length === 4;
+
+      if (!isChanged || !hasMpin) {
+        // पहली बार लॉगिन पर पासवर्ड व MPIN सेटअप पॉपअप खोलें
+        if (document.getElementById('setupEmailHidden')) {
+          document.getElementById('setupEmailHidden').value = email;
+        }
+        document.getElementById('firstTimeSetupModal').style.display = 'flex';
+      } else {
+        restorePsPortal(res);
+        switchPsTab('psHome');
+        loadMyTickets();
+      }
+    } else {
+      showMsg("लॉगिन स्थिति", res.message, false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("सर्वर त्रुटि", err.toString(), false);
+  }).verifyPSLogin(email, passMob);
+}
+
+// ================= प्रथम लॉगिन: पासवर्ड व MPIN सेटअप =================
+function submitCredentialsSetup() {
+  var hiddenEmail = document.getElementById('setupEmailHidden') ? document.getElementById('setupEmailHidden').value : '';
+  var email = hiddenEmail || sessionStorage.getItem('psk_ps_email');
+  var oldP = document.getElementById('setupOldPass').value.trim();
+  var newP = document.getElementById('setupNewPass').value.trim();
+  var confP = document.getElementById('setupConfirmPass').value.trim();
+  var mpin = document.getElementById('setupMpin').value.trim();
+
+  if (!oldP || !newP || !confP || !mpin) {
+    showMsg("ध्यान दें", "कृपया सभी फ़ील्ड भरें!", false);
+    return;
+  }
+  if (newP !== confP) {
+    showMsg("त्रुटि", "नया पासवर्ड और कन्फ़र्म पासवर्ड मेल नहीं खा रहे हैं!", false);
+    return;
+  }
+  if (mpin.length !== 4 || isNaN(mpin)) {
+    showMsg("त्रुटि", "MPIN केवल 4 अंकों की संख्या होनी चाहिए!", false);
+    return;
+  }
+
+  showLoader("पासवर्ड व MPIN सुरक्षित किया जा रहा है...");
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    if (res.success) {
+      showMsg("सफलता", res.message, true);
+      document.getElementById('firstTimeSetupModal').style.display = 'none';
+
+      var uData = JSON.parse(localStorage.getItem('psUserData') || '{}');
+      uData.isPasswordChanged = true;
+      uData.mpin = mpin;
+      localStorage.setItem('psUserData', JSON.stringify(uData));
+
+      restorePsPortal(uData);
+      switchPsTab('psHome');
+      loadMyTickets();
+    } else {
+      showMsg("त्रुटि", res.message, false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("सर्वर त्रुटि", err.toString(), false);
+  }).updatePsCredentials(email, oldP, newP, mpin);
+}
+
+// ================= 30-मिनट टाइमर, ऑटो-लॉक व MPIN लॉजिक =================
 var SESSION_LIMIT_MS = 30 * 60 * 1000; // 30 मिनट
 
 function recordPsActivity() {
-  if (localStorage.getItem("psUserLoggedIn")) {
-    localStorage.setItem("psLastActiveTime", Date.now().toString());
+  if (sessionStorage.getItem('psk_ps_email')) {
+    localStorage.setItem('psLastActiveTime', Date.now().toString());
   }
 }
 ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
@@ -4630,18 +4743,18 @@ function recordPsActivity() {
 });
 
 function evaluatePsSession() {
-  var isLogged = localStorage.getItem("psUserLoggedIn");
-  var lastActive = parseInt(localStorage.getItem("psLastActiveTime") || "0", 10);
+  var email = sessionStorage.getItem('psk_ps_email');
+  var lastActive = parseInt(localStorage.getItem('psLastActiveTime') || "0", 10);
   
-  if (!isLogged || !lastActive) return;
+  if (!email || !lastActive) return;
 
   var elapsed = Date.now() - lastActive;
 
   if (elapsed > SESSION_LIMIT_MS) {
     // 30 मिनट से अधिक होने पर पूरा लॉगआउट
     forcePsLogout("30 मिनट से अधिक निष्क्रिय रहने के कारण सुरक्षा हेतु पोर्टल लॉगआउट कर दिया गया है।");
-  } else if (elapsed > 15000) { 
-    // 30 मिनट के अंदर पोर्टल पर वापस आने पर MPIN लॉक दिखाना
+  } else if (elapsed > 20000) { 
+    // 30 मिनट के अंदर लौटने पर MPIN लॉक दिखाना
     openMpinScreen();
   }
 }
@@ -4654,76 +4767,50 @@ document.addEventListener("visibilitychange", function() {
 window.addEventListener("load", evaluatePsSession);
 
 function openMpinScreen() {
-  var user = JSON.parse(localStorage.getItem("psUserData") || "{}");
+  var user = JSON.parse(localStorage.getItem('psUserData') || '{}');
   if (user && user.fullName) {
-    document.getElementById("lockPsName").innerText = user.fullName + " (" + (user.gramPanchayat || "") + ")";
+    document.getElementById('lockPsName').innerText = user.fullName + " - पोर्टल अनलॉक करने के लिए अपना MPIN दर्ज करें";
   }
-  document.getElementById("unlockMpin").value = "";
-  document.getElementById("mpinLockModal").style.display = "flex";
+  document.getElementById('unlockMpin').value = '';
+  document.getElementById('mpinLockModal').style.display = 'flex';
 }
 
 function verifyAndUnlockSession() {
-  var pin = document.getElementById("unlockMpin").value.trim();
-  var user = JSON.parse(localStorage.getItem("psUserData") || "{}");
+  var pin = document.getElementById('unlockMpin').value.trim();
+  var email = sessionStorage.getItem('psk_ps_email');
+  var user = JSON.parse(localStorage.getItem('psUserData') || '{}');
 
   if (pin.length !== 4) {
-    alert("कृपया 4-अंकों का MPIN दर्ज करें!");
+    showMsg("ध्यान दें", "कृपया 4-अंकों का MPIN दर्ज करें!", false);
     return;
   }
 
   if (user.mpin && String(user.mpin) === String(pin)) {
-    document.getElementById("mpinLockModal").style.display = "none";
-    localStorage.setItem("psLastActiveTime", Date.now().toString());
+    document.getElementById('mpinLockModal').style.display = 'none';
+    localStorage.setItem('psLastActiveTime', Date.now().toString());
   } else {
+    showLoader("MPIN सत्यापित किया जा रहा है...");
     google.script.run.withSuccessHandler(function(res) {
+      hideLoader();
       if (res.success) {
-        document.getElementById("mpinLockModal").style.display = "none";
-        localStorage.setItem("psLastActiveTime", Date.now().toString());
+        document.getElementById('mpinLockModal').style.display = 'none';
+        localStorage.setItem('psLastActiveTime', Date.now().toString());
       } else {
-        alert(res.message || "गलत MPIN!");
+        showMsg("त्रुटि", res.message || "गलत MPIN!", false);
       }
-    }).verifyPsMpin(user.email || user.mobile, pin);
+    }).withFailureHandler(function(err) {
+      hideLoader();
+      showMsg("सर्वर त्रुटि", err.toString(), false);
+    }).verifyPsMpin(email, pin);
   }
-}
-
-function submitCredentialsSetup() {
-  var oldP = document.getElementById("setupOldPass").value.trim();
-  var newP = document.getElementById("setupNewPass").value.trim();
-  var confP = document.getElementById("setupConfirmPass").value.trim();
-  var mpin = document.getElementById("setupMpin").value.trim();
-  var user = JSON.parse(localStorage.getItem("psUserData") || "{}");
-
-  if (!oldP || !newP || !confP || !mpin) {
-    alert("कृपया सभी जानकारी भरें!");
-    return;
-  }
-  if (newP !== confP) {
-    alert("नया पासवर्ड और कन्फ़र्म पासवर्ड मेल नहीं खा रहे हैं!");
-    return;
-  }
-  if (mpin.length !== 4 || isNaN(mpin)) {
-    alert("MPIN केवल 4 अंकों की संख्या होनी चाहिए!");
-    return;
-  }
-
-  google.script.run.withSuccessHandler(function(res) {
-    if (res.success) {
-      alert(res.message);
-      user.mpin = mpin;
-      user.isPasswordChanged = true;
-      localStorage.setItem("psUserData", JSON.stringify(user));
-      document.getElementById("firstTimeSetupModal").style.display = "none";
-    } else {
-      alert("त्रुटि: " + res.message);
-    }
-  }).updatePsCredentials(user.email || user.mobile, oldP, newP, mpin);
 }
 
 function forcePsLogout(msg) {
   if (msg) alert(msg);
-  localStorage.removeItem("psUserLoggedIn");
-  localStorage.removeItem("psUserData");
-  localStorage.removeItem("psLastActiveTime");
+  sessionStorage.clear();
+  localStorage.removeItem('psUserLoggedIn');
+  localStorage.removeItem('psUserData');
+  localStorage.removeItem('psLastActiveTime');
   window.location.reload();
 }
 </script>
