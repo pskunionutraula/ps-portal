@@ -632,6 +632,10 @@ body.modal-open {
     }
   
   </style>
+
+  <!-- तारीख को हमेशा 31/08/2026 (DD/MM/YYYY) फ़ॉर्मेट में दिखाने के लिए -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
 
@@ -4616,7 +4620,16 @@ function openAdminLoginModal() {
     searchDebounceTimeout = setTimeout(callback, delay || 120);
   }
 
- 
+ // अवकाश की तारीखों को हमेशा 31/08/2026 (DD/MM/YYYY) फ़ॉर्मेट में सेट करना
+window.addEventListener('DOMContentLoaded', function() {
+  if (typeof flatpickr !== 'undefined') {
+    flatpickr("#leaveSingleDate, #leaveStartDate, #leaveEndDate", {
+      dateFormat: "d/m/Y",
+      defaultDate: new Date(),
+      allowInput: true
+    });
+  }
+});
 </script>
 </body>
 </html>
