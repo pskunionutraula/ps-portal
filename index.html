@@ -2827,9 +2827,11 @@ function openAdminLoginModal() {
 
     var todayStr = formatDisplayDate(new Date().toISOString().split('T')[0]);
 
-    var letterHtml = 
-      '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + todayStr + '</div>' +
-      '<div><b>सेवा में,</b><br>' + recipientHeading + '</div>' +
+    // नया कोड (2nd इमेज की तरह इंडेन्टेड):
+var letterHtml = 
+  '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + todayStr + '</div>' +
+  '<div><b>सेवा में,</b></div>' +
+  '<div style="margin-left: 55px; line-height: 1.8;">' + recipientHeading + '</div>' +
       '<div style="margin:15px 0 12px 0; font-weight:bold; text-decoration:underline; font-size:14.5px;">' +
       'विषय: आकस्मिक अवकाश स्वीकृत किए जाने के संबंध में प्रार्थना पत्र।' +
       '</div>' +
@@ -3995,9 +3997,11 @@ function openAdminLoginModal() {
     var abhAriWord = isFemale ? "श्रीमान जी की सदैव आभारी रहेगी" : "श्रीमान जी का सदैव आभारी रहेगा";
     var daysPhrase = (l.totalDays == 1) ? "एक दिवस" : (l.totalDays < 10 ? '0' + l.totalDays : l.totalDays) + " दिवस";
 
-    var html = 
-      '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + l.timestamp.split(' ')[0] + '</div>' +
-      '<div><b>सेवा में,</b><br>श्रीमान ' + escapeHtml(l.recipient) + ' महोदय,<br>ग्राम पंचायत- ' + escapeHtml(l.gramPanchayat) + ', विकास खण्ड- उतरौला (बलरामपुर)।</div>' +
+   // नया कोड:
+var html = 
+  '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + l.timestamp.split(' ')[0] + '</div>' +
+  '<div><b>सेवा में,</b></div>' +
+  '<div style="margin-left: 55px; line-height: 1.8;">श्रीमान ' + escapeHtml(l.recipient) + ' महोदय,<br>ग्राम पंचायत- ' + escapeHtml(l.gramPanchayat) + ', विकास खण्ड- उतरौला (बलरामपुर)।</div>' +
       '<div style="margin:15px 0 12px 0; font-weight:bold; text-decoration:underline; font-size:14.5px;">' +
       'विषय: आकस्मिक अवकाश स्वीकृत किए जाने के संबंध में प्रार्थना पत्र।' +
       '</div>' +
