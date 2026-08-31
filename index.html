@@ -2034,6 +2034,36 @@ body.modal-open {
  
 <script>
 
+  // किसी भी तारीख को हमेशा DD/MM/YYYY (जैसे 31/08/2026) बनाने का फ़ंक्शन
+function formatDateToIndian(dateVal) {
+  if (!dateVal) return "";
+  var str = String(dateVal).trim();
+  
+  if (str.indexOf(" ") > -1) {
+    str = str.split(" ")[0];
+  }
+  
+  if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(str)) {
+    var parts = str.split("-");
+    return ("0" + parts[2]).slice(-2) + "/" + ("0" + parts[1]).slice(-2) + "/" + parts[0];
+  }
+  
+  if (/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}$/.test(str)) {
+    var parts = str.split(/[\/\-]/);
+    return ("0" + parts[0]).slice(-2) + "/" + ("0" + parts[1]).slice(-2) + "/" + parts[2];
+  }
+  
+  var d = new Date(str);
+  if (!isNaN(d.getTime())) {
+    var day = ("0" + d.getDate()).slice(-2);
+    var month = ("0" + (d.getMonth() + 1)).slice(-2);
+    var year = d.getFullYear();
+    return day + "/" + month + "/" + year;
+  }
+  
+  return str;
+}
+
   // अपना Apps Script Web App URL यहाँ पेस्ट करें
   var BACKEND_API_URL = "https://script.google.com/macros/s/AKfycbxEeWFzEP5-eWGDVqPxFa0-KQnHrX5EZ2N-ewhato88zHytpdc0MA38sIz4EZiCxtA/exec";
 
@@ -2772,91 +2802,268 @@ function openAdminLoginModal() {
     return dateStr;
   }
 
-  function autoGenerateLeaveLetter() {
-    if (!loggedInPsUser) return;
+ function autoGenerateLeaveLetter() {
+  if (!loggedInPsUser) return;
 
-    var reasonSelect = document.getElementById('leaveReasonSelect');
-    var reasonVal = reasonSelect.value;
-    var letterCard = document.getElementById('generatedLetterCard');
+  var reasonSelect = document.getElementById('leaveReasonSelect');
+  var reasonVal = reasonSelect.value;
+  var letterCard = document.getElementById('generatedLetterCard');
 
-    if (!reasonVal) {
-      letterCard.style.display = 'none';
-      return;
-    }
+  if (!reasonVal) {
+    letterCard.style.display = 'none';
+    return;
+  }
 
-    if (reasonVal === 'अन्य') {
-      reasonVal = document.getElementById('customReasonText').value.trim();
-      if (!reasonVal) reasonVal = "अपरिहार्य निजी कार्य";
-    }
+  if (reasonVal === 'अन्य') {
+    reasonVal = document.getElementById('customReasonText').value.trim();
+    if (!reasonVal) reasonVal = "अपरिहार्य निजी कार्य";
+  }
 
-    var recipientRole = document.getElementById('leaveRecipient').value;
-    var gender = document.getElementById('leaveGender').value || 'male';
-    var isFemale = (gender === 'female');
+  var recipientRole = document.getElementById('leaveRecipient').value;
+  var gender = document.getElementById('leaveGender').value || 'male';
+  var isFemale = (gender === 'female');
 
-    var pWord = isFemale ? "प्रार्थिनी" : "प्रार्थी";
-    var abhAriWord = isFemale ? "श्रीमान जी की सदैव आभारी रहेगी" : "श्रीमान जी का सदैव आभारी रहेगा";
-    var bhavadiyaWord = isFemale ? "भवदीया" : "भवदीय";
+  var pWord = isFemale ? "प्रार्थिनी" : "प्रार्थी";
+  var abhAriWord = isFemale ? "श्रीमान जी की सदैव आभारी रहेगी" : "श्रीमान जी का सदैव आभारी रहेगा";
+  var bhavadiyaWord = isFemale ? "भवदीया" : "भवदीय";
 
-    var durationType = document.getElementById('leaveDurationType').value;
-    var dateRangeText = "";
-    var daysPhrase = "";
-    var totalDaysCount = 1;
+  var durationType = document.getElementById('leaveDurationType').value;
+  var dateRangeText = "";
+  var daysPhrase = "";
+  var totalDaysCount = 1;
 
-    if (durationType === 'single') {
-      var sDate = document.getElementById('leaveSingleDate').value;
-      if (!sDate) return;
-      dateRangeText = "दिनांक " + formatDisplayDate(sDate) + " को";
-      daysPhrase = "एक दिवस";
-      totalDaysCount = 1;
-    } else {
-      var startDate = document.getElementById('leaveStartDate').value;
-      var endDate = document.getElementById('leaveEndDate').value;
-      if (!startDate || !endDate) return;
-      var d1 = new Date(startDate);
-      var d2 = new Date(endDate);
-      var diffDays = Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-      if (diffDays <= 0) return;
-      totalDaysCount = diffDays;
-      dateRangeText = "दिनांक " + formatDisplayDate(startDate) + " से " + formatDisplayDate(endDate) + " तक";
-      daysPhrase = (diffDays === 1) ? "एक दिवस" : (diffDays < 10 ? '0' + diffDays : diffDays) + " दिवस";
-    }
+  if (durationType === 'single') {
+    var sDate = document.getElementById('leaveSingleDate').value;
+    if (!sDate) return;
+    dateRangeText = "दिनांक " + formatDisplayDate(sDate) + " को";
+    daysPhrase = "एक दिवस";
+    totalDaysCount = 1;
+  } else {
+    var startDate = document.getElementById('leaveStartDate').value;
+    var endDate = document.getElementById('leaveEndDate').value;
+    if (!startDate || !endDate) return;
+    var d1 = new Date(startDate);
+    var d2 = new Date(endDate);
+    var diffDays = Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    if (diffDays <= 0) return;
+    totalDaysCount = diffDays;
+    dateRangeText = "दिनांक " + formatDisplayDate(startDate) + " से " + formatDisplayDate(endDate) + " तक";
+    daysPhrase = (diffDays === 1) ? "एक दिवस" : (diffDays < 10 ? '0' + diffDays : diffDays) + " दिवस";
+  }
 
-    var recipientHeading = (recipientRole === 'सचिव') 
-      ? "श्रीमान ग्राम विकास / पंचायत अधिकारी महोदय,<br>ग्राम पंचायत- " + escapeHtml(loggedInPsUser.gramPanchayat) + ",<br>विकास खण्ड- उतरौला, जनपद- बलरामपुर (उ०प्र०)।"
-      : "श्रीमान सहायक विकास अधिकारी (पं०) महोदय,<br>विकास खण्ड- उतरौला,<br>जनपद- बलरामपुर (उ०प्र०)।";
+  // पते की 3 अलग-अलग लाइनें
+  var recipientHeading = (recipientRole === 'सचिव') 
+    ? "श्रीमान ग्राम विकास / पंचायत अधिकारी महोदय,<br>ग्राम पंचायत- " + escapeHtml(loggedInPsUser.gramPanchayat) + ",<br>विकास खण्ड- उतरौला , जनपद- बलरामपुर(उ०प्र०)।"
+    : "श्रीमान सहायक विकास अधिकारी (पं०) महोदय,<br>विकास खण्ड- उतरौला,<br>जनपद- बलरामपुर (उ०प्र०)।";
 
-    var todayStr = formatDisplayDate(new Date().toISOString().split('T')[0]);
+  // आज की तारीख DD/MM/YYYY में
+  var now = new Date();
+  var todayStr = ("0" + now.getDate()).slice(-2) + "/" + ("0" + (now.getMonth() + 1)).slice(-2) + "/" + now.getFullYear();
 
-    // नया कोड (2nd इमेज की तरह इंडेन्टेड):
-var letterHtml = 
-  '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + todayStr + '</div>' +
-  '<div><b>सेवा में,</b></div>' +
-  '<div style="margin-left: 55px; line-height: 1.8;">' + recipientHeading + '</div>' +
-      '<div style="margin:15px 0 12px 0; font-weight:bold; text-decoration:underline; font-size:14.5px;">' +
+  var letterHtml = 
+    '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + todayStr + '</div>' +
+    '<div><b>सेवा में,</b></div>' +
+    '<div style="margin-left: 55px; line-height: 1.9;">' + recipientHeading + '</div>' +
+    '<div style="margin:15px 0 12px 0; font-weight:bold; text-decoration:underline; font-size:14.5px;">' +
       'विषय: आकस्मिक अवकाश स्वीकृत किए जाने के संबंध में प्रार्थना पत्र।' +
-      '</div>' +
-      '<div><b>महोदय,</b></div>' +
-      '<p style="text-indent:30px; text-align:justify; margin:8px 0;">' +
+    '</div>' +
+    '<div><b>महोदय,</b></div>' +
+    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
       'सविनय निवेदन है कि ' + pWord + ' <b>' + escapeHtml(loggedInPsUser.fullName) + '</b> ग्राम पंचायत <b>' + escapeHtml(loggedInPsUser.gramPanchayat) + '</b>, विकास खण्ड उतरौला (बलरामपुर) में <i>पंचायत सहायक कम डाटा एंट्री ऑपरेटर</i> के पद पर कार्यरत है।' +
-      '</p>' +
-      '<p style="text-indent:30px; text-align:justify; margin:8px 0;">' +
+    '</p>' +
+    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
       pWord + ' को <b>' + escapeHtml(reasonVal) + '</b> के कारण <b>' + dateRangeText + '</b> ग्राम पंचायत सचिवालय में उपस्थित होकर अपने पदीय दायित्वों एवं शासकीय कार्यों का संपादन करने में असमर्थ है।' +
-      '</p>' +
-      '<p style="text-indent:30px; text-align:justify; margin:8px 0;">' +
+    '</p>' +
+    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
       'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। इसके लिए ' + pWord + ' ' + abhAriWord + '।' +
-      '</p>' +
-      '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
-      '  <div style="text-align:center; min-width:220px; line-height:1.6;">' +
-      '    <b>(' + escapeHtml(loggedInPsUser.fullName) + ')</b><br>' +
-      '    पंचायत सहायक कम डाटा एंट्री ऑपरेटर<br>' +
-      '    ग्राम पंचायत: ' + escapeHtml(loggedInPsUser.gramPanchayat) + '<br>' +
-      '    मो०: ' + escapeHtml(loggedInPsUser.mobile) +
-      '  </div>' +
-      '</div>';
+    '</p>' +
+    '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
+      '<div style="text-align:center; min-width:220px; line-height:1.6;">' +
+        '<b>' + bhavadiyaWord + '</b><br><br>' +
+        '<b>(' + escapeHtml(loggedInPsUser.fullName) + ')</b><br>' +
+        'पंचायत सहायक कम डाटा एंट्री ऑपरेटर<br>' +
+        'ग्राम पंचायत: ' + escapeHtml(loggedInPsUser.gramPanchayat) + '<br>' +
+        'मो०: ' + escapeHtml(loggedInPsUser.mobile) +
+      '</div>' +
+    '</div>';
 
-    document.getElementById('leaveLetterContent').innerHTML = letterHtml;
-    letterCard.style.display = 'block';
+  document.getElementById('leaveLetterContent').innerHTML = letterHtml;
+  letterCard.style.display = 'block';
+}function autoGenerateLeaveLetter() {
+  if (!loggedInPsUser) return;
 
+  var reasonSelect = document.getElementById('leaveReasonSelect');
+  var reasonVal = reasonSelect.value;
+  var letterCard = document.getElementById('generatedLetterCard');
+
+  if (!reasonVal) {
+    letterCard.style.display = 'none';
+    return;
+  }
+
+  if (reasonVal === 'अन्य') {
+    reasonVal = document.getElementById('customReasonText').value.trim();
+    if (!reasonVal) reasonVal = "अपरिहार्य निजी कार्य";
+  }
+
+  var recipientRole = document.getElementById('leaveRecipient').value;
+  var gender = document.getElementById('leaveGender').value || 'male';
+  var isFemale = (gender === 'female');
+
+  var pWord = isFemale ? "प्रार्थिनी" : "प्रार्थी";
+  var abhAriWord = isFemale ? "श्रीमान जी की सदैव आभारी रहेगी" : "श्रीमान जी का सदैव आभारी रहेगा";
+  var bhavadiyaWord = isFemale ? "भवदीया" : "भवदीय";
+
+  var durationType = document.getElementById('leaveDurationType').value;
+  var dateRangeText = "";
+  var daysPhrase = "";
+  var totalDaysCount = 1;
+
+  if (durationType === 'single') {
+    var sDate = document.getElementById('leaveSingleDate').value;
+    if (!sDate) return;
+    dateRangeText = "दिनांक " + formatDisplayDate(sDate) + " को";
+    daysPhrase = "एक दिवस";
+    totalDaysCount = 1;
+  } else {
+    var startDate = document.getElementById('leaveStartDate').value;
+    var endDate = document.getElementById('leaveEndDate').value;
+    if (!startDate || !endDate) return;
+    var d1 = new Date(startDate);
+    var d2 = new Date(endDate);
+    var diffDays = Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    if (diffDays <= 0) return;
+    totalDaysCount = diffDays;
+    dateRangeText = "दिनांक " + formatDisplayDate(startDate) + " से " + formatDisplayDate(endDate) + " तक";
+    daysPhrase = (diffDays === 1) ? "एक दिवस" : (diffDays < 10 ? '0' + diffDays : diffDays) + " दिवस";
+  }
+
+  // पते की 3 अलग-अलग लाइनें
+  var recipientHeading = (recipientRole === 'सचिव') 
+    ? "श्रीमान ग्राम विकास / पंचायत अधिकारी महोदय,<br>ग्राम पंचायत- " + escapeHtml(loggedInPsUser.gramPanchayat) + ",<br>विकास खण्ड- उतरौला , जनपद- बलरामपुर(उ०प्र०)।"
+    : "श्रीमान सहायक विकास अधिकारी (पं०) महोदय,<br>विकास खण्ड- उतरौला,<br>जनपद- बलरामपुर (उ०प्र०)।";
+
+  // आज की तारीख DD/MM/YYYY में
+  var now = new Date();
+  var todayStr = ("0" + now.getDate()).slice(-2) + "/" + ("0" + (now.getMonth() + 1)).slice(-2) + "/" + now.getFullYear();
+
+  var letterHtml = 
+    '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + todayStr + '</div>' +
+    '<div><b>सेवा में,</b></div>' +
+    '<div style="margin-left: 55px; line-height: 1.9;">' + recipientHeading + '</div>' +
+    '<div style="margin:15px 0 12px 0; font-weight:bold; text-decoration:underline; font-size:14.5px;">' +
+      'विषय: आकस्मिक अवकाश स्वीकृत किए जाने के संबंध में प्रार्थना पत्र।' +
+    '</div>' +
+    '<div><b>महोदय,</b></div>' +
+    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
+      'सविनय निवेदन है कि ' + pWord + ' <b>' + escapeHtml(loggedInPsUser.fullName) + '</b> ग्राम पंचायत <b>' + escapeHtml(loggedInPsUser.gramPanchayat) + '</b>, विकास खण्ड उतरौला (बलरामपुर) में <i>पंचायत सहायक कम डाटा एंट्री ऑपरेटर</i> के पद पर कार्यरत है।' +
+    '</p>' +
+    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
+      pWord + ' को <b>' + escapeHtml(reasonVal) + '</b> के कारण <b>' + dateRangeText + '</b> ग्राम पंचायत सचिवालय में उपस्थित होकर अपने पदीय दायित्वों एवं शासकीय कार्यों का संपादन करने में असमर्थ है।' +
+    '</p>' +
+    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
+      'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। इसके लिए ' + pWord + ' ' + abhAriWord + '।' +
+    '</p>' +
+    '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
+      '<div style="text-align:center; min-width:220px; line-height:1.6;">' +
+        '<b>' + bhavadiyaWord + '</b><br><br>' +
+        '<b>(' + escapeHtml(loggedInPsUser.fullName) + ')</b><br>' +
+        'पंचायत सहायक कम डाटा एंट्री ऑपरेटर<br>' +
+        'ग्राम पंचायत: ' + escapeHtml(loggedInPsUser.gramPanchayat) + '<br>' +
+        'मो०: ' + escapeHtml(loggedInPsUser.mobile) +
+      '</div>' +
+    '</div>';
+
+  document.getElementById('leaveLetterContent').innerHTML = letterHtml;
+  letterCard.style.display = 'block';
+}function autoGenerateLeaveLetter() {
+  if (!loggedInPsUser) return;
+
+  var reasonSelect = document.getElementById('leaveReasonSelect');
+  var reasonVal = reasonSelect.value;
+  var letterCard = document.getElementById('generatedLetterCard');
+
+  if (!reasonVal) {
+    letterCard.style.display = 'none';
+    return;
+  }
+
+  if (reasonVal === 'अन्य') {
+    reasonVal = document.getElementById('customReasonText').value.trim();
+    if (!reasonVal) reasonVal = "अपरिहार्य निजी कार्य";
+  }
+
+  var recipientRole = document.getElementById('leaveRecipient').value;
+  var gender = document.getElementById('leaveGender').value || 'male';
+  var isFemale = (gender === 'female');
+
+  var pWord = isFemale ? "प्रार्थिनी" : "प्रार्थी";
+  var abhAriWord = isFemale ? "श्रीमान जी की सदैव आभारी रहेगी" : "श्रीमान जी का सदैव आभारी रहेगा";
+  var bhavadiyaWord = isFemale ? "भवदीया" : "भवदीय";
+
+  var durationType = document.getElementById('leaveDurationType').value;
+  var dateRangeText = "";
+  var daysPhrase = "";
+  var totalDaysCount = 1;
+
+  if (durationType === 'single') {
+    var sDate = document.getElementById('leaveSingleDate').value;
+    if (!sDate) return;
+    dateRangeText = "दिनांक " + formatDisplayDate(sDate) + " को";
+    daysPhrase = "एक दिवस";
+    totalDaysCount = 1;
+  } else {
+    var startDate = document.getElementById('leaveStartDate').value;
+    var endDate = document.getElementById('leaveEndDate').value;
+    if (!startDate || !endDate) return;
+    var d1 = new Date(startDate);
+    var d2 = new Date(endDate);
+    var diffDays = Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    if (diffDays <= 0) return;
+    totalDaysCount = diffDays;
+    dateRangeText = "दिनांक " + formatDisplayDate(startDate) + " से " + formatDisplayDate(endDate) + " तक";
+    daysPhrase = (diffDays === 1) ? "एक दिवस" : (diffDays < 10 ? '0' + diffDays : diffDays) + " दिवस";
+  }
+
+  // पते की 3 अलग-अलग लाइनें
+  var recipientHeading = (recipientRole === 'सचिव') 
+    ? "श्रीमान ग्राम विकास / पंचायत अधिकारी महोदय,<br>ग्राम पंचायत- " + escapeHtml(loggedInPsUser.gramPanchayat) + ",<br>विकास खण्ड- उतरौला , जनपद- बलरामपुर(उ०प्र०)।"
+    : "श्रीमान सहायक विकास अधिकारी (पं०) महोदय,<br>विकास खण्ड- उतरौला,<br>जनपद- बलरामपुर (उ०प्र०)।";
+
+  // आज की तारीख DD/MM/YYYY में
+  var now = new Date();
+  var todayStr = ("0" + now.getDate()).slice(-2) + "/" + ("0" + (now.getMonth() + 1)).slice(-2) + "/" + now.getFullYear();
+
+  var letterHtml = 
+    '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + todayStr + '</div>' +
+    '<div><b>सेवा में,</b></div>' +
+    '<div style="margin-left: 55px; line-height: 1.9;">' + recipientHeading + '</div>' +
+    '<div style="margin:15px 0 12px 0; font-weight:bold; text-decoration:underline; font-size:14.5px;">' +
+      'विषय: आकस्मिक अवकाश स्वीकृत किए जाने के संबंध में प्रार्थना पत्र।' +
+    '</div>' +
+    '<div><b>महोदय,</b></div>' +
+    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
+      'सविनय निवेदन है कि ' + pWord + ' <b>' + escapeHtml(loggedInPsUser.fullName) + '</b> ग्राम पंचायत <b>' + escapeHtml(loggedInPsUser.gramPanchayat) + '</b>, विकास खण्ड उतरौला (बलरामपुर) में <i>पंचायत सहायक कम डाटा एंट्री ऑपरेटर</i> के पद पर कार्यरत है।' +
+    '</p>' +
+    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
+      pWord + ' को <b>' + escapeHtml(reasonVal) + '</b> के कारण <b>' + dateRangeText + '</b> ग्राम पंचायत सचिवालय में उपस्थित होकर अपने पदीय दायित्वों एवं शासकीय कार्यों का संपादन करने में असमर्थ है।' +
+    '</p>' +
+    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
+      'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। इसके लिए ' + pWord + ' ' + abhAriWord + '।' +
+    '</p>' +
+    '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
+      '<div style="text-align:center; min-width:220px; line-height:1.6;">' +
+        '<b>' + bhavadiyaWord + '</b><br><br>' +
+        '<b>(' + escapeHtml(loggedInPsUser.fullName) + ')</b><br>' +
+        'पंचायत सहायक कम डाटा एंट्री ऑपरेटर<br>' +
+        'ग्राम पंचायत: ' + escapeHtml(loggedInPsUser.gramPanchayat) + '<br>' +
+        'मो०: ' + escapeHtml(loggedInPsUser.mobile) +
+      '</div>' +
+    '</div>';
+
+  document.getElementById('leaveLetterContent').innerHTML = letterHtml;
+  letterCard.style.display = 'block';
+   
     // WhatsApp Message Draft
     var waPlainMsg = "📋 *आकस्मिक अवकाश हेतु प्रार्थना पत्र*\n\n" +
       "सेवा में,\n" + (recipientRole === 'सचिव' ? "श्रीमान ग्राम विकास / पंचायत अधिकारी महोदय, ग्रा०पं० " + loggedInPsUser.gramPanchayat : "श्रीमान सहायक विकास अधिकारी (पं०), उतरौला") + "\n\n" +
@@ -3990,48 +4197,53 @@ var letterHtml =
     renderAdminLeaveTable(filtered);
   }
 
-  function viewAdminLeaveModal(index) {
-    var l = cachedAdminLeaves[index];
-    var isFemale = (l.gender === 'female');
-    var pWord = isFemale ? "प्रार्थिनी" : "प्रार्थी";
-    var abhAriWord = isFemale ? "श्रीमान जी की सदैव आभारी रहेगी" : "श्रीमान जी का सदैव आभारी रहेगा";
-    var daysPhrase = (l.totalDays == 1) ? "एक दिवस" : (l.totalDays < 10 ? '0' + l.totalDays : l.totalDays) + " दिवस";
+ function viewAdminLeaveModal(index) {
+  var l = cachedAdminLeaves[index];
+  if (!l) return;
 
-   // नया कोड (2nd इमेज के अनुसार 3 अलग-अलग लाइनों में):
-var html = 
-  '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + l.timestamp.split(' ')[0] + '</div>' +
-  '<div><b>सेवा में,</b></div>' +
-  '<div style="margin-left: 55px; line-height: 1.9;">' +
-    'श्रीमान ' + escapeHtml(l.recipient) + ' महोदय,<br>' +
-    'ग्राम पंचायत- ' + escapeHtml(l.gramPanchayat) + ',<br>' +
-    'विकास खण्ड- उतरौला , जनपद- बलरामपुर(उ०प्र०)।' +
-  '</div>' +
-      '<div style="margin:15px 0 12px 0; font-weight:bold; text-decoration:underline; font-size:14.5px;">' +
+  var isFemale = (l.gender === 'female');
+  var pWord = isFemale ? "प्रार्थिनी" : "प्रार्थी";
+  var abhAriWord = isFemale ? "श्रीमान जी की सदैव आभारी रहेगी" : "श्रीमान जी का सदैव आभारी रहेगा";
+  var bhavadiyaWord = isFemale ? "भवदीया" : "भवदीय";
+  var daysPhrase = (l.totalDays == 1) ? "एक दिवस" : (l.totalDays < 10 ? '0' + l.totalDays : l.totalDays) + " दिवस";
+
+  // दिनांक को सटीक 31/08/2026 (DD/MM/YYYY) प्रारूप में बनाना
+  var dateStr = formatDisplayDate(l.timestamp);
+
+  var html = 
+    '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + dateStr + '</div>' +
+    '<div><b>सेवा में,</b></div>' +
+    '<div style="margin-left: 55px; line-height: 1.9;">' +
+      'श्रीमान ' + escapeHtml(l.recipient) + ' महोदय,<br>' +
+      'ग्राम पंचायत- ' + escapeHtml(l.gramPanchayat) + ',<br>' +
+      'विकास खण्ड- उतरौला , जनपद- बलरामपुर(उ०प्र०)।' +
+    '</div>' +
+    '<div style="margin:15px 0 12px 0; font-weight:bold; text-decoration:underline; font-size:14.5px;">' +
       'विषय: आकस्मिक अवकाश स्वीकृत किए जाने के संबंध में प्रार्थना पत्र।' +
-      '</div>' +
-      '<div><b>महोदय,</b></div>' +
-      '<p style="text-indent:30px; text-align:justify; margin:8px 0;">' +
+    '</div>' +
+    '<div><b>महोदय,</b></div>' +
+    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
       'सविनय निवेदन है कि ' + pWord + ' <b>' + escapeHtml(l.fullName) + '</b> ग्राम पंचायत <b>' + escapeHtml(l.gramPanchayat) + '</b> (क्लस्टर: ' + escapeHtml(l.clusterName) + ') में <i>पंचायत सहायक कम डाटा एंट्री ऑपरेटर</i> के पद पर कार्यरत है।' +
-      '</p>' +
-      '<p style="text-indent:30px; text-align:justify; margin:8px 0;">' +
+    '</p>' +
+    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
       pWord + ' को <b>' + escapeHtml(l.reason) + '</b> के कारण <b>' + escapeHtml(l.dateText) + '</b> पंचायत भवन में उपस्थित होकर शासकीय कार्य संपादन करने में असमर्थ है।' +
-      '</p>' +
-      '<p style="text-indent:30px; text-align:justify; margin:8px 0;">' +
+    '</p>' +
+    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
       'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। इसके लिए ' + pWord + ' ' + abhAriWord + '।' +
-      '</p>' +
-      '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
-      '  <div style="text-align:center; min-width:220px; line-height:1.6;">' +
-      '    <b>(' + escapeHtml(l.fullName) + ')</b><br>' +
-      '    पंचायत सहायक कम डाटा एंट्री ऑपरेटर<br>' +
-      '    ग्राम पंचायत: ' + escapeHtml(l.gramPanchayat) + '<br>' +
-      '    मो०: ' + escapeHtml(l.mobile) +
-      '  </div>' +
-      '</div>';
+    '</p>' +
+    '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
+      '<div style="text-align:center; min-width:220px; line-height:1.6;">' +
+        '<b>' + bhavadiyaWord + '</b><br><br>' +
+        '<b>(' + escapeHtml(l.fullName) + ')</b><br>' +
+        'पंचायत सहायक कम डाटा एंट्री ऑपरेटर<br>' +
+        'ग्राम पंचायत: ' + escapeHtml(l.gramPanchayat) + '<br>' +
+        'मो०: ' + escapeHtml(l.mobile) +
+      '</div>' +
+    '</div>';
 
-    document.getElementById('detailsCardContent').innerHTML = html;
-    openModal('viewDetailsModal');
-  }
-
+  document.getElementById('detailsCardContent').innerHTML = html;
+  openModal('viewDetailsModal');
+}
   function exportLeaveRecordsToExcel() {
     var csv = "क्र.,आवेदन समय,क्लस्टर का नाम,ग्राम पंचायत,पंचायत सहायक,मोबाइल,अवकाश अवधि,कुल दिन,अवकाश का कारण,संबोधित अधिकारी\n";
     for (var i = 0; i < cachedAdminLeaves.length; i++) {
