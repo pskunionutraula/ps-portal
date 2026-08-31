@@ -2827,11 +2827,17 @@ function autoGenerateLeaveLetter() {
   var gender = document.getElementById('leaveGender').value || 'male';
   var isFemale = (gender === 'female');
 
-  // विधिक व व्याकरणिक शब्द चयन
+  // विधिक व लिंग व्याकरण शब्द
   var pWord = isFemale ? "प्रार्थिनी" : "प्रार्थी";
   var asamarthWord = isFemale ? "असमर्थ रहेगी" : "असमर्थ रहेगा";
-  var abhAriWord = isFemale ? "श्रीमान जी की सदैव आभारी रहेगी" : "श्रीमान जी का सदैव आभारी रहेगा";
+  var abhAriSentence = isFemale 
+    ? "इसके लिए प्रार्थिनी आपकी सदैव आभारी रहेगी।" 
+    : "इसके लिए प्रार्थी आपका सदैव आभारी रहेगा।";
   var bhavadiyaWord = isFemale ? "भवदीया" : "भवदीय";
+
+  // "के कारण" दो बार आने से रोकने का समाधान
+  var cleanReason = escapeHtml(reasonVal);
+  var reasonText = cleanReason.includes("के कारण") ? cleanReason : (cleanReason + " के कारण");
 
   var durationType = document.getElementById('leaveDurationType').value;
   var dateRangeText = "";
@@ -2876,10 +2882,10 @@ function autoGenerateLeaveLetter() {
       'सविनय निवेदन है कि ' + pWord + ' <b>' + escapeHtml(loggedInPsUser.fullName) + '</b> ग्राम पंचायत <b>' + escapeHtml(loggedInPsUser.gramPanchayat) + '</b>, विकास खण्ड उतरौला (बलरामपुर) में <i>पंचायत सहायक कम डाटा एंट्री ऑपरेटर</i> के पद पर कार्यरत है।' +
     '</p>' +
     '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
-      pWord + ' <b>' + escapeHtml(reasonVal) + '</b> के कारण <b>' + dateRangeText + '</b> ग्राम पंचायत सचिवालय में उपस्थित होकर अपने पदीय दायित्वों एवं शासकीय कार्यों का संपादन करने में <b>' + asamarthWord + '</b>।' +
+      pWord + ' <b>' + reasonText + '</b> <b>' + dateRangeText + '</b> ग्राम पंचायत सचिवालय में उपस्थित होकर अपने पदीय दायित्वों एवं शासकीय कार्यों का संपादन करने में <b>' + asamarthWord + '</b>।' +
     '</p>' +
     '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
-      'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। इसके लिए ' + pWord + ' ' + abhAriWord + '।' +
+      'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। ' + abhAriSentence +
     '</p>' +
     '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
       '<div style="text-align:center; min-width:220px; line-height:1.6;">' +
@@ -4210,11 +4216,17 @@ function viewAdminLeaveModal(index) {
   var isFemale = (l.gender === 'female');
   var pWord = isFemale ? "प्रार्थिनी" : "प्रार्थी";
   var asamarthWord = isFemale ? "असमर्थ रहेगी" : "असमर्थ रहेगा";
-  var abhAriWord = isFemale ? "श्रीमान जी की सदैव आभारी रहेगी" : "श्रीमान जी का सदैव आभारी रहेगा";
+  var abhAriSentence = isFemale 
+    ? "इसके लिए प्रार्थिनी आपकी सदैव आभारी रहेगी।" 
+    : "इसके लिए प्रार्थी आपका सदैव आभारी रहेगा।";
   var bhavadiyaWord = isFemale ? "भवदीया" : "भवदीय";
   var daysPhrase = (l.totalDays == 1) ? "एक दिवस" : (l.totalDays < 10 ? '0' + l.totalDays : l.totalDays) + " दिवस";
 
   var dateStr = formatDisplayDate(l.timestamp);
+
+  // "के कारण" दो बार आने से रोकने का समाधान
+  var cleanReason = escapeHtml(l.reason);
+  var reasonText = cleanReason.includes("के कारण") ? cleanReason : (cleanReason + " के कारण");
 
   var html = 
     '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + dateStr + '</div>' +
@@ -4232,10 +4244,10 @@ function viewAdminLeaveModal(index) {
       'सविनय निवेदन है कि ' + pWord + ' <b>' + escapeHtml(l.fullName) + '</b> ग्राम पंचायत <b>' + escapeHtml(l.gramPanchayat) + '</b> (क्लस्टर: ' + escapeHtml(l.clusterName) + ') में <i>पंचायत सहायक कम डाटा एंट्री ऑपरेटर</i> के पद पर कार्यरत है।' +
     '</p>' +
     '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
-      pWord + ' <b>' + escapeHtml(l.reason) + '</b> के कारण <b>' + escapeHtml(l.dateText) + '</b> पंचायत भवन में उपस्थित होकर शासकीय कार्य संपादन करने में <b>' + asamarthWord + '</b>।' +
+      pWord + ' <b>' + reasonText + '</b> <b>' + escapeHtml(l.dateText) + '</b> पंचायत भवन में उपस्थित होकर शासकीय कार्य संपादन करने में <b>' + asamarthWord + '</b>।' +
     '</p>' +
     '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
-      'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। इसके लिए ' + pWord + ' ' + abhAriWord + '।' +
+      'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। ' + abhAriSentence +
     '</p>' +
     '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
       '<div style="text-align:center; min-width:220px; line-height:1.6;">' +
