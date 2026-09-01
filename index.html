@@ -4643,6 +4643,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 // ================= PS लॉगिन एवं सत्यापन =================
 // ================= PS लॉगिन एवं सत्यापन =================
+// ================= PS लॉगिन एवं 3-माह पॉपअप सत्यापन =================
 function submitPsLogin() {
   var emailInput = document.getElementById('psLoginEmail');
   var passMobInput = document.getElementById('psLoginMobile');
@@ -4673,17 +4674,13 @@ function submitPsLogin() {
         localStorage.setItem('psUserData', JSON.stringify(res.userData || res));
         localStorage.setItem('psLastActiveTime', Date.now().toString());
 
-        // हिडन फ़ील्ड में ईमेल सेट करना
         var hiddenEmailEl = document.getElementById('setupEmailHidden');
         if (hiddenEmailEl) {
           hiddenEmailEl.value = email;
         }
 
-        var isChanged = res.isPasswordChanged;
-        var hasMpin = res.mpin && String(res.mpin).trim().length === 4;
-
-        if (!isChanged || !hasMpin) {
-          // प्रथम लॉगिन: पासवर्ड व MPIN सेटअप पॉपअप खोलें
+        // केवल पहली बार या 3 महीने (90 दिन) पूरे होने पर ही पॉपअप खुलेगा
+        if (res.needsPasswordChange) {
           document.getElementById('firstTimeSetupModal').style.display = 'flex';
         } else {
           restorePsPortal(res);
@@ -4700,7 +4697,6 @@ function submitPsLogin() {
     })
     .verifyPSLogin(email, passMob);
 }
-
 // ================= प्रथम लॉगिन: पासवर्ड व MPIN सेटअप =================
 function submitCredentialsSetup() {
   var oldP = document.getElementById('setupOldPass').value.trim();
