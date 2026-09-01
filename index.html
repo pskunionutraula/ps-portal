@@ -2315,8 +2315,11 @@ function formatDateToIndian(dateVal) {
         updatePsCredentials: function(userEmailOrMobile, oldPass, newPass, mpin) {
           this._callApi('updatePsCredentials', { userEmailOrMobile: userEmailOrMobile, oldPass: oldPass, newPass: newPass, mpin: mpin });
         },
-        verifyPsMpin: function(userEmailOrMobile, mpin) {
+      verifyPsMpin: function(userEmailOrMobile, mpin) {
           this._callApi('verifyPsMpin', { userEmailOrMobile: userEmailOrMobile, mpin: mpin });
+        },
+        unlockPsAccountSecure: function(token, rowIndex) {
+          this._callApi('unlockPsAccountSecure', { token: token, rowIndex: rowIndex });
         }
       }
     }
@@ -3553,6 +3556,7 @@ function autoGenerateLeaveLetter() {
         '<td>' + escapeHtml(r.timestamp) + '</td>' +
         '<td>' +
           '<a href="' + waLink + '" target="_blank" class="btn-action-whatsapp" title="WhatsApp Chat"><i class="fa-brands fa-whatsapp"></i></a>' +
+        '<button class="btn-action-allow" style="background:#10b981; color:#fff;" title="खाता अनलॉक करें" onclick="handleAdminUnlockAccount(' + r.rowIndex + ', \'' + escapeHtml(r.fullName) + '\')"><i class="fa-solid fa-lock-open"></i></button>' +
           '<button class="btn-action-view" title="देखें (PDF)" onclick="viewRegisteredModal(' + i + ')"><i class="fa-solid fa-eye"></i></button>' +
           '<button class="btn-action-edit" title="संपादित करें" onclick="openEditRegisteredModal(' + i + ')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="confirmUniversalDelete(\'registered\', ' + r.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
@@ -5042,6 +5046,34 @@ function submitManualPasswordChange(e) {
       showMsg("सर्वर त्रुटि", err.toString(), false);
     })
     .updatePsCredentials(String(userKey), String(oldP), String(newP), String(mpin));
+}
+
+  // एडमिन द्वारा PS खाता अनलॉक करने का फ़ंक्शन
+function handleAdminUnlockAccount(rowIndex, userName) {
+  if (!adminSessionToken) {
+    showMsg("त्रुटि", "कृपया पहले एडमिन लॉगिन करें!", false);
+    return;
+  }
+
+  if (confirm("क्या आप " + userName + " का खाता अनलॉक करना चाहते हैं?")) {
+    showLoader(userName + " का खाता अनलॉक किया जा रहा है...");
+
+    google.script.run
+      .withSuccessHandler(function(res) {
+        hideLoader();
+        if (res && res.success) {
+          showMsg("सफलता", res.message, true);
+          loadAdminDashboardData(); // टेबल को रीफ्रेश करें
+        } else {
+          showMsg("त्रुटि", (res ? res.message : "अनलॉक करने में विफल"), false);
+        }
+      })
+      .withFailureHandler(function(err) {
+        hideLoader();
+        showMsg("सर्वर त्रुटि", err.toString(), false);
+      })
+      .unlockPsAccountSecure(adminSessionToken, rowIndex);
+  }
 }
 </script>
 </body>
