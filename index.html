@@ -4822,8 +4822,9 @@ function submitCredentialsSetup() {
   }
 }
 
-// ================= 30-मिनट टाइमर, इंस्टेंट मिनिमाइज़ लॉक व MPIN लॉजिक =================
-var SESSION_LIMIT_MS = 30 * 60 * 1000; // 30 मिनट
+// ================= 30-मिनट टाइमर, सुरक्षित बैकग्राउंड लॉक व MPIN लॉजिक =================
+var SESSION_LIMIT_MS = 30 * 60 * 1000; // 30 मिनट में फुल लॉगआउट
+var hideStartTime = 0;
 
 function recordPsActivity() {
   if (sessionStorage.getItem('psk_ps_email') || localStorage.getItem('psUserLoggedIn')) {
@@ -4834,46 +4835,31 @@ function recordPsActivity() {
   window.addEventListener(evt, recordPsActivity, { passive: true });
 });
 
-// जैसे ही ऐप या टैब मिनिमाइज़ / बैकग्राउंड में जाएगा तुरंत लॉक होगा
-var isScreenHidden = false;
+// केवल तभी लॉक होगा जब यूजर PS पोर्टल में हो और स्क्रीन सच में बैकग्राउंड में जाए
 document.addEventListener("visibilitychange", function() {
-  var isPsLoggedIn = sessionStorage.getItem('psk_ps_email') || localStorage.getItem('psUserLoggedIn');
-  if (!isPsLoggedIn) return;
+  var isPsLoggedIn = sessionStorage.getItem('psk_ps_email');
+  var activeView = sessionStorage.getItem('psk_active_view');
+
+  // अगर यूजर PS पोर्टल में लॉगिन नहीं है, तो कुछ नहीं करना
+  if (!isPsLoggedIn || activeView !== 'ps') return;
 
   if (document.visibilityState === "hidden") {
-    isScreenHidden = true; // ऐप बैकग्राउंड में गया
+    hideStartTime = Date.now();
   } else if (document.visibilityState === "visible") {
-    if (isScreenHidden) {
-      isScreenHidden = false;
-      openMpinScreen(); // वापस आते ही 0 सेकंड में तुरंत MPIN स्क्रीन खुलेगी
+    // 5 सेकंड से ज्यादा ऐप बाहर/बैकग्राउंड में रहने पर ही MPIN मांगेगा (ड्रॉपडाउन या टाइपिंग पर नहीं)
+    if (hideStartTime > 0 && (Date.now() - hideStartTime) > 5000) {
+      hideStartTime = 0;
+      openMpinScreen();
     }
-  }
-});
-
-// विंडो स्विच या ब्लर होने पर भी लॉक
-window.addEventListener("blur", function() {
-  var isPsLoggedIn = sessionStorage.getItem('psk_ps_email') || localStorage.getItem('psUserLoggedIn');
-  if (isPsLoggedIn) {
-    isScreenHidden = true;
-  }
-});
-
-window.addEventListener("focus", function() {
-  var isPsLoggedIn = sessionStorage.getItem('psk_ps_email') || localStorage.getItem('psUserLoggedIn');
-  if (isPsLoggedIn && isScreenHidden) {
-    isScreenHidden = false;
-    openMpinScreen();
   }
 });
 
 function evaluatePsSession() {
   var email = sessionStorage.getItem('psk_ps_email');
   var lastActive = parseInt(localStorage.getItem('psLastActiveTime') || "0", 10);
-  
   if (!email || !lastActive) return;
 
   var elapsed = Date.now() - lastActive;
-
   if (elapsed > SESSION_LIMIT_MS) {
     forcePsLogout("30 मिनट से अधिक निष्क्रिय रहने के कारण सुरक्षा हेतु पोर्टल लॉगआउट कर दिया गया है।");
   }
@@ -4881,6 +4867,11 @@ function evaluatePsSession() {
 window.addEventListener("load", evaluatePsSession);
 
 function openMpinScreen() {
+  var isPsLoggedIn = sessionStorage.getItem('psk_ps_email');
+  var activeView = sessionStorage.getItem('psk_active_view');
+
+  if (!isPsLoggedIn || activeView !== 'ps') return;
+
   var user = {};
   try {
     user = JSON.parse(localStorage.getItem('psUserData') || '{}');
@@ -4909,7 +4900,7 @@ function openMpinScreen() {
 
 // 4 अंक टाइप होते ही तुरंत ऑटोमैटिक जांच
 function handleMpinInput(input) {
-  input.value = input.value.replace(/\D/g, ''); // केवल संख्या स्वीकारें
+  input.value = input.value.replace(/\D/g, ''); // केवल संख्या
   var errEl = document.getElementById('mpinLiveError');
   if (errEl) errEl.style.display = 'none';
 
@@ -4951,7 +4942,6 @@ function verifyAndUnlockSession() {
       isMpinVerifying = false;
 
       if (res && res.success) {
-        // सही MPIN: तुरंत पोर्टल खोलें
         document.getElementById('mpinLockModal').style.display = 'none';
         pinInput.value = '';
         if (errEl) errEl.style.display = 'none';
@@ -4960,7 +4950,6 @@ function verifyAndUnlockSession() {
         user.mpin = pin;
         localStorage.setItem('psUserData', JSON.stringify(user));
       } else {
-        // गलत MPIN: तुरंत एरर दिखाएं
         pinInput.value = '';
         pinInput.focus();
 
@@ -5000,7 +4989,7 @@ function forcePsLogout(msg) {
   localStorage.removeItem('psLastActiveTime');
   window.location.reload();
 }
-
+  
   // पासवर्ड व MPIN बदलने का मोडल खोलने का फ़ंक्शन
 function openManualPasswordChangeModal() {
   document.getElementById('manualUserKey').value = '';
