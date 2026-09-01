@@ -793,6 +793,9 @@ body.modal-open {
         <button class="btn-side-action btn-admin" onclick="openAdminLoginModal()"><i class="fa-solid fa-user-shield"></i> एडमिन लॉगिन</button>
         <button class="btn-side-action btn-ps" onclick="openPsLoginModal()"><i class="fa-solid fa-id-card"></i> PS लॉगिन</button>
         <button class="btn-side-action btn-register" onclick="openNewRegisterModal()"><i class="fa-solid fa-user-plus"></i> नया रजिस्ट्रेशन करें</button>
+        <button class="btn-side-action" style="background:#7c3aed; color:#ffffff;" onclick="openManualPasswordChangeModal()">
+          <i class="fa-solid fa-key"></i> पासवर्ड / MPIN बदलें
+        </button>
       </div>
     </div>
 
@@ -1922,6 +1925,52 @@ body.modal-open {
     </div>
     <button class="submit-btn" style="background:#16a34a; display:inline-block;" onclick="saveGrievanceStatus()">सुरक्षित करें</button>
     <button class="submit-btn" style="background:#64748b; margin-top:5px; font-size:14px; padding:8px; display:inline-block;" onclick="closeModal('editGrievanceModal')">रद्द करें</button>
+  </div>
+</div>
+
+  <!-- MANUAL PASSWORD & MPIN CHANGE MODAL -->
+<div class="modal-backdrop" id="manualPasswordChangeModal">
+  <div class="modal-box" style="text-align:center; max-width:440px;">
+    <div style="background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 14px; border-radius: 10px; margin-bottom: 15px;">
+      <i class="fa-solid fa-shield-halved" style="font-size: 24px; color: #a855f7;"></i>
+      <h3 style="margin: 6px 0 2px 0; font-size: 17px; font-family:'Rozha One', serif;">पासवर्ड एवं MPIN अपडेट करें</h3>
+      <p style="font-size: 11.5px; color: #cbd5e1; margin: 0;">(3 महीने से पहले भी कभी भी पासवर्ड बदल सकते हैं)</p>
+    </div>
+
+    <form onsubmit="submitManualPasswordChange(event)">
+      <div class="field-group" style="text-align:left;">
+        <label><i class="fa-solid fa-envelope"></i> पंजीकृत ईमेल आईडी या मोबाइल नंबर <span class="req">*</span></label>
+        <input type="text" id="manualUserKey" class="field-input" placeholder="ईमेल आईडी या 10-अंकों का मोबाइल" required>
+      </div>
+
+      <div class="field-group" style="text-align:left;">
+        <label><i class="fa-solid fa-key"></i> पुराना पासवर्ड <span class="req">*</span></label>
+        <input type="password" id="manualOldPass" class="field-input" placeholder="वर्तमान पासवर्ड (डिफ़ॉल्ट मोबाइल नंबर)" required>
+      </div>
+
+      <div class="field-group" style="text-align:left;">
+        <label><i class="fa-solid fa-lock"></i> नया पासवर्ड बनाएं <span class="req">*</span></label>
+        <input type="password" id="manualNewPass" class="field-input" placeholder="नया पासवर्ड दर्ज करें" required>
+      </div>
+
+      <div class="field-group" style="text-align:left;">
+        <label><i class="fa-solid fa-lock-check"></i> नया पासवर्ड कन्फ़र्म करें <span class="req">*</span></label>
+        <input type="password" id="manualConfirmPass" class="field-input" placeholder="नया पासवर्ड पुनः दर्ज करें" required>
+      </div>
+
+      <div class="field-group" style="text-align:left;">
+        <label><i class="fa-solid fa-mobile-screen-button"></i> नया 4-अंकों का MPIN <span class="req">*</span></label>
+        <input type="password" id="manualMpin" class="field-input" maxlength="4" pattern="\d{4}" inputmode="numeric" placeholder="उदा. 1234" required>
+        <small style="color:#64748b; font-size:11px; display:block; margin-top:2px;">(पोर्टल 20 सेकंड लॉक होने पर केवल यह 4-अंकों का पिन लगेगा)</small>
+      </div>
+
+      <button type="submit" class="submit-btn" style="background:linear-gradient(135deg, #7c3aed, #6d28d9); display:inline-block;">
+        <i class="fa-solid fa-circle-check"></i> पासवर्ड व MPIN अपडेट करें
+      </button>
+      <button type="button" class="submit-btn" onclick="closeModal('manualPasswordChangeModal')" style="background:#64748b; margin-top:6px; font-size:13px; padding:8px; display:inline-block;">
+        रद्द करें
+      </button>
+    </form>
   </div>
 </div>
 
@@ -4920,6 +4969,60 @@ function forcePsLogout(msg) {
   localStorage.removeItem('psUserData');
   localStorage.removeItem('psLastActiveTime');
   window.location.reload();
+}
+
+  // पासवर्ड व MPIN बदलने का मोडल खोलने का फ़ंक्शन
+function openManualPasswordChangeModal() {
+  document.getElementById('manualUserKey').value = '';
+  document.getElementById('manualOldPass').value = '';
+  document.getElementById('manualNewPass').value = '';
+  document.getElementById('manualConfirmPass').value = '';
+  document.getElementById('manualMpin').value = '';
+  openModal('manualPasswordChangeModal');
+}
+
+// नया पासवर्ड व MPIN सबमिट करने का फ़ंक्शन
+function submitManualPasswordChange(e) {
+  e.preventDefault();
+
+  var userKey = document.getElementById('manualUserKey').value.trim();
+  var oldP = document.getElementById('manualOldPass').value.trim();
+  var newP = document.getElementById('manualNewPass').value.trim();
+  var confP = document.getElementById('manualConfirmPass').value.trim();
+  var mpin = document.getElementById('manualMpin').value.trim();
+
+  if (!userKey || !oldP || !newP || !confP || !mpin) {
+    showMsg("ध्यान दें", "कृपया सभी आवश्यक फ़ील्ड भरें!", false);
+    return;
+  }
+
+  if (newP !== confP) {
+    showMsg("त्रुटि", "नया पासवर्ड और कन्फ़र्म पासवर्ड मेल नहीं खा रहे हैं!", false);
+    return;
+  }
+
+  if (mpin.length !== 4 || isNaN(mpin)) {
+    showMsg("त्रुटि", "MPIN केवल 4 अंकों की संख्या होनी चाहिए (उदा. 1234)!", false);
+    return;
+  }
+
+  showLoader("पासवर्ड व MPIN अपडेट किया जा रहा है...");
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      hideLoader();
+      if (res && res.success) {
+        closeModal('manualPasswordChangeModal');
+        showMsg("सफलता", res.message || "पासवर्ड एवं 4-अंकों का MPIN सफलतापूर्वक सेट हो गया!", true);
+      } else {
+        showMsg("त्रुटि", (res ? res.message : "क्रेडेंशियल अपडेट नहीं हो सके"), false);
+      }
+    })
+    .withFailureHandler(function(err) {
+      hideLoader();
+      showMsg("सर्वर त्रुटि", err.toString(), false);
+    })
+    .updatePsCredentials(String(userKey), String(oldP), String(newP), String(mpin));
 }
 </script>
 </body>
