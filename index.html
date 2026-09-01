@@ -2151,7 +2151,8 @@ body.modal-open {
     </div>
     <div class="modal-body-modern">
       <div class="input-group-modern">
-        <input type="password" id="unlockMpin" maxlength="4" pattern="\d{4}" inputmode="numeric" placeholder="••••" class="mpin-big-input">
+        <input type="password" id="unlockMpin" maxlength="4" pattern="\d{4}" inputmode="numeric" placeholder="••••" class="mpin-big-input" oninput="handleMpinInput(this)">
+        <div id="mpinLiveError" style="display:none; color:#ef4444; font-size:12.5px; font-weight:bold; margin-top:8px; text-align:center;"></div>
       </div>
       <button type="button" class="btn-modern-submit" onclick="verifyAndUnlockSession()">
         <i class="fa-solid fa-unlock-keyhole"></i> अनलॉक करें
@@ -4818,45 +4819,102 @@ function openMpinScreen() {
   if (user && user.fullName) {
     document.getElementById('lockPsName').innerText = user.fullName + " - पोर्टल अनलॉक करने के लिए अपना MPIN दर्ज करें";
   }
-  document.getElementById('unlockMpin').value = '';
+  
+  var pinInput = document.getElementById('unlockMpin');
+  if (pinInput) {
+    pinInput.value = '';
+    pinInput.disabled = false;
+  }
+  var errEl = document.getElementById('mpinLiveError');
+  if (errEl) errEl.style.display = 'none';
+
   document.getElementById('mpinLockModal').style.display = 'flex';
+  if (pinInput) pinInput.focus();
 }
 
+// 4 अंक टाइप होते ही तुरंत ऑटोमैटिक जांच
+function handleMpinInput(input) {
+  input.value = input.value.replace(/\D/g, ''); // केवल संख्या स्वीकारें
+  var errEl = document.getElementById('mpinLiveError');
+  if (errEl) errEl.style.display = 'none';
+
+  if (input.value.length === 4) {
+    verifyAndUnlockSession();
+  }
+}
+
+var isMpinVerifying = false;
 function verifyAndUnlockSession() {
-  var pin = document.getElementById('unlockMpin').value.trim();
+  if (isMpinVerifying) return;
+
+  var pinInput = document.getElementById('unlockMpin');
+  var pin = pinInput.value.trim();
   var email = sessionStorage.getItem('psk_ps_email') || '';
-  
+  var errEl = document.getElementById('mpinLiveError');
+
   var user = {};
   try {
     user = JSON.parse(localStorage.getItem('psUserData') || '{}');
   } catch(e) {}
 
+  var userKey = email || user.email || user.mobile || '';
+
   if (pin.length !== 4) {
-    showMsg("ध्यान दें", "कृपया 4-अंकों का MPIN दर्ज करें!", false);
+    if (errEl) {
+      errEl.innerText = "कृपया 4 अंकों का MPIN दर्ज करें!";
+      errEl.style.display = "block";
+    }
     return;
   }
 
-  if (user.mpin && String(user.mpin) === String(pin)) {
-    document.getElementById('mpinLockModal').style.display = 'none';
-    localStorage.setItem('psLastActiveTime', Date.now().toString());
-  } else {
-    showLoader("MPIN सत्यापित किया जा रहा है...");
-    google.script.run
-      .withSuccessHandler(function(res) {
-        hideLoader();
-        if (res && res.success) {
-          document.getElementById('mpinLockModal').style.display = 'none';
-          localStorage.setItem('psLastActiveTime', Date.now().toString());
-        } else {
-          showMsg("त्रुटि", (res ? res.message : "गलत MPIN!"), false);
+  isMpinVerifying = true;
+  showLoader("MPIN सत्यापित हो रहा है...");
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      hideLoader();
+      isMpinVerifying = false;
+
+      if (res && res.success) {
+        // सही MPIN: तुरंत पोर्टल खोलें
+        document.getElementById('mpinLockModal').style.display = 'none';
+        pinInput.value = '';
+        if (errEl) errEl.style.display = 'none';
+        localStorage.setItem('psLastActiveTime', Date.now().toString());
+
+        user.mpin = pin;
+        localStorage.setItem('psUserData', JSON.stringify(user));
+      } else {
+        // गलत MPIN: तुरंत एरर दिखाएं
+        pinInput.value = '';
+        pinInput.focus();
+
+        var message = res ? res.message : "गलत MPIN दर्ज किया गया!";
+        if (errEl) {
+          errEl.innerText = "⚠️ " + message;
+          errEl.style.display = "block";
         }
-      })
-      .withFailureHandler(function(err) {
-        hideLoader();
-        showMsg("सर्वर त्रुटि", err.toString(), false);
-      })
-      .verifyPsMpin(email || user.email || user.mobile, pin);
-  }
+
+        if (res && res.locked) {
+          if (res.permanent) {
+            pinInput.disabled = true;
+            showMsg("🚫 खाता लॉक", res.message, false);
+          } else {
+            showMsg("⏳ सुरक्षा लॉक", res.message, false);
+          }
+        }
+      }
+    })
+    .withFailureHandler(function(err) {
+      hideLoader();
+      isMpinVerifying = false;
+      pinInput.value = '';
+      if (errEl) {
+        errEl.innerText = "सर्वर त्रुटि: " + err.toString();
+        errEl.style.display = "block";
+      }
+    })
+    .verifyPsMpin(userKey, pin);
 }
 
 function forcePsLogout(msg) {
