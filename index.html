@@ -5353,7 +5353,159 @@ function forcePsLogout(msg) {
   localStorage.removeItem('psUserData');
   localStorage.removeItem('psLastActiveTime');
   window.location.reload();
-}// ================= 30-मिनट टाइमर, इंस्टेंट मिनिमाइज़ लॉक व MPIN लॉजिक =================
+}
+  
+  var SESSION_LIMIT_MS = 30 * 60 * 1000; // 30 मिनट
+
+function recordPsActivity() {
+  if (sessionStorage.getItem('psk_ps_email') || localStorage.getItem('psUserLoggedIn')) {
+    localStorage.setItem('psLastActiveTime', Date.now().toString());
+  }
+}
+['click', 'mousemove', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
+  window.addEventListener(evt, recordPsActivity, { passive: true });
+});
+
+function evaluatePsSession() {
+  var email = sessionStorage.getItem('psk_ps_email');
+  var lastActive = parseInt(localStorage.getItem('psLastActiveTime') || "0", 10);
+  
+  if (!email || !lastActive) return;
+
+  var elapsed = Date.now() - lastActive;
+
+  if (elapsed > SESSION_LIMIT_MS) {
+    forcePsLogout("30 मिनट से अधिक निष्क्रिय रहने के कारण सुरक्षा हेतु पोर्टल लॉगआउट कर दिया गया है।");
+  } else if (elapsed > 20000) { 
+    openMpinScreen();
+  }
+}
+
+document.addEventListener("visibilitychange", function() {
+  if (document.visibilityState === "visible") {
+    evaluatePsSession();
+  }
+});
+window.addEventListener("load", evaluatePsSession);
+
+function openMpinScreen() {
+  var user = {};
+  try {
+    user = JSON.parse(localStorage.getItem('psUserData') || '{}');
+  } catch(e) {}
+
+  if (user && user.fullName) {
+    document.getElementById('lockPsName').innerText = user.fullName + " - पोर्टल अनलॉक करने के लिए अपना MPIN दर्ज करें";
+  }
+  
+  var pinInput = document.getElementById('unlockMpin');
+  if (pinInput) {
+    pinInput.value = '';
+    pinInput.disabled = false;
+  }
+  var errEl = document.getElementById('mpinLiveError');
+  if (errEl) errEl.style.display = 'none';
+
+  document.getElementById('mpinLockModal').style.display = 'flex';
+  if (pinInput) pinInput.focus();
+}
+
+// 4 अंक टाइप होते ही तुरंत ऑटोमैटिक जांच
+function handleMpinInput(input) {
+  input.value = input.value.replace(/\D/g, ''); // केवल संख्या स्वीकारें
+  var errEl = document.getElementById('mpinLiveError');
+  if (errEl) errEl.style.display = 'none';
+
+  if (input.value.length === 4) {
+    verifyAndUnlockSession();
+  }
+}
+
+var isMpinVerifying = false;
+function verifyAndUnlockSession() {
+  if (isMpinVerifying) return;
+
+  var pinInput = document.getElementById('unlockMpin');
+  var pin = pinInput.value.trim();
+  var email = sessionStorage.getItem('psk_ps_email') || '';
+  var errEl = document.getElementById('mpinLiveError');
+
+  var user = {};
+  try {
+    user = JSON.parse(localStorage.getItem('psUserData') || '{}');
+  } catch(e) {}
+
+  var userKey = email || user.email || user.mobile || '';
+
+  if (pin.length !== 4) {
+    if (errEl) {
+      errEl.innerText = "कृपया 4 अंकों का MPIN दर्ज करें!";
+      errEl.style.display = "block";
+    }
+    return;
+  }
+
+  isMpinVerifying = true;
+  showLoader("MPIN सत्यापित हो रहा है...");
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      hideLoader();
+      isMpinVerifying = false;
+
+      if (res && res.success) {
+        // सही MPIN: तुरंत पोर्टल खोलें
+        document.getElementById('mpinLockModal').style.display = 'none';
+        pinInput.value = '';
+        if (errEl) errEl.style.display = 'none';
+        localStorage.setItem('psLastActiveTime', Date.now().toString());
+
+        user.mpin = pin;
+        localStorage.setItem('psUserData', JSON.stringify(user));
+      } else {
+        // गलत MPIN: तुरंत एरर दिखाएं
+        pinInput.value = '';
+        pinInput.focus();
+
+        var message = res ? res.message : "गलत MPIN दर्ज किया गया!";
+        if (errEl) {
+          errEl.innerText = "⚠️ " + message;
+          errEl.style.display = "block";
+        }
+
+        if (res && res.locked) {
+          if (res.permanent) {
+            pinInput.disabled = true;
+            showMsg("🚫 खाता लॉक", res.message, false);
+          } else {
+            showMsg("⏳ सुरक्षा लॉक", res.message, false);
+          }
+        }
+      }
+    })
+    .withFailureHandler(function(err) {
+      hideLoader();
+      isMpinVerifying = false;
+      pinInput.value = '';
+      if (errEl) {
+        errEl.innerText = "सर्वर त्रुटि: " + err.toString();
+        errEl.style.display = "block";
+      }
+    })
+    .verifyPsMpin(userKey, pin);
+}
+
+function forcePsLogout(msg) {
+  if (msg) alert(msg);
+  sessionStorage.clear();
+  localStorage.removeItem('psUserLoggedIn');
+  localStorage.removeItem('psUserData');
+  localStorage.removeItem('psLastActiveTime');
+  window.location.reload();
+}
+  
+  
+  // ================= 30-मिनट टाइमर, इंस्टेंट मिनिमाइज़ लॉक व MPIN लॉजिक =================
 var SESSION_LIMIT_MS = 30 * 60 * 1000; // 30 मिनट
 
 function recordPsActivity() {
