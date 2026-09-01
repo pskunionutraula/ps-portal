@@ -2260,8 +2260,14 @@ function formatDateToIndian(dateVal) {
         deleteClusterRecordSecure: function(token, rowIndex) { this._callApi('deleteClusterRecordSecure', { token: token, rowIndex: rowIndex }); },
         updateClusterRecordSecure: function(token, recordData) { this._callApi('updateClusterRecordSecure', { token: token, recordData: recordData }); },
         updateRegisteredUserSecure: function(token, recordData) { this._callApi('updateRegisteredUserSecure', { token: token, recordData: recordData }); },
-        updateSurveyRecordSecure: function(token, recordData) { this._callApi('updateSurveyRecordSecure', { token: token, recordData: recordData }); },
-        deleteLeaveRecordSecure: function(token, rowIndex) { this._callApi('deleteLeaveRecordSecure', { token: token, rowIndex: rowIndex }); }
+       updateSurveyRecordSecure: function(token, recordData) { this._callApi('updateSurveyRecordSecure', { token: token, recordData: recordData }); },
+        deleteLeaveRecordSecure: function(token, rowIndex) { this._callApi('deleteLeaveRecordSecure', { token: token, rowIndex: rowIndex }); },
+        updatePsCredentials: function(userEmailOrMobile, oldPass, newPass, mpin) {
+          this._callApi('updatePsCredentials', { userEmailOrMobile: userEmailOrMobile, oldPass: oldPass, newPass: newPass, mpin: mpin });
+        },
+        verifyPsMpin: function(userEmailOrMobile, mpin) {
+          this._callApi('verifyPsMpin', { userEmailOrMobile: userEmailOrMobile, mpin: mpin });
+        }
       }
     }
   };
@@ -4701,7 +4707,6 @@ function submitCredentialsSetup() {
   var confP = document.getElementById('setupConfirmPass').value.trim();
   var mpin = document.getElementById('setupMpin').value.trim();
 
-  // ईमेल को हर संभव सुरक्षित जगह से प्राप्त करना
   var hiddenEmail = document.getElementById('setupEmailHidden') ? document.getElementById('setupEmailHidden').value.trim() : '';
   var sessionEmail = sessionStorage.getItem('psk_ps_email') || '';
   var loginEmail = document.getElementById('psLoginEmail') ? document.getElementById('psLoginEmail').value.trim() : '';
@@ -4726,41 +4731,50 @@ function submitCredentialsSetup() {
     return;
   }
   if (!userKey) {
-    showMsg("त्रुटि", "यूज़र की पहचान नहीं मिली। कृपया पोर्टल को रीफ़्रेश करके पुनः लॉगिन करें।", false);
+    showMsg("त्रुटि", "यूज़र की पहचान नहीं मिली। कृपया पुनः लॉगिन करें।", false);
     return;
   }
 
   showLoader("पासवर्ड व MPIN सुरक्षित किया जा रहा है...");
 
-  google.script.run
-    .withSuccessHandler(function(res) {
-      hideLoader();
-      if (res && res.success) {
-        showMsg("सफलता", res.message, true);
-        document.getElementById('firstTimeSetupModal').style.display = 'none';
+  try {
+    google.script.run
+      .withSuccessHandler(function(res) {
+        hideLoader();
+        if (res && res.success) {
+          document.getElementById('firstTimeSetupModal').style.display = 'none';
 
-        uData.isPasswordChanged = true;
-        uData.mpin = mpin;
-        localStorage.setItem('psUserData', JSON.stringify(uData));
+          uData.isPasswordChanged = true;
+          uData.mpin = mpin;
+          localStorage.setItem('psUserData', JSON.stringify(uData));
 
-        try {
-          restorePsPortal(uData);
-          switchPsTab('psHome');
-          loadMyTickets();
-        } catch(e) {
-          console.error("Portal load error:", e);
+          showMsg("सफलता", res.message || "पासवर्ड एवं MPIN सफलतापूर्वक सेट हो गया!", true);
+
+          try {
+            if (typeof restorePsPortal === "function") {
+              restorePsPortal({ userData: uData, notices: [] });
+            }
+            switchPsTab('psHome');
+            if (typeof loadMyTickets === "function") {
+              loadMyTickets();
+            }
+          } catch(err) {
+            console.error("Portal load error:", err);
+          }
+        } else {
+          showMsg("त्रुटि", (res ? res.message : "क्रेडेंशियल अपडेट नहीं हो सके"), false);
         }
-      } else {
-        showMsg("त्रुटि", (res ? res.message : "त्रुटि उत्पन्न हुई"), false);
-      }
-    })
-    .withFailureHandler(function(err) {
-      hideLoader();
-      showMsg("सर्वर त्रुटि", err.toString(), false);
-    })
-    .updatePsCredentials(String(userKey), String(oldP), String(newP), String(mpin));
+      })
+      .withFailureHandler(function(err) {
+        hideLoader();
+        showMsg("सर्वर त्रुटि", err.toString(), false);
+      })
+      .updatePsCredentials(String(userKey), String(oldP), String(newP), String(mpin));
+  } catch (err) {
+    hideLoader();
+    showMsg("ब्राउज़र त्रुटि", err.toString(), false);
+  }
 }
-
 // ================= 30-मिनट टाइमर, ऑटो-लॉक व MPIN लॉजिक =================
 var SESSION_LIMIT_MS = 30 * 60 * 1000; // 30 मिनट
 
