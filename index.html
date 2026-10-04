@@ -1756,7 +1756,96 @@ body.modal-open {
 
     <div style="display:flex; justify-content:center; gap:10px;">
       <button type="button" class="submit-btn" style="width:auto; padding:8px 20px; font-size:13px; background:#1e3a8a; margin:0;" onclick="applyCropImage()">Crop Image</button>
-      <button type="button" class="submit-btn" style="width:auto; padding:8px 20px; font-size:13px; background:#dc2626; margin:0;" onclick="closeModal('imgCropModal')">Cancel</button>
+     <!-- ADVANCED RESIZE & DPI MODAL -->
+<div class="modal-backdrop" id="imgResizeModal">
+  <div class="modal-box" style="max-width:520px; text-align:center;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--input-border); padding-bottom:8px;">
+      <h4 style="font-size:15px; font-weight:bold; color:#2563eb; margin:0;"><i class="fa-solid fa-arrows-up-down-left-right"></i> इमेज रीसाइज़ एवं DPI सेटिंग</h4>
+      <button type="button" onclick="closeModal('imgResizeModal')" style="background:#dc2626; color:#fff; border:none; width:26px; height:26px; border-radius:50%; cursor:pointer;">✕</button>
+    </div>
+
+    <!-- Unit Selection Pills -->
+    <div style="display:flex; justify-content:center; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
+      <span style="font-size:12px; font-weight:bold;">यूनिट चुनें:</span>
+      <button type="button" id="unitBtnPX" onclick="switchResizeUnit('Pixels')" style="padding:4px 10px; border-radius:14px; border:none; background:#1e3a8a; color:#fff; cursor:pointer; font-size:12px; font-weight:bold;">Pixels</button>
+      <button type="button" id="unitBtnMM" onclick="switchResizeUnit('MM')" style="padding:4px 10px; border-radius:14px; border:1px solid #cbd5e1; background:var(--input-bg); cursor:pointer; font-size:12px;">MM</button>
+      <button type="button" id="unitBtnCM" onclick="switchResizeUnit('CM')" style="padding:4px 10px; border-radius:14px; border:1px solid #cbd5e1; background:var(--input-bg); cursor:pointer; font-size:12px;">CM</button>
+      <button type="button" id="unitBtnINCH" onclick="switchResizeUnit('Inch')" style="padding:4px 10px; border-radius:14px; border:1px solid #cbd5e1; background:var(--input-bg); cursor:pointer; font-size:12px;">Inch</button>
+    </div>
+
+    <!-- DPI Setting -->
+    <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:14px; background:var(--sub-box-bg); padding:8px; border-radius:8px;">
+      <label style="font-size:12px; font-weight:bold;"><i class="fa-solid fa-print"></i> रेजोल्यूशन (DPI):</label>
+      <select id="resizeDpiSelect" class="field-input" style="width:110px; padding:4px 8px; font-size:12px;" onchange="onDpiChanged()">
+        <option value="96">96 DPI (Web)</option>
+        <option value="150">150 DPI</option>
+        <option value="200" selected>200 DPI (Govt)</option>
+        <option value="300">300 DPI (HQ Print)</option>
+      </select>
+    </div>
+
+    <!-- Aspect Ratio Checkbox -->
+    <div style="margin-bottom:12px;">
+      <label style="font-size:13px; font-weight:bold; cursor:pointer;">
+        <input type="checkbox" id="maintainAspectCheck" checked onchange="handleAspectToggle()"> Maintain Aspect Ratio (अनुपात बनाए रखें)
+      </label>
+    </div>
+
+    <!-- Width and Height Inputs -->
+    <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:16px;">
+      <span style="font-weight:bold; font-size:13px;">चौड़ाई (W):</span>
+      <input type="number" step="any" id="resizeWidthInput" class="field-input" style="width:90px; text-align:center; padding:6px;" oninput="onResizeWidthChanged()">
+      <span style="background:#1e3a8a; color:#fff; padding:6px 10px; border-radius:5px; font-size:11px; font-weight:bold;" id="unitBadgeW">PX</span>
+
+      <span style="font-weight:bold; font-size:13px; margin-left:8px;">ऊंचाई (H):</span>
+      <input type="number" step="any" id="resizeHeightInput" class="field-input" style="width:90px; text-align:center; padding:6px;" oninput="onResizeHeightChanged()">
+      <span style="background:#1e3a8a; color:#fff; padding:6px 10px; border-radius:5px; font-size:11px; font-weight:bold;" id="unitBadgeH">PX</span>
+    </div>
+
+    <div style="display:flex; justify-content:center; gap:10px;">
+      <button type="button" class="submit-btn" style="width:auto; padding:8px 22px; font-size:13px; background:#1e3a8a; margin:0;" onclick="applyResizeImage()">रीसाइज़ लागू करें</button>
+      <button type="button" class="submit-btn" style="width:auto; padding:8px 18px; font-size:13px; background:#64748b; margin:0;" onclick="closeModal('imgResizeModal')">रद्द करें</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADVANCED CROP MODAL (MANUAL & AUTO) -->
+<div class="modal-backdrop" id="imgCropModal">
+  <div class="modal-box" style="max-width:560px; text-align:center;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--input-border); padding-bottom:8px;">
+      <h4 style="font-size:15px; font-weight:bold; color:#2563eb; margin:0;"><i class="fa-solid fa-crop-simple"></i> फोटो क्रॉप एवं रोटेट</h4>
+      <button type="button" onclick="closeModal('imgCropModal')" style="background:#dc2626; color:#fff; border:none; width:26px; height:26px; border-radius:50%; cursor:pointer;">✕</button>
+    </div>
+
+    <!-- Mode Selector: Auto vs Manual -->
+    <div style="display:flex; justify-content:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+      <button type="button" id="cropPresetFree" onclick="setCropRatio('free')" style="padding:4px 10px; border-radius:6px; font-size:12px; font-weight:bold; background:#1e3a8a; color:#fff; border:none; cursor:pointer;">फ्री क्रॉप</button>
+      <button type="button" id="cropPresetPassport" onclick="setCropRatio('passport')" style="padding:4px 10px; border-radius:6px; font-size:12px; background:var(--input-bg); border:1px solid #cbd5e1; cursor:pointer;">पासपोर्ट (3.5x4.5)</button>
+      <button type="button" id="cropPresetSquare" onclick="setCropRatio('1:1')" style="padding:4px 10px; border-radius:6px; font-size:12px; background:var(--input-bg); border:1px solid #cbd5e1; cursor:pointer;">स्क्वायर (1:1)</button>
+      <button type="button" onclick="autoCenterCrop()" style="padding:4px 10px; border-radius:6px; font-size:12px; font-weight:bold; background:#16a34a; color:#fff; border:none; cursor:pointer;">⚡ ऑटो सेंटर क्रॉप</button>
+    </div>
+
+    <!-- Viewport Area -->
+    <div style="background: repeating-conic-gradient(#64748b 0% 25%, #334155 0% 50%) 50% / 20px 20px; border-radius:10px; padding:15px; display:flex; justify-content:center; align-items:center; min-height:240px; overflow:hidden;">
+      <div id="cropTargetContainer" style="position:relative; display:inline-block; overflow:hidden; border:2px solid #38bdf8; border-radius:6px;">
+        <img id="imgCropTarget" src="" style="max-height:240px; max-width:100%; display:block; transform-origin:center center;">
+      </div>
+    </div>
+
+    <!-- Sliders -->
+    <div style="margin-top:14px;">
+      <div style="font-size:12.5px; font-weight:bold; margin-bottom:4px;">रोटेट करें (Rotate Angle)</div>
+      <input type="range" id="cropRotateSlider" min="-180" max="180" value="0" style="width:80%;" oninput="applyCropTransform()">
+    </div>
+
+    <div style="margin-top:10px; margin-bottom:16px;">
+      <div style="font-size:12.5px; font-weight:bold; margin-bottom:4px;">ज़ूम इन (Zoom Level)</div>
+      <input type="range" id="cropZoomSlider" min="1" max="3" step="0.05" value="1" style="width:80%;" oninput="applyCropTransform()">
+    </div>
+
+    <div style="display:flex; justify-content:center; gap:10px;">
+      <button type="button" class="submit-btn" style="width:auto; padding:8px 22px; font-size:13px; background:#1e3a8a; margin:0;" onclick="applyCropImage()">क्रॉप लागू करें</button>
+      <button type="button" class="submit-btn" style="width:auto; padding:8px 18px; font-size:13px; background:#64748b; margin:0;" onclick="closeModal('imgCropModal')">रद्द करें</button>
     </div>
   </div>
 </div>
@@ -5541,6 +5630,380 @@ function compressCanvasToExactBytes(img, targetBytes, callback) {
         binarySearchQuality();
       } else {
         // Agar minimum quality par bhi target se bada hai, to dimension 10% kam karein
+        if (!bestBlob || bestBlob.size > targetBytes) {
+          curW = Math.round(curW * 0.9);
+          curH = Math.round(curH * 0.9);
+          canvas.width = curW;
+          canvas.height = curH;
+          ctx.drawImage(img, 0, 0, curW, curH);
+          minQ = 0.05;
+          maxQ = 0.92;
+          iterations = 0;
+          binarySearchQuality();
+        } else {
+          var finalKB = Math.round(bestBlob.size / 1024);
+          callback(bestBlob, finalKB);
+        }
+      }
+    }, 'image/jpeg', midQ);
+  }
+
+  binarySearchQuality();
+}
+
+// ================= ADVANCED IMAGE COMPRESSION & RESIZE ENGINE =================
+var currentOriginalFile = null;
+var workingImageObj = new Image();
+var currentOriginalKB = 0;
+var activeDimensionUnit = "Pixels";
+var activeDPI = 200;
+var workingAspect = 1;
+var processedBlob = null;
+var activeCropRatio = "free";
+
+// Drag & drop support
+var dropArea = document.getElementById('imgUploadDropArea');
+if (dropArea) {
+  ['dragenter', 'dragover'].forEach(function(evt) {
+    dropArea.addEventListener(evt, function(e) { e.preventDefault(); dropArea.style.borderColor = '#16a34a'; });
+  });
+  ['dragleave', 'drop'].forEach(function(evt) {
+    dropArea.addEventListener(evt, function(e) { e.preventDefault(); dropArea.style.borderColor = '#3b82f6'; });
+  });
+  dropArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+      loadSelectedImageFile(e.dataTransfer.files[0]);
+    }
+  });
+}
+
+function handleImageFileSelected(input) {
+  if (input.files && input.files.length > 0) {
+    loadSelectedImageFile(input.files[0]);
+  }
+}
+
+function loadSelectedImageFile(file) {
+  currentOriginalFile = file;
+  currentOriginalKB = Math.round(file.size / 1024);
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    workingImageObj = new Image();
+    workingImageObj.onload = function() {
+      workingAspect = workingImageObj.width / workingImageObj.height;
+      updateWorkspaceMeta(file.name);
+      document.getElementById('imgActiveWorkspace').style.display = 'block';
+      document.getElementById('imgResultCard').style.display = 'none';
+    };
+    workingImageObj.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function updateWorkspaceMeta(fileName) {
+  document.getElementById('imgPreviewThumb').src = workingImageObj.src;
+  document.getElementById('imgMetaName').innerText = fileName || (currentOriginalFile ? currentOriginalFile.name : "photo.jpeg");
+  document.getElementById('imgMetaSize').innerText = currentOriginalKB + " KB";
+  document.getElementById('imgMetaWidth').innerText = workingImageObj.width;
+  document.getElementById('imgMetaHeight').innerText = workingImageObj.height;
+
+  var baseName = (fileName || (currentOriginalFile ? currentOriginalFile.name : "photo")).split('.')[0];
+  document.getElementById('finalRenameInput').value = baseName + "-50kb";
+}
+
+function resetImageTool() {
+  currentOriginalFile = null;
+  document.getElementById('hiddenImgFileInput').value = '';
+  document.getElementById('imgActiveWorkspace').style.display = 'none';
+  document.getElementById('imgResultCard').style.display = 'none';
+}
+
+// ----------------- UNIT & DPI CONVERSION ENGINE -----------------
+function pxToUnit(px, unit, dpi) {
+  if (unit === 'Pixels') return Math.round(px);
+  if (unit === 'Inch') return +(px / dpi).toFixed(2);
+  if (unit === 'MM') return +((px * 25.4) / dpi).toFixed(1);
+  if (unit === 'CM') return +((px * 2.54) / dpi).toFixed(2);
+  return Math.round(px);
+}
+
+function unitToPx(val, unit, dpi) {
+  val = parseFloat(val) || 0;
+  if (unit === 'Pixels') return Math.round(val);
+  if (unit === 'Inch') return Math.round(val * dpi);
+  if (unit === 'MM') return Math.round((val / 25.4) * dpi);
+  if (unit === 'CM') return Math.round((val / 2.54) * dpi);
+  return Math.round(val);
+}
+
+function openResizeModal() {
+  if (!workingImageObj.src) return;
+  activeDPI = parseInt(document.getElementById('resizeDpiSelect').value, 10) || 200;
+  switchResizeUnit(activeDimensionUnit || 'Pixels');
+  openModal('imgResizeModal');
+}
+
+function switchResizeUnit(unit) {
+  activeDimensionUnit = unit;
+  activeDPI = parseInt(document.getElementById('resizeDpiSelect').value, 10) || 200;
+
+  var btns = {
+    'Pixels': document.getElementById('unitBtnPX'),
+    'MM': document.getElementById('unitBtnMM'),
+    'CM': document.getElementById('unitBtnCM'),
+    'Inch': document.getElementById('unitBtnINCH')
+  };
+
+  for (var k in btns) {
+    if (btns[k]) {
+      btns[k].style.background = (k === unit) ? '#1e3a8a' : 'var(--input-bg)';
+      btns[k].style.color = (k === unit) ? '#fff' : 'var(--text-main)';
+      btns[k].style.border = (k === unit) ? 'none' : '1px solid #cbd5e1';
+    }
+  }
+
+  var label = (unit === 'MM') ? 'MM' : ((unit === 'CM') ? 'CM' : ((unit === 'Inch') ? 'IN' : 'PX'));
+  document.getElementById('unitBadgeW').innerText = label;
+  document.getElementById('unitBadgeH').innerText = label;
+
+  document.getElementById('resizeWidthInput').value = pxToUnit(workingImageObj.width, unit, activeDPI);
+  document.getElementById('resizeHeightInput').value = pxToUnit(workingImageObj.height, unit, activeDPI);
+}
+
+function onDpiChanged() {
+  activeDPI = parseInt(document.getElementById('resizeDpiSelect').value, 10) || 200;
+  if (activeDimensionUnit !== 'Pixels') {
+    document.getElementById('resizeWidthInput').value = pxToUnit(workingImageObj.width, activeDimensionUnit, activeDPI);
+    document.getElementById('resizeHeightInput').value = pxToUnit(workingImageObj.height, activeDimensionUnit, activeDPI);
+  }
+}
+
+function handleAspectToggle() {
+  if (document.getElementById('maintainAspectCheck').checked) {
+    onResizeWidthChanged();
+  }
+}
+
+function onResizeWidthChanged() {
+  var w = parseFloat(document.getElementById('resizeWidthInput').value) || 0;
+  if (document.getElementById('maintainAspectCheck').checked && w && workingAspect) {
+    var h = +(w / workingAspect).toFixed(2);
+    document.getElementById('resizeHeightInput').value = (activeDimensionUnit === 'Pixels') ? Math.round(h) : h;
+  }
+}
+
+function onResizeHeightChanged() {
+  var h = parseFloat(document.getElementById('resizeHeightInput').value) || 0;
+  if (document.getElementById('maintainAspectCheck').checked && h && workingAspect) {
+    var w = +(h * workingAspect).toFixed(2);
+    document.getElementById('resizeWidthInput').value = (activeDimensionUnit === 'Pixels') ? Math.round(w) : w;
+  }
+}
+
+function applyResizeImage() {
+  var inW = document.getElementById('resizeWidthInput').value;
+  var inH = document.getElementById('resizeHeightInput').value;
+
+  var targetPxW = unitToPx(inW, activeDimensionUnit, activeDPI);
+  var targetPxH = unitToPx(inH, activeDimensionUnit, activeDPI);
+
+  if (!targetPxW || !targetPxH || targetPxW <= 0 || targetPxH <= 0) {
+    alert("अमान्य साइज!");
+    return;
+  }
+
+  var canvas = document.createElement('canvas');
+  canvas.width = targetPxW;
+  canvas.height = targetPxH;
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(workingImageObj, 0, 0, targetPxW, targetPxH);
+
+  var resizedDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+  workingImageObj.onload = function() {
+    workingAspect = workingImageObj.width / workingImageObj.height;
+    updateWorkspaceMeta();
+    closeModal('imgResizeModal');
+  };
+  workingImageObj.src = resizedDataUrl;
+}
+
+// ----------------- CROP & ROTATE ENGINE (MANUAL & AUTO) -----------------
+function openCropModal() {
+  if (!workingImageObj.src) return;
+  document.getElementById('imgCropTarget').src = workingImageObj.src;
+  document.getElementById('cropRotateSlider').value = 0;
+  document.getElementById('cropZoomSlider').value = 1;
+  setCropRatio('free');
+  applyCropTransform();
+  openModal('imgCropModal');
+}
+
+function setCropRatio(ratio) {
+  activeCropRatio = ratio;
+  var pFree = document.getElementById('cropPresetFree');
+  var pPass = document.getElementById('cropPresetPassport');
+  var pSq = document.getElementById('cropPresetSquare');
+
+  [pFree, pPass, pSq].forEach(function(b) {
+    if (b) {
+      b.style.background = 'var(--input-bg)';
+      b.style.color = 'var(--text-main)';
+      b.style.border = '1px solid #cbd5e1';
+    }
+  });
+
+  var active = (ratio === 'passport') ? pPass : ((ratio === '1:1') ? pSq : pFree);
+  if (active) {
+    active.style.background = '#1e3a8a';
+    active.style.color = '#fff';
+  }
+
+  var box = document.getElementById('cropTargetContainer');
+  if (box) {
+    if (ratio === 'passport') {
+      box.style.aspectRatio = "3.5 / 4.5";
+    } else if (ratio === '1:1') {
+      box.style.aspectRatio = "1 / 1";
+    } else {
+      box.style.aspectRatio = "unset";
+    }
+  }
+}
+
+function autoCenterCrop() {
+  var canvas = document.createElement('canvas');
+  var cropW = Math.round(workingImageObj.width * 0.8);
+  var cropH = Math.round(workingImageObj.height * 0.8);
+  var startX = Math.round((workingImageObj.width - cropW) / 2);
+  var startY = Math.round((workingImageObj.height - cropH) / 2);
+
+  canvas.width = cropW;
+  canvas.height = cropH;
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(workingImageObj, startX, startY, cropW, cropH, 0, 0, cropW, cropH);
+
+  var autoDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+  workingImageObj.onload = function() {
+    workingAspect = workingImageObj.width / workingImageObj.height;
+    updateWorkspaceMeta();
+    closeModal('imgCropModal');
+  };
+  workingImageObj.src = autoDataUrl;
+}
+
+function applyCropTransform() {
+  var deg = document.getElementById('cropRotateSlider').value;
+  var zoom = document.getElementById('cropZoomSlider').value;
+  var target = document.getElementById('imgCropTarget');
+  if (target) {
+    target.style.transform = "rotate(" + deg + "deg) scale(" + zoom + ")";
+  }
+}
+
+function applyCropImage() {
+  var deg = parseFloat(document.getElementById('cropRotateSlider').value) || 0;
+  var zoom = parseFloat(document.getElementById('cropZoomSlider').value) || 1;
+
+  var canvas = document.createElement('canvas');
+  var w = workingImageObj.width;
+  var h = workingImageObj.height;
+
+  if (activeCropRatio === 'passport') {
+    h = Math.round(w * (4.5 / 3.5));
+  } else if (activeCropRatio === '1:1') {
+    h = w;
+  }
+
+  canvas.width = w;
+  canvas.height = h;
+  var ctx = canvas.getContext('2d');
+
+  ctx.translate(w / 2, h / 2);
+  ctx.rotate((deg * Math.PI) / 180);
+  ctx.scale(zoom, zoom);
+  ctx.drawImage(workingImageObj, -workingImageObj.width / 2, -workingImageObj.height / 2);
+
+  var croppedDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+  workingImageObj.onload = function() {
+    workingAspect = workingImageObj.width / workingImageObj.height;
+    updateWorkspaceMeta();
+    closeModal('imgCropModal');
+  };
+  workingImageObj.src = croppedDataUrl;
+}
+
+// ----------------- EXACT TARGET COMPRESSION ENGINE -----------------
+function startCompressImage() {
+  if (!workingImageObj.src) return;
+
+  var targetVal = parseFloat(document.getElementById('targetKbInput').value) || 50;
+  var unit = document.getElementById('targetKbUnit').value;
+  var targetBytes = (unit === "MB") ? (targetVal * 1024 * 1024) : (targetVal * 1024);
+
+  showLoader("फोटो " + targetVal + " " + unit + " में सटीक कंप्रेस हो रही है...");
+
+  setTimeout(function() {
+    compressCanvasToExactBytes(workingImageObj, targetBytes, function(finalBlob, finalKB) {
+      hideLoader();
+      processedBlob = finalBlob;
+
+      var resultUrl = URL.createObjectURL(finalBlob);
+      document.getElementById('imgFinalResultPreview').src = resultUrl;
+      document.getElementById('finalSizeResult').innerText = finalKB + " KB";
+      document.getElementById('finalOriginalSizeResult').innerText = currentOriginalKB + " KB";
+
+      var reduction = Math.max(0, Math.round(((currentOriginalKB - finalKB) / currentOriginalKB) * 100));
+      document.getElementById('finalPercentReduction').innerText = reduction + "% smaller";
+
+      document.getElementById('imgResultCard').style.display = 'block';
+      document.getElementById('imgResultCard').scrollIntoView({ behavior: 'smooth' });
+
+      if (loggedInPsUser) {
+        var logPayload = {
+          email: loggedInPsUser.email,
+          gramPanchayat: loggedInPsUser.gramPanchayat,
+          fullName: loggedInPsUser.fullName,
+          fileName: (currentOriginalFile ? currentOriginalFile.name : "photo.jpg"),
+          originalSizeKB: currentOriginalKB,
+          compressedSizeKB: finalKB,
+          targetSizeKB: targetVal + " " + unit
+        };
+        google.script.run.logImageCompressionActivity(logPayload);
+      }
+    });
+  }, 100);
+}
+
+function compressCanvasToExactBytes(img, targetBytes, callback) {
+  var canvas = document.createElement('canvas');
+  var curW = img.width;
+  var curH = img.height;
+  canvas.width = curW;
+  canvas.height = curH;
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, curW, curH);
+
+  var minQ = 0.01;
+  var maxQ = 0.98;
+  var bestBlob = null;
+  var iterations = 0;
+
+  function binarySearchQuality() {
+    var midQ = (minQ + maxQ) / 2;
+    canvas.toBlob(function(blob) {
+      iterations++;
+      if (blob.size <= targetBytes) {
+        bestBlob = blob;
+        minQ = midQ;
+      } else {
+        maxQ = midQ;
+      }
+
+      if (iterations < 8 && (maxQ - minQ) > 0.015) {
+        binarySearchQuality();
+      } else {
         if (!bestBlob || bestBlob.size > targetBytes) {
           curW = Math.round(curW * 0.9);
           curH = Math.round(curH * 0.9);
