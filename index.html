@@ -707,6 +707,9 @@ body.modal-open {
   <!-- तारीख को हमेशा 31/08/2026 (DD/MM/YYYY) फ़ॉर्मेट में दिखाने के लिए -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <!-- Advanced Crop Library (Cropper.js) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </head>
 <body>
 
@@ -1688,164 +1691,101 @@ body.modal-open {
   </div>
 </div>
 
-<!-- RESIZE IMAGE MODAL (Screenshot 2) -->
+<!-- 1. ADVANCED RESIZE & DPI MODAL -->
 <div class="modal-backdrop" id="imgResizeModal">
-  <div class="modal-box" style="max-width:480px; text-align:center;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-      <div style="display:flex; align-items:center; gap:6px; font-size:13px; font-weight:bold;">
-        <span>Resize Image In</span>
-        <button type="button" id="unitBtnPX" onclick="switchResizeUnit('Pixels')" style="padding:3px 10px; border-radius:14px; border:none; background:#1e3a8a; color:#fff; cursor:pointer;">Pixels</button>
-        <button type="button" id="unitBtnMM" onclick="switchResizeUnit('MM')" style="padding:3px 10px; border-radius:14px; border:1px solid #cbd5e1; background:var(--input-bg); cursor:pointer;">MM (Millimeter)</button>
-        <button type="button" id="unitBtnCM" onclick="switchResizeUnit('CM')" style="padding:3px 10px; border-radius:14px; border:1px solid #cbd5e1; background:var(--input-bg); cursor:pointer;">CM (Centimetre)</button>
-      </div>
-      <button type="button" onclick="closeModal('imgResizeModal')" style="background:#dc2626; color:#fff; border:none; width:24px; height:24px; border-radius:4px; cursor:pointer;">✕</button>
-    </div>
-
-    <div style="margin:10px auto; max-height:200px; display:flex; justify-content:center;">
-      <img id="imgResizePreview" src="" style="max-height:180px; border-radius:6px; border:1px solid var(--input-border);">
-    </div>
-
-    <p style="font-size:12px; color:#64748b; margin-bottom:10px;">Please enter the width and height of the image you wish to resize</p>
-
-    <div style="margin-bottom:12px;">
-      <label style="font-size:13px; font-weight:bold; cursor:pointer;">
-        <input type="checkbox" id="maintainAspectCheck" checked onchange="handleAspectToggle()"> Maintain Aspect Ratio
-      </label>
-    </div>
-
-    <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:18px;">
-      <span style="font-weight:bold; font-size:13px;">Width:</span>
-      <input type="number" id="resizeWidthInput" class="field-input" style="width:90px; text-align:center; padding:6px;" oninput="onResizeWidthChanged()">
-      <span style="background:#1e3a8a; color:#fff; padding:6px 10px; border-radius:5px; font-size:11px; font-weight:bold;" id="unitBadgeW">PX</span>
-
-      <span style="font-weight:bold; font-size:13px; margin-left:8px;">Height:</span>
-      <input type="number" id="resizeHeightInput" class="field-input" style="width:90px; text-align:center; padding:6px;" oninput="onResizeHeightChanged()">
-      <span style="background:#1e3a8a; color:#fff; padding:6px 10px; border-radius:5px; font-size:11px; font-weight:bold;" id="unitBadgeH">PX</span>
-    </div>
-
-    <div style="display:flex; justify-content:center; gap:10px;">
-      <button type="button" class="submit-btn" style="width:auto; padding:8px 20px; font-size:13px; background:#1e3a8a; margin:0;" onclick="applyResizeImage()">Resize Image</button>
-      <button type="button" class="submit-btn" style="width:auto; padding:8px 20px; font-size:13px; background:#dc2626; margin:0;" onclick="closeModal('imgResizeModal')">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- CROP & ROTATE MODAL (Screenshot 3) -->
-<div class="modal-backdrop" id="imgCropModal">
   <div class="modal-box" style="max-width:540px; text-align:center;">
-    <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
-      <button type="button" onclick="closeModal('imgCropModal')" style="background:#dc2626; color:#fff; border:none; width:24px; height:24px; border-radius:4px; cursor:pointer;">✕</button>
-    </div>
-
-    <!-- Checkered Background Viewport -->
-    <div style="background: repeating-conic-gradient(#808080 0% 25%, #404040 0% 50%) 50% / 20px 20px; border-radius:10px; padding:15px; display:flex; justify-content:center; align-items:center; min-height:240px; overflow:hidden;">
-      <div id="cropCanvasWrapper" style="position:relative; display:inline-block; overflow:hidden;">
-        <img id="imgCropTarget" src="" style="max-height:220px; max-width:100%; display:block; transform-origin:center center;">
-      </div>
-    </div>
-
-    <div style="margin-top:14px;">
-      <div style="font-size:12.5px; font-weight:bold; color:var(--text-main); margin-bottom:4px;">Rotate Image By Moving Slider</div>
-      <input type="range" id="cropRotateSlider" min="-180" max="180" value="0" style="width:80%; accent-color:#3b82f6;" oninput="applyCropTransform()">
-    </div>
-
-    <div style="margin-top:10px; margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:bold; color:var(--text-main); margin-bottom:4px;">Zoom In Image By Moving Slider</div>
-      <input type="range" id="cropZoomSlider" min="1" max="3" step="0.05" value="1" style="width:80%; accent-color:#3b82f6;" oninput="applyCropTransform()">
-    </div>
-
-    <div style="display:flex; justify-content:center; gap:10px;">
-      <button type="button" class="submit-btn" style="width:auto; padding:8px 20px; font-size:13px; background:#1e3a8a; margin:0;" onclick="applyCropImage()">Crop Image</button>
-     <!-- ADVANCED RESIZE & DPI MODAL -->
-<div class="modal-backdrop" id="imgResizeModal">
-  <div class="modal-box" style="max-width:520px; text-align:center;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--input-border); padding-bottom:8px;">
-      <h4 style="font-size:15px; font-weight:bold; color:#2563eb; margin:0;"><i class="fa-solid fa-arrows-up-down-left-right"></i> इमेज रीसाइज़ एवं DPI सेटिंग</h4>
+      <h4 style="font-size:16px; font-weight:bold; color:#2563eb; margin:0;"><i class="fa-solid fa-arrows-up-down-left-right"></i> इमेज रीसाइज़ एवं DPI सेटिंग</h4>
       <button type="button" onclick="closeModal('imgResizeModal')" style="background:#dc2626; color:#fff; border:none; width:26px; height:26px; border-radius:50%; cursor:pointer;">✕</button>
     </div>
 
-    <!-- Unit Selection Pills -->
-    <div style="display:flex; justify-content:center; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
-      <span style="font-size:12px; font-weight:bold;">यूनिट चुनें:</span>
-      <button type="button" id="unitBtnPX" onclick="switchResizeUnit('Pixels')" style="padding:4px 10px; border-radius:14px; border:none; background:#1e3a8a; color:#fff; cursor:pointer; font-size:12px; font-weight:bold;">Pixels</button>
-      <button type="button" id="unitBtnMM" onclick="switchResizeUnit('MM')" style="padding:4px 10px; border-radius:14px; border:1px solid #cbd5e1; background:var(--input-bg); cursor:pointer; font-size:12px;">MM</button>
-      <button type="button" id="unitBtnCM" onclick="switchResizeUnit('CM')" style="padding:4px 10px; border-radius:14px; border:1px solid #cbd5e1; background:var(--input-bg); cursor:pointer; font-size:12px;">CM</button>
-      <button type="button" id="unitBtnINCH" onclick="switchResizeUnit('Inch')" style="padding:4px 10px; border-radius:14px; border:1px solid #cbd5e1; background:var(--input-bg); cursor:pointer; font-size:12px;">Inch</button>
+    <!-- 4 Units Selection (Pixels, MM, CM, Inch) -->
+    <div style="display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+      <span style="font-size:13px; font-weight:bold;">यूनिट चुनें:</span>
+      <button type="button" id="unitBtnPX" onclick="switchResizeUnit('Pixels')" style="padding:6px 12px; border-radius:16px; border:none; background:#1e3a8a; color:#fff; cursor:pointer; font-size:12.5px; font-weight:bold;">Pixels</button>
+      <button type="button" id="unitBtnMM" onclick="switchResizeUnit('MM')" style="padding:6px 12px; border-radius:16px; border:1px solid #cbd5e1; background:var(--input-bg); cursor:pointer; font-size:12.5px;">MM</button>
+      <button type="button" id="unitBtnCM" onclick="switchResizeUnit('CM')" style="padding:6px 12px; border-radius:16px; border:1px solid #cbd5e1; background:var(--input-bg); cursor:pointer; font-size:12.5px;">CM</button>
+      <button type="button" id="unitBtnINCH" onclick="switchResizeUnit('Inch')" style="padding:6px 12px; border-radius:16px; border:1px solid #cbd5e1; background:var(--input-bg); cursor:pointer; font-size:12.5px; font-weight:bold;">Inch (इंच)</button>
     </div>
 
     <!-- DPI Setting -->
-    <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:14px; background:var(--sub-box-bg); padding:8px; border-radius:8px;">
-      <label style="font-size:12px; font-weight:bold;"><i class="fa-solid fa-print"></i> रेजोल्यूशन (DPI):</label>
-      <select id="resizeDpiSelect" class="field-input" style="width:110px; padding:4px 8px; font-size:12px;" onchange="onDpiChanged()">
+    <div style="display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:14px; background:var(--sub-box-bg); padding:10px; border-radius:8px;">
+      <label style="font-size:13px; font-weight:bold;"><i class="fa-solid fa-print"></i> रेजोल्यूशन (DPI):</label>
+      <select id="resizeDpiSelect" class="field-input" style="width:130px; padding:6px 10px; font-size:13px;" onchange="onDpiChanged()">
         <option value="96">96 DPI (Web)</option>
         <option value="150">150 DPI</option>
-        <option value="200" selected>200 DPI (Govt)</option>
+        <option value="200" selected>200 DPI (मानक)</option>
         <option value="300">300 DPI (HQ Print)</option>
       </select>
     </div>
 
-    <!-- Aspect Ratio Checkbox -->
+    <!-- Maintain Aspect Ratio -->
     <div style="margin-bottom:12px;">
       <label style="font-size:13px; font-weight:bold; cursor:pointer;">
-        <input type="checkbox" id="maintainAspectCheck" checked onchange="handleAspectToggle()"> Maintain Aspect Ratio (अनुपात बनाए रखें)
+        <input type="checkbox" id="maintainAspectCheck" checked onchange="handleAspectToggle()"> Maintain Aspect Ratio (समानुपातिक रखें)
       </label>
     </div>
 
-    <!-- Width and Height Inputs -->
-    <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:16px;">
+    <!-- Dimensions Inputs -->
+    <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:8px;">
       <span style="font-weight:bold; font-size:13px;">चौड़ाई (W):</span>
-      <input type="number" step="any" id="resizeWidthInput" class="field-input" style="width:90px; text-align:center; padding:6px;" oninput="onResizeWidthChanged()">
+      <input type="number" step="any" id="resizeWidthInput" class="field-input" style="width:100px; text-align:center; padding:7px;" oninput="onResizeWidthChanged()">
       <span style="background:#1e3a8a; color:#fff; padding:6px 10px; border-radius:5px; font-size:11px; font-weight:bold;" id="unitBadgeW">PX</span>
 
       <span style="font-weight:bold; font-size:13px; margin-left:8px;">ऊंचाई (H):</span>
-      <input type="number" step="any" id="resizeHeightInput" class="field-input" style="width:90px; text-align:center; padding:6px;" oninput="onResizeHeightChanged()">
+      <input type="number" step="any" id="resizeHeightInput" class="field-input" style="width:100px; text-align:center; padding:7px;" oninput="onResizeHeightChanged()">
       <span style="background:#1e3a8a; color:#fff; padding:6px 10px; border-radius:5px; font-size:11px; font-weight:bold;" id="unitBadgeH">PX</span>
     </div>
 
+    <!-- Live Pixel Calculation Info -->
+    <div id="livePixelReadout" style="font-size:12px; font-weight:bold; color:#16a34a; margin-bottom:16px;">🎯 कुल पिक्सल: 0 × 0 PX</div>
+
     <div style="display:flex; justify-content:center; gap:10px;">
-      <button type="button" class="submit-btn" style="width:auto; padding:8px 22px; font-size:13px; background:#1e3a8a; margin:0;" onclick="applyResizeImage()">रीसाइज़ लागू करें</button>
-      <button type="button" class="submit-btn" style="width:auto; padding:8px 18px; font-size:13px; background:#64748b; margin:0;" onclick="closeModal('imgResizeModal')">रद्द करें</button>
+      <button type="button" class="submit-btn" style="width:auto; padding:8px 24px; font-size:13.5px; background:#1e3a8a; margin:0;" onclick="applyResizeImage()">रीसाइज़ लागू करें</button>
+      <button type="button" class="submit-btn" style="width:auto; padding:8px 20px; font-size:13.5px; background:#64748b; margin:0;" onclick="closeModal('imgResizeModal')">रद्द करें</button>
     </div>
   </div>
 </div>
 
-<!-- ADVANCED CROP MODAL (MANUAL & AUTO) -->
+<!-- 2. ADVANCED CROP MODAL (INTERACTIVE MANUAL DRAG & AUTO PRESETS) -->
 <div class="modal-backdrop" id="imgCropModal">
-  <div class="modal-box" style="max-width:560px; text-align:center;">
+  <div class="modal-box" style="max-width:620px; text-align:center;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--input-border); padding-bottom:8px;">
-      <h4 style="font-size:15px; font-weight:bold; color:#2563eb; margin:0;"><i class="fa-solid fa-crop-simple"></i> फोटो क्रॉप एवं रोटेट</h4>
+      <h4 style="font-size:16px; font-weight:bold; color:#2563eb; margin:0;"><i class="fa-solid fa-crop-simple"></i> फोटो क्रॉप एवं रोटेट टूल</h4>
       <button type="button" onclick="closeModal('imgCropModal')" style="background:#dc2626; color:#fff; border:none; width:26px; height:26px; border-radius:50%; cursor:pointer;">✕</button>
     </div>
 
-    <!-- Mode Selector: Auto vs Manual -->
-    <div style="display:flex; justify-content:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
-      <button type="button" id="cropPresetFree" onclick="setCropRatio('free')" style="padding:4px 10px; border-radius:6px; font-size:12px; font-weight:bold; background:#1e3a8a; color:#fff; border:none; cursor:pointer;">फ्री क्रॉप</button>
-      <button type="button" id="cropPresetPassport" onclick="setCropRatio('passport')" style="padding:4px 10px; border-radius:6px; font-size:12px; background:var(--input-bg); border:1px solid #cbd5e1; cursor:pointer;">पासपोर्ट (3.5x4.5)</button>
-      <button type="button" id="cropPresetSquare" onclick="setCropRatio('1:1')" style="padding:4px 10px; border-radius:6px; font-size:12px; background:var(--input-bg); border:1px solid #cbd5e1; cursor:pointer;">स्क्वायर (1:1)</button>
-      <button type="button" onclick="autoCenterCrop()" style="padding:4px 10px; border-radius:6px; font-size:12px; font-weight:bold; background:#16a34a; color:#fff; border:none; cursor:pointer;">⚡ ऑटो सेंटर क्रॉप</button>
+    <!-- Manual Drag vs Auto Preset Buttons -->
+    <div style="display:flex; justify-content:center; gap:6px; margin-bottom:12px; flex-wrap:wrap;">
+      <button type="button" id="cropPresetFree" onclick="setCropRatio('free')" style="padding:5px 12px; border-radius:6px; font-size:12px; font-weight:bold; background:#1e3a8a; color:#fff; border:none; cursor:pointer;">✂️ फ्री मैनुअल क्रॉप</button>
+      <button type="button" id="cropPresetPassport" onclick="setCropRatio('passport')" style="padding:5px 12px; border-radius:6px; font-size:12px; background:var(--input-bg); border:1px solid #cbd5e1; cursor:pointer;">👤 पासपोर्ट (3.5×4.5 cm)</button>
+      <button type="button" id="cropPresetSquare" onclick="setCropRatio('1:1')" style="padding:5px 12px; border-radius:6px; font-size:12px; background:var(--input-bg); border:1px solid #cbd5e1; cursor:pointer;">⬛ चौकोर (1:1)</button>
+      <button type="button" id="cropPresetSign" onclick="setCropRatio('sign')" style="padding:5px 12px; border-radius:6px; font-size:12px; background:var(--input-bg); border:1px solid #cbd5e1; cursor:pointer;">✍️ हस्ताक्षर (3:1)</button>
+      <button type="button" onclick="autoCenterCrop()" style="padding:5px 12px; border-radius:6px; font-size:12px; font-weight:bold; background:#16a34a; color:#fff; border:none; cursor:pointer;">⚡ ऑटो सेंटर</button>
     </div>
 
-    <!-- Viewport Area -->
-    <div style="background: repeating-conic-gradient(#64748b 0% 25%, #334155 0% 50%) 50% / 20px 20px; border-radius:10px; padding:15px; display:flex; justify-content:center; align-items:center; min-height:240px; overflow:hidden;">
-      <div id="cropTargetContainer" style="position:relative; display:inline-block; overflow:hidden; border:2px solid #38bdf8; border-radius:6px;">
-        <img id="imgCropTarget" src="" style="max-height:240px; max-width:100%; display:block; transform-origin:center center;">
+    <!-- Interactive Cropper Viewport -->
+    <div style="background:#0f172a; border-radius:10px; padding:10px; display:flex; justify-content:center; align-items:center; max-height:360px; overflow:hidden;">
+      <div style="max-width:100%; max-height:340px;">
+        <img id="imgCropTarget" src="" style="max-width:100%; display:block;">
       </div>
     </div>
 
-    <!-- Sliders -->
-    <div style="margin-top:14px;">
-      <div style="font-size:12.5px; font-weight:bold; margin-bottom:4px;">रोटेट करें (Rotate Angle)</div>
-      <input type="range" id="cropRotateSlider" min="-180" max="180" value="0" style="width:80%;" oninput="applyCropTransform()">
+    <!-- Live Sliders -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; text-align:left;">
+      <div>
+        <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:3px;">रोटेट करें: <span id="rotateValText">0°</span></label>
+        <input type="range" id="cropRotateSlider" min="-180" max="180" value="0" style="width:100%;" oninput="onRotateSliderChanged()">
+      </div>
+      <div>
+        <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:3px;">ज़ूम करें: <span id="zoomValText">1.0x</span></label>
+        <input type="range" id="cropZoomSlider" min="0.5" max="3" step="0.05" value="1" style="width:100%;" oninput="onZoomSliderChanged()">
+      </div>
     </div>
 
-    <div style="margin-top:10px; margin-bottom:16px;">
-      <div style="font-size:12.5px; font-weight:bold; margin-bottom:4px;">ज़ूम इन (Zoom Level)</div>
-      <input type="range" id="cropZoomSlider" min="1" max="3" step="0.05" value="1" style="width:80%;" oninput="applyCropTransform()">
-    </div>
-
-    <div style="display:flex; justify-content:center; gap:10px;">
-      <button type="button" class="submit-btn" style="width:auto; padding:8px 22px; font-size:13px; background:#1e3a8a; margin:0;" onclick="applyCropImage()">क्रॉप लागू करें</button>
-      <button type="button" class="submit-btn" style="width:auto; padding:8px 18px; font-size:13px; background:#64748b; margin:0;" onclick="closeModal('imgCropModal')">रद्द करें</button>
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:16px;">
+      <button type="button" class="submit-btn" style="width:auto; padding:8px 26px; font-size:13.5px; background:#1e3a8a; margin:0;" onclick="applyCropImage()">क्रॉप लागू करें</button>
+      <button type="button" class="submit-btn" style="width:auto; padding:8px 20px; font-size:13.5px; background:#64748b; margin:0;" onclick="closeModal('imgCropModal')">रद्द करें</button>
     </div>
   </div>
 </div>
