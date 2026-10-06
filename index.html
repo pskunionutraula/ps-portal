@@ -1603,6 +1603,7 @@ body.modal-open {
             </div>
           </div>
         </div>
+      
       <!-- PS TAB: COMPRESS, RESIZE & EDIT IMAGE TOOL -->
 <div id="psImageToolTabContent" style="display:none;">
   <div class="form-header-banner" style="background:linear-gradient(135deg, #0284c7, #0f172a); border-radius:14px; margin-bottom:20px;">
@@ -2788,6 +2789,12 @@ function openAdminLoginModal() {
     document.getElementById('psPortalSection').style.display = 'none';
     document.getElementById('adminDashboardView').style.display = 'none';
     document.getElementById('publicFormView').style.display = 'block';
+
+    // होम पेज पर फोटो टूल कभी न दिखे
+  if (document.getElementById('psImageToolTabContent')) {
+    document.getElementById('psImageToolTabContent').style.display = 'none';
+  }
+    
     loadPublicHomeStats();
   }
 
@@ -3115,6 +3122,11 @@ function submitPsLogin() {
     sessionStorage.removeItem('psk_active_view');
     sessionStorage.removeItem('psk_ps_tab');
     document.getElementById('psPortalSection').style.display = 'none';
+
+  // लॉगआउट होने पर फोटो टूल बंद करें
+  if (document.getElementById('psImageToolTabContent')) {
+    document.getElementById('psImageToolTabContent').style.display = 'none';
+  }
     showHomeView();
   }
 
