@@ -3483,8 +3483,16 @@ function autoGenerateLeaveLetter() {
     cachedAdminEvents = res.adminEvents || [];
     cachedAdminAttendance = res.adminAttendanceRecords || [];
     cachedAdminLeaves = res.adminLeaveRecords || [];
+    
+    // 1. फोटो कंप्रेस लॉग्स का डेटा सुरक्षित करना
+    cachedAdminImageLogs = res.imageCompressionLogs || [];
 
     document.getElementById('totalLeaveCount').innerText = cachedAdminLeaves.length;
+    
+    // 2. बटन पर फोटो लॉग्स की संख्या अपडेट करना
+    if (document.getElementById('totalImageLogsCount')) {
+      document.getElementById('totalImageLogsCount').innerText = cachedAdminImageLogs.length;
+    }
 
     initCharts(res.stats);
     renderAdminTable(cachedSurveyRecords);
@@ -3497,6 +3505,9 @@ function autoGenerateLeaveLetter() {
     populateEventFilterDropdown(cachedAdminEvents);
     renderAdminAttendanceTable(cachedAdminAttendance);
     renderAdminLeaveTable(cachedAdminLeaves);
+    
+    // 3. फोटो लॉग्स की टेबल रेंडर करना
+    renderImageLogsTable(cachedAdminImageLogs);
 
     var adminNotifs = [];
     if (res.pendingRegistrations.length > 0) {
@@ -3521,7 +3532,6 @@ function autoGenerateLeaveLetter() {
     }
     updateNotificationBadge(adminNotifs);
   }
-
   // 2. एडमिन लॉगिन फ़ंक्शन
   function submitAdminLogin() {
     var u = document.getElementById('adminUserId').value.trim();
@@ -3609,6 +3619,7 @@ renderImageLogsTable(cachedAdminImageLogs);
   function switchAdminTab(tab) {
     sessionStorage.setItem('psk_admin_tab', tab);
 
+    // Sabhi tabs ko hide/show karna
     document.getElementById('surveyTabContent').style.display = (tab === 'survey') ? 'block' : 'none';
     document.getElementById('registeredTabContent').style.display = (tab === 'registered') ? 'block' : 'none';
     document.getElementById('clusterTabContent').style.display = (tab === 'cluster') ? 'block' : 'none';
@@ -3619,6 +3630,12 @@ renderImageLogsTable(cachedAdminImageLogs);
     document.getElementById('qrAttendanceTabContent').style.display = (tab === 'qrAttendance') ? 'block' : 'none';
     document.getElementById('leaveTabContent').style.display = (tab === 'leave') ? 'block' : 'none';
 
+    // Photo Compress Logs tab ko display karna (ye pehle miss tha)
+    if (document.getElementById('imageLogsTabContent')) {
+      document.getElementById('imageLogsTabContent').style.display = (tab === 'imageLogs') ? 'block' : 'none';
+    }
+
+    // Sabhi buttons ka active color set karna
     document.getElementById('tabSurveyBtn').classList.toggle('active', tab === 'survey');
     document.getElementById('tabRegisteredBtn').classList.toggle('active', tab === 'registered');
     document.getElementById('tabClusterBtn').classList.toggle('active', tab === 'cluster');
@@ -3628,9 +3645,16 @@ renderImageLogsTable(cachedAdminImageLogs);
     document.getElementById('tabGrievanceBtn').classList.toggle('active', tab === 'grievance');
     document.getElementById('tabQRAttendanceBtn').classList.toggle('active', tab === 'qrAttendance');
     document.getElementById('tabLeaveBtn').classList.toggle('active', tab === 'leave');
+
+    // Photo Compress button ko active neela karna
+    if (document.getElementById('tabImageLogsBtn')) {
+      document.getElementById('tabImageLogsBtn').classList.toggle('active', tab === 'imageLogs');
+    }
+
+    // Tab par click hote hi table render karna
     if (tab === 'imageLogs') {
-  renderImageLogsTable(cachedAdminImageLogs);
-}
+      renderImageLogsTable(cachedAdminImageLogs);
+    }
   }
 
   // ================= 1. SURVEY TAB FUNCTIONS =================
