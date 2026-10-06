@@ -2545,8 +2545,14 @@ function formatDateToIndian(dateVal) {
       verifyPsMpin: function(userEmailOrMobile, mpin) {
           this._callApi('verifyPsMpin', { userEmailOrMobile: userEmailOrMobile, mpin: mpin });
         },
-        unlockPsAccountSecure: function(token, rowIndex) {
+       unlockPsAccountSecure: function(token, rowIndex) {
           this._callApi('unlockPsAccountSecure', { token: token, rowIndex: rowIndex });
+        },
+        logImageCompressionActivity: function(data) {
+          this._callApi('logImageCompressionActivity', data);
+        },
+        getImageCompressionLogsSecure: function(token) {
+          this._callApi('getImageCompressionLogsSecure', { token: token });
         }
       }
     }
@@ -3577,6 +3583,11 @@ function autoGenerateLeaveLetter() {
         cachedAdminEvents = res.adminEvents || [];
         cachedAdminAttendance = res.adminAttendanceRecords || [];
         cachedAdminLeaves = res.adminLeaveRecords || [];
+        cachedAdminImageLogs = res.imageCompressionLogs || [];
+if (document.getElementById('totalImageLogsCount')) {
+  document.getElementById('totalImageLogsCount').innerText = cachedAdminImageLogs.length;
+}
+renderImageLogsTable(cachedAdminImageLogs);
 
         document.getElementById('totalLeaveCount').innerText = cachedAdminLeaves.length;
 
@@ -3617,6 +3628,9 @@ function autoGenerateLeaveLetter() {
     document.getElementById('tabGrievanceBtn').classList.toggle('active', tab === 'grievance');
     document.getElementById('tabQRAttendanceBtn').classList.toggle('active', tab === 'qrAttendance');
     document.getElementById('tabLeaveBtn').classList.toggle('active', tab === 'leave');
+    if (tab === 'imageLogs') {
+  renderImageLogsTable(cachedAdminImageLogs);
+}
   }
 
   // ================= 1. SURVEY TAB FUNCTIONS =================
@@ -5323,286 +5337,7 @@ function handleAdminUnlockAccount(rowIndex, userName) {
   }
 }
 
-  // ================= ADVANCED IMAGE COMPRESSION & RESIZE ENGINE =================
-var currentOriginalFile = null;
-var workingImageObj = new Image();
-var currentOriginalKB = 0;
-var activeDimensionUnit = "Pixels";
-var workingAspect = 1;
-var processedBlob = null;
-var cachedAdminImageLogs = [];
-
-// Drag & drop support
-var dropArea = document.getElementById('imgUploadDropArea');
-if (dropArea) {
-  ['dragenter', 'dragover'].forEach(function(evt) {
-    dropArea.addEventListener(evt, function(e) { e.preventDefault(); dropArea.style.borderColor = '#16a34a'; });
-  });
-  ['dragleave', 'drop'].forEach(function(evt) {
-    dropArea.addEventListener(evt, function(e) { e.preventDefault(); dropArea.style.borderColor = '#3b82f6'; });
-  });
-  dropArea.addEventListener('drop', function(e) {
-    if (e.dataTransfer && e.dataTransfer.files.length > 0) {
-      loadSelectedImageFile(e.dataTransfer.files[0]);
-    }
-  });
-}
-
-function handleImageFileSelected(input) {
-  if (input.files && input.files.length > 0) {
-    loadSelectedImageFile(input.files[0]);
-  }
-}
-
-function loadSelectedImageFile(file) {
-  currentOriginalFile = file;
-  currentOriginalKB = Math.round(file.size / 1024);
-
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    workingImageObj = new Image();
-    workingImageObj.onload = function() {
-      workingAspect = workingImageObj.width / workingImageObj.height;
-      document.getElementById('imgPreviewThumb').src = e.target.result;
-      document.getElementById('imgMetaName').innerText = file.name;
-      document.getElementById('imgMetaSize').innerText = currentOriginalKB + " KB";
-      document.getElementById('imgMetaWidth').innerText = workingImageObj.width;
-      document.getElementById('imgMetaHeight').innerText = workingImageObj.height;
-
-      var baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-      document.getElementById('finalRenameInput').value = baseName + "-50kb";
-
-      document.getElementById('imgActiveWorkspace').style.display = 'block';
-      document.getElementById('imgResultCard').style.display = 'none';
-    };
-    workingImageObj.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-function resetImageTool() {
-  currentOriginalFile = null;
-  document.getElementById('hiddenImgFileInput').value = '';
-  document.getElementById('imgActiveWorkspace').style.display = 'none';
-  document.getElementById('imgResultCard').style.display = 'none';
-}
-
-// ----------------- RESIZE MODAL LOGIC -----------------
-function setDimensionUnit(unit) {
-  activeDimensionUnit = unit;
-  openResizeModal();
-}
-
-function openResizeModal() {
-  if (!workingImageObj.src) return;
-  document.getElementById('imgResizePreview').src = workingImageObj.src;
-  document.getElementById('resizeWidthInput').value = workingImageObj.width;
-  document.getElementById('resizeHeightInput').value = workingImageObj.height;
-  switchResizeUnit(activeDimensionUnit || 'Pixels');
-  openModal('imgResizeModal');
-}
-
-function switchResizeUnit(unit) {
-  activeDimensionUnit = unit;
-  var pxBtn = document.getElementById('unitBtnPX');
-  var mmBtn = document.getElementById('unitBtnMM');
-  var cmBtn = document.getElementById('unitBtnCM');
-  var badgeW = document.getElementById('unitBadgeW');
-  var badgeH = document.getElementById('unitBadgeH');
-
-  [pxBtn, mmBtn, cmBtn].forEach(function(b) {
-    b.style.background = 'var(--input-bg)';
-    b.style.color = 'var(--text-main)';
-    b.style.border = '1px solid #cbd5e1';
-  });
-
-  var activeBtn = (unit === 'MM') ? mmBtn : ((unit === 'CM') ? cmBtn : pxBtn);
-  activeBtn.style.background = '#1e3a8a';
-  activeBtn.style.color = '#fff';
-
-  var label = (unit === 'MM') ? 'MM' : ((unit === 'CM') ? 'CM' : 'PX');
-  badgeW.innerText = label;
-  badgeH.innerText = label;
-}
-
-function handleAspectToggle() {
-  if (document.getElementById('maintainAspectCheck').checked) {
-    onResizeWidthChanged();
-  }
-}
-
-function onResizeWidthChanged() {
-  var w = parseFloat(document.getElementById('resizeWidthInput').value);
-  if (document.getElementById('maintainAspectCheck').checked && w && workingAspect) {
-    document.getElementById('resizeHeightInput').value = Math.round(w / workingAspect);
-  }
-}
-
-function onResizeHeightChanged() {
-  var h = parseFloat(document.getElementById('resizeHeightInput').value);
-  if (document.getElementById('maintainAspectCheck').checked && h && workingAspect) {
-    document.getElementById('resizeWidthInput').value = Math.round(h * workingAspect);
-  }
-}
-
-function applyResizeImage() {
-  var w = parseInt(document.getElementById('resizeWidthInput').value, 10);
-  var h = parseInt(document.getElementById('resizeHeightInput').value, 10);
-  if (!w || !h || w <= 0 || h <= 0) return;
-
-  var canvas = document.createElement('canvas');
-  canvas.width = w;
-  canvas.height = h;
-  var ctx = canvas.getContext('2d');
-  ctx.drawImage(workingImageObj, 0, 0, w, h);
-
-  var resizedDataUrl = canvas.toDataURL('image/jpeg', 0.95);
-  workingImageObj.onload = function() {
-    workingAspect = workingImageObj.width / workingImageObj.height;
-    document.getElementById('imgPreviewThumb').src = resizedDataUrl;
-    document.getElementById('imgMetaWidth').innerText = workingImageObj.width;
-    document.getElementById('imgMetaHeight').innerText = workingImageObj.height;
-    closeModal('imgResizeModal');
-  };
-  workingImageObj.src = resizedDataUrl;
-}
-
-// ----------------- CROP & ROTATE MODAL LOGIC -----------------
-function openCropModal() {
-  if (!workingImageObj.src) return;
-  document.getElementById('imgCropTarget').src = workingImageObj.src;
-  document.getElementById('cropRotateSlider').value = 0;
-  document.getElementById('cropZoomSlider').value = 1;
-  applyCropTransform();
-  openModal('imgCropModal');
-}
-
-function applyCropTransform() {
-  var deg = document.getElementById('cropRotateSlider').value;
-  var zoom = document.getElementById('cropZoomSlider').value;
-  var target = document.getElementById('imgCropTarget');
-  target.style.transform = "rotate(" + deg + "deg) scale(" + zoom + ")";
-}
-
-function applyCropImage() {
-  var deg = parseFloat(document.getElementById('cropRotateSlider').value) || 0;
-  var zoom = parseFloat(document.getElementById('cropZoomSlider').value) || 1;
-
-  var canvas = document.createElement('canvas');
-  var w = workingImageObj.width;
-  var h = workingImageObj.height;
-  canvas.width = w;
-  canvas.height = h;
-  var ctx = canvas.getContext('2d');
-
-  ctx.translate(w / 2, h / 2);
-  ctx.rotate((deg * Math.PI) / 180);
-  ctx.scale(zoom, zoom);
-  ctx.drawImage(workingImageObj, -w / 2, -h / 2);
-
-  var croppedDataUrl = canvas.toDataURL('image/jpeg', 0.95);
-  workingImageObj.onload = function() {
-    workingAspect = workingImageObj.width / workingImageObj.height;
-    document.getElementById('imgPreviewThumb').src = croppedDataUrl;
-    closeModal('imgCropModal');
-  };
-  workingImageObj.src = croppedDataUrl;
-}
-
-// ----------------- EXACT TARGET COMPRESSION ENGINE -----------------
-function startCompressImage() {
-  if (!workingImageObj.src) return;
-
-  var targetVal = parseFloat(document.getElementById('targetKbInput').value) || 50;
-  var unit = document.getElementById('targetKbUnit').value;
-  var targetBytes = (unit === "MB") ? (targetVal * 1024 * 1024) : (targetVal * 1024);
-
-  showLoader("फोटो " + targetVal + " " + unit + " में कंप्रेस हो रही है...");
-
-  setTimeout(function() {
-    compressCanvasToExactBytes(workingImageObj, targetBytes, function(finalBlob, finalKB) {
-      hideLoader();
-      processedBlob = finalBlob;
-
-      var resultUrl = URL.createObjectURL(finalBlob);
-      document.getElementById('imgFinalResultPreview').src = resultUrl;
-      document.getElementById('finalSizeResult').innerText = finalKB + " KB";
-      document.getElementById('finalOriginalSizeResult').innerText = currentOriginalKB + " KB";
-
-      var reduction = Math.max(0, Math.round(((currentOriginalKB - finalKB) / currentOriginalKB) * 100));
-      document.getElementById('finalPercentReduction').innerText = reduction + "% smaller";
-
-      document.getElementById('imgResultCard').style.display = 'block';
-      document.getElementById('imgResultCard').scrollIntoView({ behavior: 'smooth' });
-
-      // Sheet me logging karna
-      if (loggedInPsUser) {
-        var logPayload = {
-          email: loggedInPsUser.email,
-          gramPanchayat: loggedInPsUser.gramPanchayat,
-          fullName: loggedInPsUser.fullName,
-          fileName: (currentOriginalFile ? currentOriginalFile.name : "photo.jpg"),
-          originalSizeKB: currentOriginalKB,
-          compressedSizeKB: finalKB,
-          targetSizeKB: targetVal + " " + unit
-        };
-        google.script.run.logImageCompressionActivity(logPayload);
-      }
-    });
-  }, 100);
-}
-
-// Binary Search Algorithm jo target KB se bilkul upar nahi jane deta
-function compressCanvasToExactBytes(img, targetBytes, callback) {
-  var canvas = document.createElement('canvas');
-  var curW = img.width;
-  var curH = img.height;
-  canvas.width = curW;
-  canvas.height = curH;
-  var ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0, curW, curH);
-
-  var minQ = 0.01;
-  var maxQ = 0.98;
-  var bestBlob = null;
-  var iterations = 0;
-
-  function binarySearchQuality() {
-    var midQ = (minQ + maxQ) / 2;
-    canvas.toBlob(function(blob) {
-      iterations++;
-      if (blob.size <= targetBytes) {
-        bestBlob = blob;
-        minQ = midQ; // Aur achhi quality try karein
-      } else {
-        maxQ = midQ; // Quality kam karein
-      }
-
-      if (iterations < 7 && (maxQ - minQ) > 0.02) {
-        binarySearchQuality();
-      } else {
-        // Agar minimum quality par bhi target se bada hai, to dimension 10% kam karein
-        if (!bestBlob || bestBlob.size > targetBytes) {
-          curW = Math.round(curW * 0.9);
-          curH = Math.round(curH * 0.9);
-          canvas.width = curW;
-          canvas.height = curH;
-          ctx.drawImage(img, 0, 0, curW, curH);
-          minQ = 0.05;
-          maxQ = 0.92;
-          iterations = 0;
-          binarySearchQuality();
-        } else {
-          var finalKB = Math.round(bestBlob.size / 1024);
-          callback(bestBlob, finalKB);
-        }
-      }
-    }, 'image/jpeg', midQ);
-  }
-
-  binarySearchQuality();
-}
-
+ 
 // ================= ADVANCED IMAGE COMPRESSION & RESIZE ENGINE =================
 var currentOriginalFile = null;
 var workingImageObj = new Image();
@@ -5887,8 +5622,12 @@ function applyCropImage() {
 }
 
 // ----------------- EXACT TARGET COMPRESSION ENGINE -----------------
+// ----------------- EXACT TARGET COMPRESSION ENGINE (50 KB GUARANTEE) -----------------
 function startCompressImage() {
-  if (!workingImageObj.src) return;
+  var imgSrc = (typeof currentImageBase64 !== "undefined" && currentImageBase64) 
+               ? currentImageBase64 
+               : (workingImageObj && workingImageObj.src ? workingImageObj.src : null);
+  if (!imgSrc) return;
 
   var targetVal = parseFloat(document.getElementById('targetKbInput').value) || 50;
   var unit = document.getElementById('targetKbUnit').value;
@@ -5896,8 +5635,9 @@ function startCompressImage() {
 
   showLoader("फोटो " + targetVal + " " + unit + " में सटीक कंप्रेस हो रही है...");
 
-  setTimeout(function() {
-    compressCanvasToExactBytes(workingImageObj, targetBytes, function(finalBlob, finalKB) {
+  var img = new Image();
+  img.onload = function() {
+    compressCanvasToExactBytes(img, targetBytes, function(finalBlob, finalKB) {
       hideLoader();
       processedBlob = finalBlob;
 
@@ -5912,22 +5652,27 @@ function startCompressImage() {
       document.getElementById('imgResultCard').style.display = 'block';
       document.getElementById('imgResultCard').scrollIntoView({ behavior: 'smooth' });
 
-      if (loggedInPsUser) {
-        var logPayload = {
-          email: loggedInPsUser.email,
-          gramPanchayat: loggedInPsUser.gramPanchayat,
-          fullName: loggedInPsUser.fullName,
-          fileName: (currentOriginalFile ? currentOriginalFile.name : "photo.jpg"),
-          originalSizeKB: currentOriginalKB,
-          compressedSizeKB: finalKB,
-          targetSizeKB: targetVal + " " + unit
-        };
+      // Save record in Google Sheet safely
+      var psUser = (typeof loggedInPsUser !== "undefined" && loggedInPsUser) ? loggedInPsUser : null;
+      if (!psUser) {
+        try { psUser = JSON.parse(localStorage.getItem('psUserData') || '{}'); } catch(e){}
+      }
+      var logPayload = {
+        email: (psUser && psUser.email) ? psUser.email : (sessionStorage.getItem('psk_ps_email') || "PS User"),
+        gramPanchayat: (psUser && psUser.gramPanchayat) ? psUser.gramPanchayat : "-",
+        fullName: (psUser && psUser.fullName) ? psUser.fullName : "पंचायत सहायक",
+        fileName: (currentOriginalFile ? currentOriginalFile.name : "photo.jpg"),
+        originalSizeKB: currentOriginalKB,
+        compressedSizeKB: finalKB,
+        targetSizeKB: targetVal + " " + unit
+      };
+      if (typeof google !== "undefined" && google.script && google.script.run) {
         google.script.run.logImageCompressionActivity(logPayload);
       }
     });
-  }, 100);
+  };
+  img.src = imgSrc;
 }
-
 function compressCanvasToExactBytes(img, targetBytes, callback) {
   var canvas = document.createElement('canvas');
   var curW = img.width;
