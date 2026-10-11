@@ -5542,108 +5542,146 @@ function applyResizeImage() {
 }
 
 // ----------------- CROP & ROTATE ENGINE (MANUAL & AUTO) -----------------
+// ----------------- ADVANCED 100% WORKING MANUAL CROP ENGINE -----------------
+var cropperInstance = null;
+
 function openCropModal() {
-  if (!workingImageObj.src) return;
-  document.getElementById('imgCropTarget').src = workingImageObj.src;
+  var imgSrc = (typeof currentImageBase64 !== "undefined" && currentImageBase64) 
+               ? currentImageBase64 
+               : (typeof workingImageObj !== "undefined" && workingImageObj && workingImageObj.src ? workingImageObj.src : null);
+  if (!imgSrc) return;
+
+  var targetImg = document.getElementById('imgCropTarget');
+  
+  // स्लाइडर्स रीसेट
   document.getElementById('cropRotateSlider').value = 0;
   document.getElementById('cropZoomSlider').value = 1;
-  setCropRatio('free');
-  applyCropTransform();
+  if (document.getElementById('rotateValText')) document.getElementById('rotateValText').innerText = "0°";
+  if (document.getElementById('zoomValText')) document.getElementById('zoomValText').innerText = "1.0x";
+
+  // मोडल खोलें
   openModal('imgCropModal');
-}
 
-function setCropRatio(ratio) {
-  activeCropRatio = ratio;
-  var pFree = document.getElementById('cropPresetFree');
-  var pPass = document.getElementById('cropPresetPassport');
-  var pSq = document.getElementById('cropPresetSquare');
-
-  [pFree, pPass, pSq].forEach(function(b) {
-    if (b) {
-      b.style.background = 'var(--input-bg)';
-      b.style.color = 'var(--text-main)';
-      b.style.border = '1px solid #cbd5e1';
-    }
-  });
-
-  var active = (ratio === 'passport') ? pPass : ((ratio === '1:1') ? pSq : pFree);
-  if (active) {
-    active.style.background = '#1e3a8a';
-    active.style.color = '#fff';
+  // पुराना इंस्टेंस हटाएं
+  if (cropperInstance) {
+    cropperInstance.destroy();
+    cropperInstance = null;
   }
 
-  var box = document.getElementById('cropTargetContainer');
-  if (box) {
-    if (ratio === 'passport') {
-      box.style.aspectRatio = "3.5 / 4.5";
-    } else if (ratio === '1:1') {
-      box.style.aspectRatio = "1 / 1";
-    } else {
-      box.style.aspectRatio = "unset";
-    }
-  }
-}
-
-function autoCenterCrop() {
-  var canvas = document.createElement('canvas');
-  var cropW = Math.round(workingImageObj.width * 0.8);
-  var cropH = Math.round(workingImageObj.height * 0.8);
-  var startX = Math.round((workingImageObj.width - cropW) / 2);
-  var startY = Math.round((workingImageObj.height - cropH) / 2);
-
-  canvas.width = cropW;
-  canvas.height = cropH;
-  var ctx = canvas.getContext('2d');
-  ctx.drawImage(workingImageObj, startX, startY, cropW, cropH, 0, 0, cropW, cropH);
-
-  var autoDataUrl = canvas.toDataURL('image/jpeg', 0.95);
-  workingImageObj.onload = function() {
-    workingAspect = workingImageObj.width / workingImageObj.height;
-    updateWorkspaceMeta();
-    closeModal('imgCropModal');
+  // फोटो लोड होने के बाद मैनुअल क्रॉपर शुरू करें
+  targetImg.onload = function() {
+    setTimeout(function() {
+      initManualCropper();
+    }, 120);
   };
-  workingImageObj.src = autoDataUrl;
+  targetImg.src = imgSrc;
 }
 
-function applyCropTransform() {
-  var deg = document.getElementById('cropRotateSlider').value;
-  var zoom = document.getElementById('cropZoomSlider').value;
-  var target = document.getElementById('imgCropTarget');
-  if (target) {
-    target.style.transform = "rotate(" + deg + "deg) scale(" + zoom + ")";
+function initManualCropper() {
+  if (cropperInstance) {
+    cropperInstance.destroy();
+    cropperInstance = null;
+  }
+
+  var image = document.getElementById('imgCropTarget');
+  if (!image) return;
+
+  // लाइब्रेरी लोड करने की सुरक्षित व्यवस्था
+  if (typeof Cropper === "undefined") {
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css';
+    document.head.appendChild(link);
+
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js';
+    script.onload = function() { initManualCropper(); };
+    document.head.appendChild(script);
+    return;
+  }
+
+  // 100% फ्रीहैंड मैनुअल क्रॉप (चारों कोनों को खींचने की पूरी आज़ादी)
+  cropperInstance = new Cropper(image, {
+    aspectRatio: NaN,          // फ्री साइज क्रॉप
+    viewMode: 1,               // बॉक्स फोटो के बाहर न जाए
+    dragMode: 'crop',          // नया बॉक्स खींचने की सुविधा
+    autoCrop: true,
+    autoCropArea: 0.85,        // शुरुआत में 85% एरिया चुनेगा
+    restore: false,
+    guides: true,              // कटिंग ग्रिड लाइन
+    center: true,
+    highlight: true,
+    cropBoxMovable: true,      // बीच से पकड़कर कहीं भी खिसकाएं
+    cropBoxResizable: true,    // कोनों को खींचकर छोटा या बड़ा करें
+    toggleDragModeOnDblclick: false,
+    background: false
+  });
+}
+
+function resetCropSelectionBox() {
+  if (cropperInstance) {
+    cropperInstance.reset();
+  }
+}
+
+function onRotateSliderChanged() {
+  var deg = parseInt(document.getElementById('cropRotateSlider').value, 10) || 0;
+  if (document.getElementById('rotateValText')) document.getElementById('rotateValText').innerText = deg + "°";
+  if (cropperInstance) {
+    cropperInstance.rotateTo(deg);
+  }
+}
+
+function onZoomSliderChanged() {
+  var zoom = parseFloat(document.getElementById('cropZoomSlider').value) || 1;
+  if (document.getElementById('zoomValText')) document.getElementById('zoomValText').innerText = zoom.toFixed(1) + "x";
+  if (cropperInstance) {
+    cropperInstance.zoomTo(zoom);
   }
 }
 
 function applyCropImage() {
-  var deg = parseFloat(document.getElementById('cropRotateSlider').value) || 0;
-  var zoom = parseFloat(document.getElementById('cropZoomSlider').value) || 1;
+  if (!cropperInstance) return;
+  showLoader("फोटो क्रॉप हो रही है...");
 
-  var canvas = document.createElement('canvas');
-  var w = workingImageObj.width;
-  var h = workingImageObj.height;
+  setTimeout(function() {
+    var croppedCanvas = cropperInstance.getCroppedCanvas({
+      imageSmoothingEnabled: true,
+      imageSmoothingQuality: 'high'
+    });
 
-  if (activeCropRatio === 'passport') {
-    h = Math.round(w * (4.5 / 3.5));
-  } else if (activeCropRatio === '1:1') {
-    h = w;
-  }
+    if (!croppedCanvas) {
+      hideLoader();
+      alert("क्रॉप करने में समस्या आई, कृपया पुनः प्रयास करें।");
+      return;
+    }
 
-  canvas.width = w;
-  canvas.height = h;
-  var ctx = canvas.getContext('2d');
+    var croppedDataUrl = croppedCanvas.toDataURL('image/jpeg', 0.95);
+    currentImageBase64 = croppedDataUrl;
 
-  ctx.translate(w / 2, h / 2);
-  ctx.rotate((deg * Math.PI) / 180);
-  ctx.scale(zoom, zoom);
-  ctx.drawImage(workingImageObj, -workingImageObj.width / 2, -workingImageObj.height / 2);
+    if (typeof workingImageObj !== "undefined") {
+      workingImageObj = new Image();
+      workingImageObj.onload = function() {
+        if (typeof workingAspect !== "undefined") {
+          workingAspect = workingImageObj.width / workingImageObj.height;
+        }
+        if (typeof updateWorkspaceMeta === "function") updateWorkspaceMeta();
+        if (typeof updateWorkspaceUI === "function") updateWorkspaceUI(croppedCanvas.width, croppedCanvas.height);
+        hideLoader();
+        closeModal('imgCropModal');
+      };
+      workingImageObj.src = croppedDataUrl;
+    } else {
+      if (typeof updateWorkspaceUI === "function") updateWorkspaceUI(croppedCanvas.width, croppedCanvas.height);
+      hideLoader();
+      closeModal('imgCropModal');
+    }
 
-  var croppedDataUrl = canvas.toDataURL('image/jpeg', 0.95);
-  workingImageObj.onload = function() {
-    workingAspect = workingImageObj.width / workingImageObj.height;
-    updateWorkspaceMeta();
-    closeModal('imgCropModal');
-  };
-  workingImageObj.src = croppedDataUrl;
+    if (cropperInstance) {
+      cropperInstance.destroy();
+      cropperInstance = null;
+    }
+  }, 100);
 }
 
 // ----------------- EXACT TARGET COMPRESSION ENGINE -----------------
