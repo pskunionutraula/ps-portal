@@ -1748,21 +1748,20 @@ body.modal-open {
   </div>
 </div>
 
-<!-- 2. ADVANCED CROP MODAL (INTERACTIVE MANUAL DRAG & AUTO PRESETS) -->
+<!-- ADVANCED MANUAL CROP MODAL -->
 <div class="modal-backdrop" id="imgCropModal">
   <div class="modal-box" style="max-width:620px; text-align:center;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--input-border); padding-bottom:8px;">
-      <h4 style="font-size:16px; font-weight:bold; color:#2563eb; margin:0;"><i class="fa-solid fa-crop-simple"></i> फोटो क्रॉप एवं रोटेट टूल</h4>
+      <h4 style="font-size:16px; font-weight:bold; color:#2563eb; margin:0;"><i class="fa-solid fa-crop-simple"></i> फोटो मैनुअल क्रॉप एवं रोटेट टूल</h4>
       <button type="button" onclick="closeModal('imgCropModal')" style="background:#dc2626; color:#fff; border:none; width:26px; height:26px; border-radius:50%; cursor:pointer;">✕</button>
     </div>
 
-    <!-- Manual Drag vs Auto Preset Buttons -->
-    <div style="display:flex; justify-content:center; gap:6px; margin-bottom:12px; flex-wrap:wrap;">
-      <button type="button" id="cropPresetFree" onclick="setCropRatio('free')" style="padding:5px 12px; border-radius:6px; font-size:12px; font-weight:bold; background:#1e3a8a; color:#fff; border:none; cursor:pointer;">✂️ फ्री मैनुअल क्रॉप</button>
-      <button type="button" id="cropPresetPassport" onclick="setCropRatio('passport')" style="padding:5px 12px; border-radius:6px; font-size:12px; background:var(--input-bg); border:1px solid #cbd5e1; cursor:pointer;">👤 पासपोर्ट (3.5×4.5 cm)</button>
-      <button type="button" id="cropPresetSquare" onclick="setCropRatio('1:1')" style="padding:5px 12px; border-radius:6px; font-size:12px; background:var(--input-bg); border:1px solid #cbd5e1; cursor:pointer;">⬛ चौकोर (1:1)</button>
-      <button type="button" id="cropPresetSign" onclick="setCropRatio('sign')" style="padding:5px 12px; border-radius:6px; font-size:12px; background:var(--input-bg); border:1px solid #cbd5e1; cursor:pointer;">✍️ हस्ताक्षर (3:1)</button>
-      <button type="button" onclick="autoCenterCrop()" style="padding:5px 12px; border-radius:6px; font-size:12px; font-weight:bold; background:#16a34a; color:#fff; border:none; cursor:pointer;">⚡ ऑटो सेंटर</button>
+    <!-- Manual Info & Reset Box -->
+    <div style="background:#eff6ff; border:1px solid #bfdbfe; color:#1e40af; padding:8px 12px; border-radius:8px; font-size:12.5px; font-weight:bold; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+      <span><i class="fa-solid fa-arrows-up-down-left-right"></i> फोटो के कोनों को खींचकर अपनी पसंद से मैनुअल क्रॉप करें</span>
+      <button type="button" onclick="resetCropSelectionBox()" style="background:#1e3a8a; color:#fff; border:none; padding:4px 10px; border-radius:5px; font-size:11px; cursor:pointer;">
+        <i class="fa-solid fa-rotate-left"></i> बॉक्स रीसेट करें
+      </button>
     </div>
 
     <!-- Interactive Cropper Viewport -->
@@ -1785,7 +1784,9 @@ body.modal-open {
     </div>
 
     <div style="display:flex; justify-content:center; gap:10px; margin-top:16px;">
-      <button type="button" class="submit-btn" style="width:auto; padding:8px 26px; font-size:13.5px; background:#1e3a8a; margin:0;" onclick="applyCropImage()">क्रॉप लागू करें</button>
+      <button type="button" class="submit-btn" style="width:auto; padding:8px 26px; font-size:13.5px; background:#16a34a; margin:0;" onclick="applyCropImage()">
+        <i class="fa-solid fa-check"></i> क्रॉप लागू करें
+      </button>
       <button type="button" class="submit-btn" style="width:auto; padding:8px 20px; font-size:13.5px; background:#64748b; margin:0;" onclick="closeModal('imgCropModal')">रद्द करें</button>
     </div>
   </div>
