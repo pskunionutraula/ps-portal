@@ -2929,53 +2929,7 @@ function openAdminLoginModal() {
     document.getElementById('psPortalSection').style.display = 'block';
   }
 
-  // PS लॉगिन फ़ंक्शन
-function submitPsLogin() {
-  var email = document.getElementById('psLoginEmail').value.trim();
-  var passMob = document.getElementById('psLoginMobile').value.trim();
-  if (!email || !passMob) { 
-    showMsg("ध्यान दें", "ईमेल आईडी और पासवर्ड/मोबाइल दर्ज करें।", false); 
-    return; 
-  }
-
-  showLoader("लॉगिन सत्यापित किया जा रहा है...");
-
-  google.script.run.withSuccessHandler(function(res) {
-    hideLoader();
-    if (res.success && res.isApproved) {
-      closeModal('psLoginModal');
-
-      // सेशन व यूजर डेटा सुरक्षित करना
-      sessionStorage.setItem('psk_ps_email', email);
-      sessionStorage.setItem('psk_ps_mobile', passMob);
-      sessionStorage.setItem('psk_active_view', 'ps');
-      sessionStorage.setItem('psk_ps_tab', 'psHome');
-      
-      localStorage.setItem('psUserLoggedIn', 'true');
-      localStorage.setItem('psUserData', JSON.stringify(res.userData || res));
-      localStorage.setItem('psLastActiveTime', Date.now().toString());
-
-      // जाँचें कि क्या पासवर्ड बदला गया है और 4-अंकों का MPIN सेट है
-      var isChanged = res.isPasswordChanged;
-      var hasMpin = res.mpin && String(res.mpin).length === 4;
-
-      if (!isChanged || !hasMpin) {
-        // प्रथम बार लॉगिन: पासवर्ड व MPIN सेटअप पॉपअप खोलें
-        document.getElementById('setupEmailHidden').value = email;
-        document.getElementById('firstTimeSetupModal').style.display = 'flex';
-      } else {
-        restorePsPortal(res);
-        switchPsTab('psHome');
-        loadMyTickets();
-      }
-    } else {
-      showMsg("लॉगिन स्थिति", res.message, false);
-    }
-  }).withFailureHandler(function(err) {
-    hideLoader();
-    showMsg("सर्वर त्रुटि", err.toString(), false);
-  }).verifyPSLogin(email, passMob);
-}
+ 
   function renderPsClusterCard(cluster, psUser) {
     var box = document.getElementById('psClusterDetailsCard');
     if (!cluster) {
@@ -4814,13 +4768,6 @@ function viewAdminLeaveModal(index) {
   var html5QrCodeScannerInstance = null;
   var isScanningActive = false;
 
- // ================= IN-APP QR CAMERA SCANNER =================
-  var html5QrCodeScannerInstance = null;
-  var isScanningActive = false;
-
- // ================= ADVANCED MODERN IN-APP SCANNER =================
-  var html5QrCodeScannerInstance = null;
-  var isScanningActive = false;
 
   function startInAppCameraScanner() {
     if (!loggedInPsUser) {
@@ -4983,59 +4930,62 @@ window.addEventListener('DOMContentLoaded', function() {
 // ================= PS लॉगिन एवं सत्यापन =================
 // ================= PS लॉगिन एवं सत्यापन =================
 // ================= PS लॉगिन एवं 3-माह पॉपअप सत्यापन =================
-function submitPsLogin() {
-  var emailInput = document.getElementById('psLoginEmail');
-  var passMobInput = document.getElementById('psLoginMobile');
-  
-  var email = emailInput ? emailInput.value.trim() : '';
-  var passMob = passMobInput ? passMobInput.value.trim() : '';
+// PS लॉगिन एवं 3-माह पॉपअप सत्यापन फ़ंक्शन
+  function submitPsLogin() {
+    var emailInput = document.getElementById('psLoginEmail');
+    var passMobInput = document.getElementById('psLoginMobile');
 
-  if (!email || !passMob) { 
-    showMsg("ध्यान दें", "ईमेल आईडी और पासवर्ड/मोबाइल दर्ज करें।", false); 
-    return; 
+    var email = emailInput ? emailInput.value.trim() : '';
+    var passMob = passMobInput ? passMobInput.value.trim() : '';
+
+    if (!email || !passMob) { 
+      showMsg("ध्यान दें", "ईमेल आईडी और पासवर्ड/मोबाइल दर्ज करें।", false); 
+      return; 
+    }
+
+    showLoader("लॉगिन सत्यापित किया जा रहा है...");
+
+    google.script.run
+      .withSuccessHandler(function(res) {
+        hideLoader();
+        if (res && res.success && res.isApproved) {
+          closeModal('psLoginModal');
+
+          // सेशन व यूजर डेटा सुरक्षित करना
+          sessionStorage.setItem('psk_ps_email', email);
+          sessionStorage.setItem('psk_ps_mobile', passMob);
+          sessionStorage.setItem('psk_active_view', 'ps');
+          sessionStorage.setItem('psk_ps_tab', 'psHome');
+
+          localStorage.setItem('psUserLoggedIn', 'true');
+          localStorage.setItem('psUserData', JSON.stringify(res.userData || res));
+          localStorage.setItem('psLastActiveTime', Date.now().toString());
+
+          var hiddenEmailEl = document.getElementById('setupEmailHidden');
+          if (hiddenEmailEl) {
+            hiddenEmailEl.value = email;
+          }
+
+          // प्रथम बार लॉगिन या 3 महीने (90 दिन) पूरे होने पर सेटअप पॉपअप खोलें
+          if (res.needsPasswordChange || !res.isPasswordChanged || !res.mpin || String(res.mpin).length !== 4) {
+            document.getElementById('firstTimeSetupModal').style.display = 'flex';
+          } else {
+            restorePsPortal(res);
+            switchPsTab('psHome');
+            loadMyTickets();
+          }
+        } else {
+          showMsg("लॉगिन स्थिति", (res ? res.message : "लॉगिन विफल रहा"), false);
+        }
+      })
+      .withFailureHandler(function(err) {
+        hideLoader();
+        showMsg("सर्वर त्रुटि", err.toString(), false);
+      })
+      .verifyPSLogin(email, passMob);
   }
 
-  showLoader("लॉगिन सत्यापित किया जा रहा है...");
-
-  google.script.run
-    .withSuccessHandler(function(res) {
-      hideLoader();
-      if (res && res.success && res.isApproved) {
-        closeModal('psLoginModal');
-
-        // सेशन डेटा सुरक्षित करना
-        sessionStorage.setItem('psk_ps_email', email);
-        sessionStorage.setItem('psk_ps_mobile', passMob);
-        sessionStorage.setItem('psk_active_view', 'ps');
-        sessionStorage.setItem('psk_ps_tab', 'psHome');
-        
-        localStorage.setItem('psUserLoggedIn', 'true');
-        localStorage.setItem('psUserData', JSON.stringify(res.userData || res));
-        localStorage.setItem('psLastActiveTime', Date.now().toString());
-
-        var hiddenEmailEl = document.getElementById('setupEmailHidden');
-        if (hiddenEmailEl) {
-          hiddenEmailEl.value = email;
-        }
-
-        // केवल पहली बार या 3 महीने (90 दिन) पूरे होने पर ही पॉपअप खुलेगा
-        if (res.needsPasswordChange) {
-          document.getElementById('firstTimeSetupModal').style.display = 'flex';
-        } else {
-          restorePsPortal(res);
-          switchPsTab('psHome');
-          loadMyTickets();
-        }
-      } else {
-        showMsg("लॉगिन स्थिति", (res ? res.message : "लॉगिन विफल रहा"), false);
-      }
-    })
-    .withFailureHandler(function(err) {
-      hideLoader();
-      showMsg("सर्वर त्रुटि", err.toString(), false);
-    })
-    .verifyPSLogin(email, passMob);
-}
+  
 // ================= प्रथम लॉगिन: पासवर्ड व MPIN सेटअप =================
 function submitCredentialsSetup() {
   var oldP = document.getElementById('setupOldPass').value.trim();
