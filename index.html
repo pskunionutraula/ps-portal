@@ -5,7 +5,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>पंचायत सहायक कर्मचारी यूनियन - उतरौला, बलरामपुर</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Tiro+Devanagari+Hindi:ital@0;1&family=Yatra+One&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -599,18 +599,31 @@ body.modal-open {
   }
 }
 
+    .badge-locked { background: #fee2e2; color: #991b1b; border: 1.5px solid #ef4444; font-weight: 800; }
     @media (max-width: 768px) {
+      body { padding: 4px; font-size: 14px; }
       .content-layout { flex-direction: column; }
-      .executive-sidebar { width: 100%; border-right: none; border-bottom: 2px solid var(--input-border); }
-      .brand-titles h1 { font-size: 23px; }
-      .brand-titles h3 { font-size: 14px; }
-      .form-container { padding: 15px 10px; }
-      .admin-dashboard-container { padding: 10px; }
+      .executive-sidebar { width: 100%; border-right: none; border-bottom: 2px solid var(--input-border); padding: 12px; }
+      .brand-titles h1 { font-size: 22px; }
+      .brand-titles h3 { font-size: 13.5px; }
+      .form-container { padding: 14px 10px; }
+      .admin-dashboard-container { padding: 10px 8px; }
       .admin-header-bar { flex-direction: column; text-align: center; }
+      .admin-tab-bar {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 10px;
+        gap: 6px;
+        scrollbar-width: thin;
+      }
+      .admin-tab-btn { flex: 0 0 auto; white-space: nowrap; font-size: 12.5px; padding: 8px 12px; }
       .charts-flex-box { width: 100%; }
-      .chart-container { width: 140px; height: 160px; }
+      .chart-container { width: 46%; min-width: 145px; height: 175px; }
       .shayari-grid { grid-template-columns: 1fr; }
-      .top-strip { justify-content: center; text-align: center; }
+      .top-strip { justify-content: center; text-align: center; padding: 8px 10px; }
+      .modal-box { padding: 16px 14px; max-height: 92dvh; }
     }
 
     /* ================= लैग-फ्री स्मूद CSS ================= */
@@ -644,11 +657,13 @@ body.modal-open {
   padding: 15px;
 }
 .custom-modal-box {
-  background: #ffffff;
+  background: var(--card-bg, #ffffff);
+  color: var(--text-main, #0f172a);
+  border: 2px solid var(--card-border, #1e3a8a);
   border-radius: 16px;
   width: 100%;
   max-width: 420px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
   overflow: hidden;
 }
 .modal-header-modern {
@@ -659,13 +674,15 @@ body.modal-open {
 }
 .modal-header-modern h3 { margin: 6px 0; font-size: 17px; }
 .modal-header-modern p { margin: 0; font-size: 12px; color: #94a3b8; }
-.modal-body-modern { padding: 20px; }
+.modal-body-modern { padding: 20px; background: var(--card-bg, #ffffff); }
 .input-group-modern { margin-bottom: 12px; text-align: left; }
-.input-group-modern label { display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 4px; }
+.input-group-modern label { display: block; font-size: 12px; font-weight: 600; color: var(--text-main, #334155); margin-bottom: 4px; }
 .input-group-modern input {
   width: 100%;
   padding: 9px 12px;
-  border: 1.5px solid #cbd5e1;
+  border: 1.5px solid var(--input-border, #cbd5e1);
+  background: var(--input-bg, #f8fafc);
+  color: var(--text-main, #0f172a);
   border-radius: 8px;
   font-size: 13.5px;
   outline: none;
@@ -1280,7 +1297,6 @@ body.modal-open {
 
         </div>
 
-      </div>
 <!-- PS TAB 7: IMPORTANT LINKS (महत्वपूर्ण उपयोगी पोर्टल्स) -->
         <div id="psLinksTabContent" style="display:none;">
           <div class="form-header-banner" style="background:linear-gradient(135deg, #0284c7, #0f172a);">
@@ -1621,7 +1637,7 @@ body.modal-open {
         <span style="color:#2563eb; cursor:pointer;" onclick="event.stopPropagation(); setDimensionUnit('CM')">CM</span>
       </div>
       <p style="font-size:16px; font-weight:700; color:var(--text-main); margin-bottom:12px;">Select Or Drag & Drop Images Here</p>
-      <button type="button" class="submit-btn" style="width:auto; padding:9px 24px; font-size:14px; background:#16a34a; margin:0 auto;">Select Images</button>
+      <button type="button" class="submit-btn" style="width:auto; padding:9px 24px; font-size:14px; background:#16a34a; margin:0 auto;" onclick="event.stopPropagation(); document.getElementById('hiddenImgFileInput').click()">Select Images</button>
       <input type="file" id="hiddenImgFileInput" accept="image/*" style="display:none;" onchange="handleImageFileSelected(this)">
     </div>
 
@@ -1690,6 +1706,7 @@ body.modal-open {
     </div>
 
   </div>
+</div>
 </div>
 
 <!-- 1. ADVANCED RESIZE & DPI MODAL -->
@@ -1843,7 +1860,7 @@ body.modal-open {
     </div>
 
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-      <input type="text" id="adminSearchInput" onkeyup="filterAdminTable()" class="field-input" placeholder="🔍 नाम या ग्राम पंचायत से खोजें..." style="max-width:280px;">
+      <input type="text" id="adminSearchInput" oninput="debounceTableSearch(filterAdminTable, 100)" onkeyup="debounceTableSearch(filterAdminTable, 100)" class="field-input" placeholder="🔍 नाम या ग्राम पंचायत से खोजें..." style="max-width:280px;">
       <div>
         <button class="submit-btn" style="background:#16a34a; font-size:12px; padding:8px 14px; width:auto;" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> Excel (CSV) डाउनलोड</button>
       </div>
@@ -1864,7 +1881,7 @@ body.modal-open {
   <!-- TAB 2: REGISTERED USERS -->
   <div id="registeredTabContent" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-      <input type="text" id="registeredSearchInput" onkeyup="filterRegisteredTable()" class="field-input" placeholder="🔍 पंजीकृत नाम/ग्राम पंचायत से खोजें..." style="max-width:280px;">
+      <input type="text" id="registeredSearchInput" oninput="debounceTableSearch(filterRegisteredTable, 100)" onkeyup="debounceTableSearch(filterRegisteredTable, 100)" class="field-input" placeholder="🔍 पंजीकृत नाम/ग्राम पंचायत से खोजें..." style="max-width:280px;">
       <div>
         <button class="submit-btn" style="background:#16a34a; font-size:12px; padding:8px 14px; width:auto;" onclick="exportRegisteredToExcel()"><i class="fa-solid fa-file-excel"></i> Registered CSV डाउनलोड</button>
       </div>
@@ -1885,7 +1902,7 @@ body.modal-open {
   <!-- TAB 3: CLUSTER DETAILS -->
   <div id="clusterTabContent" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-      <input type="text" id="clusterSearchInput" onkeyup="filterClusterTable()" class="field-input" placeholder="🔍 क्लस्टर / ग्राम पंचायत / सचिव से खोजें..." style="max-width:280px;">
+      <input type="text" id="clusterSearchInput" oninput="debounceTableSearch(filterClusterTable, 100)" onkeyup="debounceTableSearch(filterClusterTable, 100)" class="field-input" placeholder="🔍 क्लस्टर / ग्राम पंचायत / सचिव से खोजें..." style="max-width:280px;">
       <div>
         <button class="submit-btn" style="background:#16a34a; font-size:12px; padding:8px 14px; width:auto;" onclick="exportClusterToExcel()"><i class="fa-solid fa-file-excel"></i> Cluster CSV डाउनलोड</button>
       </div>
@@ -1906,7 +1923,7 @@ body.modal-open {
   <!-- TAB 4: PS LOGIN TRACKER -->
   <div id="loginLogsTabContent" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-      <input type="text" id="loginLogsSearchInput" onkeyup="filterLoginLogsTable()" class="field-input" placeholder="🔍 नाम, ग्राम पंचायत या मोबाइल से खोजें..." style="max-width:280px;">
+      <input type="text" id="loginLogsSearchInput" oninput="debounceTableSearch(filterLoginLogsTable, 100)" onkeyup="debounceTableSearch(filterLoginLogsTable, 100)" class="field-input" placeholder="🔍 नाम, ग्राम पंचायत या मोबाइल से खोजें..." style="max-width:280px;">
       <div style="display:flex; align-items:center; gap:8px;">
         <span style="font-size:12px; color:#16a34a; font-weight:bold;"><i class="fa-solid fa-shield-halved"></i> 7 दिन बाद स्वतः डिलीट (Auto-Purge Active)</span>
         <button class="submit-btn" style="background:#16a34a; font-size:12px; padding:8px 14px; width:auto;" onclick="exportLoginLogsToExcel()"><i class="fa-solid fa-file-excel"></i> Login Logs CSV</button>
@@ -1985,7 +2002,7 @@ body.modal-open {
           <i class="fa-solid fa-list-check" style="color: #2563eb;"></i> प्रकाशित नोटिस सूची
         </div>
         <div style="width: 100%; max-width: 300px;">
-          <input type="text" id="noticeSearchInput" onkeyup="filterAdminNoticesTable()" class="field-input" placeholder="🔍 नोटिस विवरण या तारीख से खोजें..." style="padding: 8px 12px; font-size: 13px;">
+          <input type="text" id="noticeSearchInput" oninput="debounceTableSearch(filterAdminNoticesTable, 100)" onkeyup="debounceTableSearch(filterAdminNoticesTable, 100)" class="field-input" placeholder="🔍 नोटिस विवरण या तारीख से खोजें..." style="padding: 8px 12px; font-size: 13px;">
         </div>
       </div>
 
@@ -2062,7 +2079,7 @@ body.modal-open {
     <h3 style="color:#38bdf8; margin-bottom:12px; font-size:16px;"><i class="fa-solid fa-file-signature"></i> पंचायत सहायक अवकाश आवेदन रिकॉर्ड्स</h3>
     
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-      <input type="text" id="leaveSearchInput" onkeyup="filterAdminLeaveTable()" class="field-input" placeholder="🔍 नाम, ग्राम पंचायत या क्लस्टर से खोजें..." style="max-width:300px;">
+      <input type="text" id="leaveSearchInput" oninput="debounceTableSearch(filterAdminLeaveTable, 100)" onkeyup="debounceTableSearch(filterAdminLeaveTable, 100)" class="field-input" placeholder="🔍 नाम, ग्राम पंचायत या क्लस्टर से खोजें..." style="max-width:300px;">
       <div style="display:flex; gap:8px;">
         <button class="submit-btn" style="background:#16a34a; font-size:12px; padding:8px 14px; width:auto;" onclick="exportLeaveRecordsToExcel()"><i class="fa-solid fa-file-excel"></i> Leave CSV डाउनलोड</button>
         <button class="submit-btn" style="background:#0284c7; font-size:12px; padding:8px 14px; width:auto;" onclick="printLeaveRecordsPDF()"><i class="fa-solid fa-print"></i> रिपोर्ट प्रिंट करें</button>
@@ -2104,7 +2121,7 @@ body.modal-open {
     </div>
 
     <div style="margin-bottom:12px;">
-      <input type="text" id="imageLogsSearchInput" onkeyup="filterImageLogsTable()" class="field-input" placeholder="🔍 नाम, ग्राम पंचायत या फ़ाइल से खोजें..." style="max-width:300px;">
+      <input type="text" id="imageLogsSearchInput" oninput="debounceTableSearch(filterImageLogsTable, 100)" onkeyup="debounceTableSearch(filterImageLogsTable, 100)" class="field-input" placeholder="🔍 नाम, ग्राम पंचायत या फ़ाइल से खोजें..." style="max-width:300px;">
     </div>
 
     <div class="table-responsive">
@@ -2260,16 +2277,22 @@ body.modal-open {
   </div>
 </div>
 
-<!-- 6. UNIVERSAL DELETE CONFIRMATION MODAL -->
+<!-- 6. UNIVERSAL ACTION & DELETE CONFIRMATION MODAL -->
 <div class="modal-backdrop" id="deleteConfirmModal">
-  <div class="modal-box" style="text-align:center !important; max-width:420px;">
-    <div style="font-size:42px; color:#dc2626; margin-bottom:10px; text-align:center !important;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+  <div class="modal-box" style="text-align:center !important; max-width:430px;">
+    <div style="font-size:42px; color:#dc2626; margin-bottom:10px; text-align:center !important;" id="deleteModalIconBox"><i class="fa-solid fa-triangle-exclamation"></i></div>
     <h3 style="color:#2563eb; margin-bottom:8px; font-family:'Yatra One', serif; text-align:center !important;" id="deleteModalTitle">रिकॉर्ड हटाने की पुष्टि</h3>
-    <p style="font-size:14px; margin-bottom:15px; text-align:center !important;" id="deleteModalMsg">क्या आप इस रिकॉर्ड को निश्चित रूप से हटाना चाहते हैं?</p>
+    <p style="font-size:14px; margin-bottom:15px; text-align:center !important; white-space:pre-line;" id="deleteModalMsg">क्या आप इस रिकॉर्ड को निश्चित रूप से हटाना चाहते हैं?</p>
     <input type="hidden" id="deleteTargetType">
     <input type="hidden" id="deleteTargetRowIndex">
+    <div id="unlockResetCredsBox" style="display:none; background:var(--sub-box-bg); border:1px dashed #2563eb; border-radius:8px; padding:10px; margin-bottom:14px; text-align:left; font-size:13px;">
+      <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:700; color:var(--text-main);">
+        <input type="checkbox" id="unlockResetPasswordCheck" style="width:16px; height:16px;">
+        <span>पासवर्ड व MPIN भी डिफ़ॉल्ट (मोबाइल नंबर) पर रीसेट करें</span>
+      </label>
+    </div>
     <div style="display:flex; justify-content:center; gap:10px; margin-top:10px;">
-      <button class="submit-btn" onclick="executeUniversalDelete()" style="background:#dc2626; padding:8px 18px; width:auto; font-size:13px; margin:0; display:inline-block;">हाँ, हटाएं</button>
+      <button class="submit-btn" id="deleteModalConfirmBtn" onclick="executeUniversalDelete()" style="background:#dc2626; padding:8px 18px; width:auto; font-size:13px; margin:0; display:inline-block;">हाँ, हटाएं</button>
       <button class="submit-btn" onclick="closeModal('deleteConfirmModal')" style="background:#64748b; padding:8px 18px; width:auto; font-size:13px; margin:0; display:inline-block;">रद्द करें</button>
     </div>
   </div>
@@ -2317,9 +2340,10 @@ body.modal-open {
       <div class="field-group" style="text-align:left;">
         <label>स्थिति (Status)</label>
         <select id="editRegStatus" class="field-input">
-          <option value="Approved">Approved</option>
-          <option value="Pending">Pending</option>
-          <option value="Rejected">Rejected</option>
+          <option value="Approved">Approved (स्वीकृत)</option>
+          <option value="Pending">Pending (लंबित)</option>
+          <option value="Locked">Locked (सुरक्षा लॉक)</option>
+          <option value="Rejected">Rejected (अस्वीकृत)</option>
         </select>
       </div>
       <button type="submit" class="submit-btn" style="background:#16a34a; display:inline-block;">सुरक्षित करें</button>
@@ -2516,7 +2540,7 @@ function formatDateToIndian(dateVal) {
           });
         },
         getPublicHomeStats: function() { this._callApi('getPublicHomeStats', {}); },
-        verifyPSLogin: function(email, mobile) { this._callApi('verifyPSLogin', { email: email, mobile: mobile }); },
+        verifyPSLogin: function(email, mobile, isSessionRestore) { this._callApi('verifyPSLogin', { email: email, mobile: mobile, isSessionRestore: !!isSessionRestore }); },
         loginAdminSecure: function(userId, password) { this._callApi('loginAdminSecure', { userId: userId, password: password }); },
         getAdminDashboardDataSecure: function(token) { this._callApi('getAdminDashboardDataSecure', { token: token }); },
         processNewRegistration: function(data) { this._callApi('processNewRegistration', data); },
@@ -2546,8 +2570,8 @@ function formatDateToIndian(dateVal) {
       verifyPsMpin: function(userEmailOrMobile, mpin) {
           this._callApi('verifyPsMpin', { userEmailOrMobile: userEmailOrMobile, mpin: mpin });
         },
-       unlockPsAccountSecure: function(token, rowIndex) {
-          this._callApi('unlockPsAccountSecure', { token: token, rowIndex: rowIndex });
+       unlockPsAccountSecure: function(token, rowIndex, resetCredentials) {
+          this._callApi('unlockPsAccountSecure', { token: token, rowIndex: rowIndex, resetCredentials: !!resetCredentials });
         },
         logImageCompressionActivity: function(data) {
           this._callApi('logImageCompressionActivity', data);
@@ -2571,10 +2595,32 @@ function formatDateToIndian(dateVal) {
   var cachedAdminEvents = [];
   var cachedAdminAttendance = [];
   var cachedAdminLeaves = [];
+  var cachedAdminImageLogs = [];
+  var cachedAdminStats = null;
   var loggedInPsUser = null;
   var loggedInPsCluster = null;
- 
+  var pendingPsLoginRes = null;
+  var currentImageBase64 = null;
+  var currentLeaveDraftPayload = null;
+  var lastSubmittedLeaveKey = "";
   var activeNotifications = [];
+
+  function safeSetStorage(store, key, val) {
+    try { store.setItem(key, val); } catch (e) {}
+  }
+  function safeGetStorage(store, key) {
+    try { return store.getItem(key); } catch (e) { return null; }
+  }
+  function safeRemoveStorage(store, key) {
+    try { store.removeItem(key); } catch (e) {}
+  }
+  function findRecordByRowOrIdx(list, rowOrIdx) {
+    if (!list || !list.length) return null;
+    for (var i = 0; i < list.length; i++) {
+      if (Number(list[i].rowIndex) === Number(rowOrIdx)) return list[i];
+    }
+    return list[rowOrIdx] || null;
+  }
 
   function escapeHtml(str) {
     if (!str) return "";
@@ -2604,7 +2650,7 @@ function hideLoader() {
   }
 }
   window.onload = function() {
-    var savedTheme = localStorage.getItem('ps_union_theme');
+    var savedTheme = safeGetStorage(localStorage, 'ps_union_theme');
     if (savedTheme === 'dark') {
       document.body.classList.add('dark-mode');
       updateThemeToggleUI(true);
@@ -2617,8 +2663,8 @@ function hideLoader() {
     }
 
     // 2. ऑटो-रिस्टोर: एडमिन पोर्टल सेशन चेक करें
-    var savedAdminToken = sessionStorage.getItem('psk_admin_token');
-    var activeView = sessionStorage.getItem('psk_active_view');
+    var savedAdminToken = safeGetStorage(sessionStorage, 'psk_admin_token');
+    var activeView = safeGetStorage(sessionStorage, 'psk_active_view');
 
     if (activeView === 'admin' && savedAdminToken) {
       adminSessionToken = savedAdminToken;
@@ -2626,7 +2672,7 @@ function hideLoader() {
       google.script.run.withSuccessHandler(function(res) {
         if (res && res.success) {
           restoreAdminDashboard(res);
-          var lastAdminTab = sessionStorage.getItem('psk_admin_tab') || 'survey';
+          var lastAdminTab = safeGetStorage(sessionStorage, 'psk_admin_tab') || 'survey';
           switchAdminTab(lastAdminTab);
           hideLoader();
         } else {
@@ -2641,16 +2687,20 @@ function hideLoader() {
     }
 
     // 3. ऑटो-रिस्टोर: पंचायत सहायक (PS) पोर्टल सेशन चेक करें
-    var savedPsEmail = sessionStorage.getItem('psk_ps_email');
-    var savedPsMobile = sessionStorage.getItem('psk_ps_mobile');
+    var savedPsEmail = safeGetStorage(sessionStorage, 'psk_ps_email');
+    var savedPsAuth = safeGetStorage(sessionStorage, 'psk_ps_token') || safeGetStorage(sessionStorage, 'psk_ps_mobile');
 
-    if (activeView === 'ps' && savedPsEmail && savedPsMobile) {
+    if (activeView === 'ps' && savedPsEmail && savedPsAuth) {
       showLoader("पंचायत सहायक पोर्टल पुनः लोड हो रहा है...");
       google.script.run.withSuccessHandler(function(res) {
         hideLoader();
         if (res && res.success && res.isApproved) {
+          if (res.psSessionToken) {
+            safeSetStorage(sessionStorage, 'psk_ps_token', res.psSessionToken);
+            safeRemoveStorage(sessionStorage, 'psk_ps_mobile');
+          }
           restorePsPortal(res);
-          var lastPsTab = sessionStorage.getItem('psk_ps_tab') || 'psHome';
+          var lastPsTab = safeGetStorage(sessionStorage, 'psk_ps_tab') || 'psHome';
           switchPsTab(lastPsTab);
         } else {
           logoutPS();
@@ -2658,7 +2708,7 @@ function hideLoader() {
       }).withFailureHandler(function() {
         hideLoader();
         logoutPS();
-      }).verifyPSLogin(savedPsEmail, savedPsMobile);
+      }).verifyPSLogin(savedPsEmail, savedPsAuth, true);
       return;
     }
 
@@ -2668,15 +2718,11 @@ function hideLoader() {
 
   function toggleTheme() {
     var isDark = document.body.classList.toggle('dark-mode');
-    localStorage.setItem('ps_union_theme', isDark ? 'dark' : 'light');
+    safeSetStorage(localStorage, 'ps_union_theme', isDark ? 'dark' : 'light');
     updateThemeToggleUI(isDark);
-    if (adminSessionToken) initCharts({
-      wifiAvailable: Number(document.getElementById('statWifi').innerText),
-      electricityAvailable: Number(document.getElementById('statElec').innerText),
-      drinkingWaterAvailable: Number(document.getElementById('statWater').innerText),
-      printerWorking: Number(document.getElementById('statWifi').innerText),
-      stationeryAvailable: Number(document.getElementById('statWifi').innerText)
-    });
+    if (adminSessionToken && cachedAdminStats) {
+      initCharts(cachedAdminStats);
+    }
   }
 
   function updateThemeToggleUI(isDark) {
@@ -2791,17 +2837,12 @@ function openAdminLoginModal() {
   function closeStatusModal() { closeModal('statusModal'); }
 
   function showHomeView() {
+    stopInAppCameraScanner();
     document.getElementById('homeViewSection').style.display = 'block';
     document.getElementById('qrScanAttendanceSection').style.display = 'none';
     document.getElementById('psPortalSection').style.display = 'none';
     document.getElementById('adminDashboardView').style.display = 'none';
     document.getElementById('publicFormView').style.display = 'block';
-
-    // होम पेज पर फोटो टूल कभी न दिखे
-  if (document.getElementById('psImageToolTabContent')) {
-    document.getElementById('psImageToolTabContent').style.display = 'none';
-  }
-    
     loadPublicHomeStats();
   }
 
@@ -3072,22 +3113,79 @@ function openAdminLoginModal() {
       document.getElementById('stationery').value = prev.stationery || "";
       document.getElementById('parivarRegister').value = prev.parivarRegister || "";
       document.getElementById('birthDeathRegister').value = prev.birthDeathRegister || "";
+
+      // वाई-फ़ाई प्री-फ़िल
+      if (prev.wifiStatus && prev.wifiStatus !== "नहीं है") {
+        document.getElementById('wifiOption').value = "है";
+        document.getElementById('wifiRechargeStatus').value = prev.wifiStatus;
+      } else if (prev.wifiStatus === "नहीं है") {
+        document.getElementById('wifiOption').value = "नहीं है";
+      }
+      toggleSubOption('wifiOption', 'wifiSubBox');
+
+      // ग्राम निधि रिचार्ज प्री-फ़िल
+      if (prev.gramNidhiRecharge && prev.gramNidhiRecharge !== "नहीं किया गया है") {
+        document.getElementById('gramNidhiOption').value = "है";
+        document.getElementById('gramNidhiMonths').value = String(prev.gramNidhiRecharge).replace(/\D/g, "");
+      } else if (prev.gramNidhiRecharge === "नहीं किया गया है") {
+        document.getElementById('gramNidhiOption').value = "नहीं किया गया है";
+      }
+      toggleSubOption('gramNidhiOption', 'gramNidhiSubBox');
+
+      // प्रिंटर प्री-फ़िल
+      if (prev.printerStatus && prev.printerStatus !== "नहीं है") {
+        document.getElementById('printerOption').value = "है";
+        document.getElementById('printerCondition').value = prev.printerStatus;
+      } else if (prev.printerStatus === "नहीं है") {
+        document.getElementById('printerOption').value = "नहीं है";
+      }
+      toggleSubOption('printerOption', 'printerSubBox');
+
+      // शौचालय प्री-फ़िल
+      if (prev.toiletStatus && prev.toiletStatus !== "नहीं है") {
+        document.getElementById('toiletOption').value = "है";
+        document.getElementById('toiletCleanliness').value = prev.toiletStatus;
+      } else if (prev.toiletStatus === "नहीं है") {
+        document.getElementById('toiletOption').value = "नहीं है";
+      }
+      toggleSubOption('toiletOption', 'toiletSubBox');
+
+      // रजिस्टर कार्यकर्ता प्री-फ़िल
+      if (prev.registerWorker && prev.registerWorker.indexOf("मुंशी") === 0) {
+        document.getElementById('registerWorkerOption').value = "मुंशी";
+        var mMatch = prev.registerWorker.match(/\(([^)]*)\)/);
+        document.getElementById('munshiName').value = mMatch ? mMatch[1] : "";
+      } else if (prev.registerWorker) {
+        document.getElementById('registerWorkerOption').value = prev.registerWorker;
+      }
+      toggleSubOption('registerWorkerOption', 'munshiSubBox');
+
+      // भुगतान कार्यकर्ता प्री-फ़िल
+      if (prev.paymentWorker && prev.paymentWorker.indexOf("बाहरी व्यक्ति") === 0) {
+        document.getElementById('paymentWorkerOption').value = "बाहरी व्यक्ति";
+        var oMatch = prev.paymentWorker.match(/\(([^)]*)\)/);
+        document.getElementById('outsiderName').value = oMatch ? oMatch[1] : "";
+      } else if (prev.paymentWorker) {
+        document.getElementById('paymentWorkerOption').value = prev.paymentWorker;
+      }
+      toggleSubOption('paymentWorkerOption', 'outsiderSubBox');
     }
   }
 
   function logoutPS() {
+    stopInAppCameraScanner();
     loggedInPsUser = null; 
     loggedInPsCluster = null;
-    sessionStorage.removeItem('psk_ps_email');
-    sessionStorage.removeItem('psk_ps_mobile');
-    sessionStorage.removeItem('psk_active_view');
-    sessionStorage.removeItem('psk_ps_tab');
+    pendingPsLoginRes = null;
+    safeRemoveStorage(sessionStorage, 'psk_ps_email');
+    safeRemoveStorage(sessionStorage, 'psk_ps_mobile');
+    safeRemoveStorage(sessionStorage, 'psk_ps_token');
+    safeRemoveStorage(sessionStorage, 'psk_active_view');
+    safeRemoveStorage(sessionStorage, 'psk_ps_tab');
+    safeRemoveStorage(localStorage, 'psUserLoggedIn');
+    safeRemoveStorage(localStorage, 'psUserData');
+    safeRemoveStorage(localStorage, 'psLastActiveTime');
     document.getElementById('psPortalSection').style.display = 'none';
-
-  // लॉगआउट होने पर फोटो टूल बंद करें
-  if (document.getElementById('psImageToolTabContent')) {
-    document.getElementById('psImageToolTabContent').style.display = 'none';
-  }
     showHomeView();
   }
 
@@ -3171,6 +3269,21 @@ function openAdminLoginModal() {
   }
 
   // ================= INSTANT AUTO-GENERATING LEAVE APPLICATION JS =================
+  function parseCustomDate(dStr) {
+    if (!dStr) return null;
+    var s = String(dStr).trim().split(' ')[0];
+    if (/^\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{4}$/.test(s)) {
+      var p = s.split(/[\/\-.]/);
+      return new Date(parseInt(p[2], 10), parseInt(p[1], 10) - 1, parseInt(p[0], 10));
+    }
+    if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(s)) {
+      var p2 = s.split('-');
+      return new Date(parseInt(p2[0], 10), parseInt(p2[1], 10) - 1, parseInt(p2[2], 10));
+    }
+    var d = new Date(s);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
   function toggleLeaveDateInputs() {
     var type = document.getElementById('leaveDurationType').value;
     var singleBox = document.getElementById('singleDateBox');
@@ -3197,142 +3310,133 @@ function openAdminLoginModal() {
     var e = document.getElementById('leaveEndDate').value;
     var textElem = document.getElementById('leaveDaysCountText');
     if (s && e) {
-      var d1 = new Date(s);
-      var d2 = new Date(e);
-      var diffDays = Math.ceil((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-      if (diffDays > 0) {
-        textElem.innerText = "✓ कुल अवकाश अवधि: " + (diffDays < 10 ? '0' + diffDays : diffDays) + " दिन";
-      } else {
-        textElem.innerText = "⚠️ अंतिम तारीख प्रारंभ तारीख के बाद की होनी चाहिए।";
+      var d1 = parseCustomDate(s);
+      var d2 = parseCustomDate(e);
+      if (d1 && d2) {
+        var diffDays = Math.round((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+        if (diffDays > 0) {
+          textElem.innerText = "✓ कुल अवकाश अवधि: " + (diffDays < 10 ? '0' + diffDays : diffDays) + " दिन";
+        } else {
+          textElem.innerText = "⚠️ अंतिम तारीख प्रारंभ तारीख के बाद की होनी चाहिए।";
+        }
       }
     }
   }
 
   function formatDisplayDate(dateStr) {
     if (!dateStr) return "";
-    var parts = dateStr.split('-');
-    if (parts.length === 3) {
-      return parts[2] + "." + parts[1] + "." + parts[0];
+    var formatted = formatDateToIndian(dateStr);
+    return formatted.replace(/\//g, ".");
+  }
+
+  function saveCurrentLeaveToSheetOnce() {
+    if (!currentLeaveDraftPayload) return;
+    var sig = currentLeaveDraftPayload.email + "|" + currentLeaveDraftPayload.dateText + "|" + currentLeaveDraftPayload.reason + "|" + currentLeaveDraftPayload.recipient;
+    if (sig === lastSubmittedLeaveKey) return;
+    lastSubmittedLeaveKey = sig;
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run.submitLeaveApplication(currentLeaveDraftPayload);
     }
-    return dateStr;
   }
 
-function autoGenerateLeaveLetter() {
-  if (!loggedInPsUser) return;
+  function autoGenerateLeaveLetter() {
+    if (!loggedInPsUser) return;
 
-  var reasonSelect = document.getElementById('leaveReasonSelect');
-  var reasonVal = reasonSelect.value;
-  var letterCard = document.getElementById('generatedLetterCard');
+    var reasonSelect = document.getElementById('leaveReasonSelect');
+    var reasonVal = reasonSelect.value;
+    var letterCard = document.getElementById('generatedLetterCard');
 
-  if (!reasonVal) {
-    letterCard.style.display = 'none';
-    return;
-  }
-
-  if (reasonVal === 'अन्य') {
-    reasonVal = document.getElementById('customReasonText').value.trim();
-    if (!reasonVal) reasonVal = "अपरिहार्य निजी कार्य";
-  }
-
-  var recipientRole = document.getElementById('leaveRecipient').value;
-  var gender = document.getElementById('leaveGender').value || 'male';
-  var isFemale = (gender === 'female');
-
-  // विधिक व लिंग व्याकरण शब्द
-  var pWord = isFemale ? "प्रार्थिनी" : "प्रार्थी";
-  var asamarthWord = isFemale ? "असमर्थ रहेगी" : "असमर्थ रहेगा";
-  var abhAriSentence = isFemale 
-    ? "इसके लिए प्रार्थिनी आपकी सदैव आभारी रहेगी।" 
-    : "इसके लिए प्रार्थी आपका सदैव आभारी रहेगा।";
-  var bhavadiyaWord = isFemale ? "भवदीया" : "भवदीय";
-
-  // "के कारण" दो बार आने से रोकने का समाधान
-  var cleanReason = escapeHtml(reasonVal);
-  var reasonText = cleanReason.includes("के कारण") ? cleanReason : (cleanReason + " के कारण");
-
-  // तारीख (DD/MM/YYYY या YYYY-MM-DD) को सही Date ऑब्जेक्ट में बदलने का हेल्पर
-  function parseCustomDate(dStr) {
-    if (!dStr) return null;
-    var s = String(dStr).trim().split(' ')[0];
-    if (/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}$/.test(s)) {
-      var p = s.split(/[\/\-]/);
-      return new Date(parseInt(p[2], 10), parseInt(p[1], 10) - 1, parseInt(p[0], 10));
+    if (!reasonVal) {
+      letterCard.style.display = 'none';
+      currentLeaveDraftPayload = null;
+      return;
     }
-    if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(s)) {
-      var p = s.split('-');
-      return new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+
+    if (reasonVal === 'अन्य') {
+      reasonVal = document.getElementById('customReasonText').value.trim();
+      if (!reasonVal) reasonVal = "अपरिहार्य निजी कार्य";
     }
-    return new Date(s);
-  }
 
-  var durationType = document.getElementById('leaveDurationType').value;
-  var dateRangeText = "";
-  var daysPhrase = "";
-  var totalDaysCount = 1;
+    var recipientRole = document.getElementById('leaveRecipient').value;
+    var gender = document.getElementById('leaveGender').value || 'male';
+    var isFemale = (gender === 'female');
 
-  if (durationType === 'single') {
-    var sDate = document.getElementById('leaveSingleDate').value;
-    if (!sDate) return;
-    dateRangeText = "दिनांक " + formatDisplayDate(sDate) + " को";
-    daysPhrase = "एक दिवस";
-    totalDaysCount = 1;
-  } else {
-    var startDate = document.getElementById('leaveStartDate').value;
-    var endDate = document.getElementById('leaveEndDate').value;
-    if (!startDate || !endDate) return;
+    var pWord = isFemale ? "प्रार्थिनी" : "प्रार्थी";
+    var asamarthWord = isFemale ? "असमर्थ रहेगी" : "असमर्थ रहेगा";
+    var abhAriSentence = isFemale 
+      ? "इसके लिए प्रार्थिनी आपकी सदैव आभारी रहेगी।" 
+      : "इसके लिए प्रार्थी आपका सदैव आभारी रहेगा।";
+    var bhavadiyaWord = isFemale ? "भवदीया" : "भवदीय";
 
-    var d1 = parseCustomDate(startDate);
-    var d2 = parseCustomDate(endDate);
+    var cleanReason = escapeHtml(reasonVal);
+    var reasonText = cleanReason.includes("के कारण") ? cleanReason : (cleanReason + " के कारण");
 
-    if (!d1 || !d2 || isNaN(d1.getTime()) || isNaN(d2.getTime())) return;
+    var durationType = document.getElementById('leaveDurationType').value;
+    var dateRangeText = "";
+    var daysPhrase = "";
+    var totalDaysCount = 1;
 
-    var diffDays = Math.round((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-    if (diffDays <= 0) return;
+    if (durationType === 'single') {
+      var sDate = document.getElementById('leaveSingleDate').value;
+      if (!sDate) return;
+      dateRangeText = "दिनांक " + formatDisplayDate(sDate) + " को";
+      daysPhrase = "एक दिवस";
+      totalDaysCount = 1;
+    } else {
+      var startDate = document.getElementById('leaveStartDate').value;
+      var endDate = document.getElementById('leaveEndDate').value;
+      if (!startDate || !endDate) return;
 
-    totalDaysCount = diffDays;
-    dateRangeText = "दिनांक " + formatDisplayDate(startDate) + " से " + formatDisplayDate(endDate) + " तक";
-    daysPhrase = (diffDays === 1) ? "एक दिवस" : (diffDays < 10 ? '0' + diffDays : diffDays) + " दिवस";
-  }
+      var d1 = parseCustomDate(startDate);
+      var d2 = parseCustomDate(endDate);
 
-  var recipientHeading = (recipientRole === 'सचिव') 
-    ? "श्रीमान ग्राम विकास / पंचायत अधिकारी महोदय,<br>ग्राम पंचायत- " + escapeHtml(loggedInPsUser.gramPanchayat) + ",<br>विकास खण्ड- उतरौला , जनपद- बलरामपुर(उ०प्र०)।"
-    : "श्रीमान सहायक विकास अधिकारी (पं०) महोदय,<br>विकास खण्ड- उतरौला,<br>जनपद- बलरामपुर (उ०प्र०)।";
+      if (!d1 || !d2 || isNaN(d1.getTime()) || isNaN(d2.getTime())) return;
 
-  var now = new Date();
-  var todayStr = ("0" + now.getDate()).slice(-2) + "/" + ("0" + (now.getMonth() + 1)).slice(-2) + "/" + now.getFullYear();
+      var diffDays = Math.round((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      if (diffDays <= 0) return;
 
-  var letterHtml = 
-    '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + todayStr + '</div>' +
-    '<div><b>सेवा में,</b></div>' +
-    '<div style="margin-left: 55px; line-height: 1.9;">' + recipientHeading + '</div>' +
-    '<div style="margin:15px 0 12px 0; font-weight:bold; text-decoration:underline; font-size:14.5px;">' +
-      'विषय: आकस्मिक अवकाश स्वीकृत किए जाने के संबंध में प्रार्थना पत्र।' +
-    '</div>' +
-    '<div><b>महोदय,</b></div>' +
-    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
-      'सविनय निवेदन है कि ' + pWord + ' <b>' + escapeHtml(loggedInPsUser.fullName) + '</b> ग्राम पंचायत <b>' + escapeHtml(loggedInPsUser.gramPanchayat) + '</b>, विकास खण्ड उतरौला (बलरामपुर) में <i>पंचायत सहायक कम डाटा एंट्री ऑपरेटर</i> के पद पर कार्यरत है।' +
-    '</p>' +
-    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
-      pWord + ' <b>' + reasonText + '</b> <b>' + dateRangeText + '</b> ग्राम पंचायत सचिवालय में उपस्थित होकर अपने पदीय दायित्वों एवं शासकीय कार्यों का संपादन करने में <b>' + asamarthWord + '</b>।' +
-    '</p>' +
-    '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
-      'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। ' + abhAriSentence +
-    '</p>' +
-    '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
-      '<div style="text-align:center; min-width:220px; line-height:1.6;">' +
-        '<b>' + bhavadiyaWord + '</b><br><br>' +
-        '<b>(' + escapeHtml(loggedInPsUser.fullName) + ')</b><br>' +
-        'पंचायत सहायक कम डाटा एंट्री ऑपरेटर<br>' +
-        'ग्राम पंचायत: ' + escapeHtml(loggedInPsUser.gramPanchayat) + '<br>' +
-        'मो०: ' + escapeHtml(loggedInPsUser.mobile) +
+      totalDaysCount = diffDays;
+      dateRangeText = "दिनांक " + formatDisplayDate(startDate) + " से " + formatDisplayDate(endDate) + " तक";
+      daysPhrase = (diffDays === 1) ? "एक दिवस" : (diffDays < 10 ? '0' + diffDays : diffDays) + " दिवस";
+    }
+
+    var recipientHeading = (recipientRole === 'सचिव') 
+      ? "श्रीमान ग्राम विकास / पंचायत अधिकारी महोदय,<br>ग्राम पंचायत- " + escapeHtml(loggedInPsUser.gramPanchayat) + ",<br>विकास खण्ड- उतरौला , जनपद- बलरामपुर(उ०प्र०)।"
+      : "श्रीमान सहायक विकास अधिकारी (पं०) महोदय,<br>विकास खण्ड- उतरौला,<br>जनपद- बलरामपुर (उ०प्र०)।";
+
+    var now = new Date();
+    var todayStr = ("0" + now.getDate()).slice(-2) + "/" + ("0" + (now.getMonth() + 1)).slice(-2) + "/" + now.getFullYear();
+
+    var letterHtml = 
+      '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + todayStr + '</div>' +
+      '<div><b>सेवा में,</b></div>' +
+      '<div style="margin-left: 55px; line-height: 1.9;">' + recipientHeading + '</div>' +
+      '<div style="margin:15px 0 12px 0; font-weight:bold; text-decoration:underline; font-size:14.5px;">' +
+        'विषय: आकस्मिक अवकाश स्वीकृत किए जाने के संबंध में प्रार्थना पत्र।' +
       '</div>' +
-    '</div>';
+      '<div><b>महोदय,</b></div>' +
+      '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
+        'सविनय निवेदन है कि ' + pWord + ' <b>' + escapeHtml(loggedInPsUser.fullName) + '</b> ग्राम पंचायत <b>' + escapeHtml(loggedInPsUser.gramPanchayat) + '</b>, विकास खण्ड उतरौला (बलरामपुर) में <i>पंचायत सहायक कम डाटा एंट्री ऑपरेटर</i> के पद पर कार्यरत है।' +
+      '</p>' +
+      '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
+        pWord + ' <b>' + reasonText + '</b> <b>' + dateRangeText + '</b> ग्राम पंचायत सचिवालय में उपस्थित होकर अपने पदीय दायित्वों एवं शासकीय कार्यों का संपादन करने में <b>' + asamarthWord + '</b>।' +
+      '</p>' +
+      '<p style="text-indent:30px; text-align:justify; margin:8px 0; line-height:1.8;">' +
+        'अतः श्रीमान जी से विनम्र निवेदन है कि ' + pWord + ' का उक्त <b>' + daysPhrase + '</b> का आकस्मिक अवकाश स्वीकृत करने की कृपा करें। ' + abhAriSentence +
+      '</p>' +
+      '<div style="margin-top:35px; display:flex; justify-content:flex-end;">' +
+        '<div style="text-align:center; min-width:220px; line-height:1.6;">' +
+          '<b>' + bhavadiyaWord + '</b><br><br>' +
+          '<b>(' + escapeHtml(loggedInPsUser.fullName) + ')</b><br>' +
+          'पंचायत सहायक कम डाटा एंट्री ऑपरेटर<br>' +
+          'ग्राम पंचायत: ' + escapeHtml(loggedInPsUser.gramPanchayat) + '<br>' +
+          'मो०: ' + escapeHtml(loggedInPsUser.mobile) +
+        '</div>' +
+      '</div>';
 
-  document.getElementById('leaveLetterContent').innerHTML = letterHtml;
-  letterCard.style.display = 'block';
+    document.getElementById('leaveLetterContent').innerHTML = letterHtml;
+    letterCard.style.display = 'block';
 
-
-    // WhatsApp Message Draft
     var waPlainMsg = "📋 *आकस्मिक अवकाश हेतु प्रार्थना पत्र*\n\n" +
       "सेवा में,\n" + (recipientRole === 'सचिव' ? "श्रीमान ग्राम विकास / पंचायत अधिकारी महोदय, ग्रा०पं० " + loggedInPsUser.gramPanchayat : "श्रीमान सहायक विकास अधिकारी (पं०), उतरौला") + "\n\n" +
       "महोदय,\n" +
@@ -3342,10 +3446,12 @@ function autoGenerateLeaveLetter() {
 
     var waBtn = document.getElementById('btnShareWhatsAppLeave');
     waBtn.href = "https://api.whatsapp.com/send?text=" + encodeURIComponent(waPlainMsg);
+    waBtn.onclick = function() {
+      saveCurrentLeaveToSheetOnce();
+    };
 
-    // Save automatically to Google Sheet for Admin Dashboard
     var clusterNameVal = (loggedInPsCluster && loggedInPsCluster.clusterName) ? loggedInPsCluster.clusterName : "-";
-    var payload = {
+    currentLeaveDraftPayload = {
       clusterName: clusterNameVal,
       gramPanchayat: loggedInPsUser.gramPanchayat,
       fullName: loggedInPsUser.fullName,
@@ -3358,8 +3464,9 @@ function autoGenerateLeaveLetter() {
       gender: gender
     };
 
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-      google.script.run.submitLeaveApplication(payload);
+    // यदि कारण ड्रॉपडाउन से चुना गया है (कस्टम टाइपिंग के बीच नहीं), तो सुरक्षित सेव करें
+    if (document.getElementById('leaveReasonSelect').value !== 'अन्य') {
+      saveCurrentLeaveToSheetOnce();
     }
   }
 
@@ -3367,27 +3474,28 @@ function autoGenerateLeaveLetter() {
     document.getElementById('leaveApplicationForm').reset();
     document.getElementById('generatedLetterCard').style.display = 'none';
     document.getElementById('customReasonBox').style.display = 'none';
+    currentLeaveDraftPayload = null;
     toggleLeaveDateInputs();
-    var todayStr = new Date().toISOString().split('T')[0];
+    var now = new Date();
+    var todayFormatted = ("0" + now.getDate()).slice(-2) + "/" + ("0" + (now.getMonth() + 1)).slice(-2) + "/" + now.getFullYear();
     var sInput = document.getElementById('leaveSingleDate');
-    if (sInput) sInput.value = todayStr;
+    if (sInput) sInput.value = todayFormatted;
     showMsg("रीसेट", "फ़ॉर्म खाली कर दिया गया है। आप नया अवकाश आवेदन तैयार कर सकते हैं।", false);
   }
 
   function printLeaveApplicationPDF() {
-  var content = document.getElementById('leaveLetterContent').innerHTML;
-  var printArea = document.getElementById('printTemplateArea');
-  
-  // सटीक 1 पेज A4 फॉर्मेटिंग
-  printArea.innerHTML = 
-    '<div style="width:100%; max-width:700px; margin:0 auto; padding:5px 0; font-family:\'Tiro Devanagari Hindi\', serif; line-height:1.65; font-size:13.5px; color:#000000;">' + 
-      content + 
-    '</div>';
-    
-  window.print();
-}
+    saveCurrentLeaveToSheetOnce();
+    var content = document.getElementById('leaveLetterContent').innerHTML;
+    var printArea = document.getElementById('printTemplateArea');
+    printArea.innerHTML = 
+      '<div style="width:100%; max-width:700px; margin:0 auto; padding:5px 0; font-family:\'Tiro Devanagari Hindi\', serif; line-height:1.65; font-size:13.5px; color:#000000;">' + 
+        content + 
+      '</div>';
+    window.print();
+  }
 
   function downloadLeaveAsWord() {
+    saveCurrentLeaveToSheetOnce();
     var content = document.getElementById('leaveLetterContent').innerHTML;
     var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>" +
       "<head><meta charset='utf-8'><title>Leave Application</title><style>body{font-family:'Arial', sans-serif; line-height:1.8;}</style></head><body>";
@@ -3428,6 +3536,7 @@ function autoGenerateLeaveLetter() {
 
     if (res.webAppUrl) systemWebAppUrl = res.webAppUrl;
 
+    cachedAdminStats = res.stats;
     cachedSurveyRecords = res.surveyRecords || [];
     cachedAllRegistrations = res.allRegistrations || [];
     cachedPendingRegs = res.pendingRegistrations || [];
@@ -3438,8 +3547,6 @@ function autoGenerateLeaveLetter() {
     cachedAdminEvents = res.adminEvents || [];
     cachedAdminAttendance = res.adminAttendanceRecords || [];
     cachedAdminLeaves = res.adminLeaveRecords || [];
-    
-    // 1. फोटो कंप्रेस लॉग्स का डेटा सुरक्षित करना
     cachedAdminImageLogs = res.imageCompressionLogs || [];
 
     document.getElementById('totalLeaveCount').innerText = cachedAdminLeaves.length;
@@ -3525,48 +3632,7 @@ function autoGenerateLeaveLetter() {
     google.script.run.withSuccessHandler(function(res) {
       hideLoader();
       if (res && res.success) {
-        document.getElementById('statTotal').innerText = res.stats.totalSurveys;
-        document.getElementById('statApprovedUsers').innerText = res.stats.approvedUsers;
-        document.getElementById('statPendingUsers').innerText = res.stats.pendingUsers;
-        document.getElementById('statWifi').innerText = res.stats.wifiAvailable;
-        document.getElementById('statElec').innerText = res.stats.electricityAvailable;
-        document.getElementById('statWater').innerText = res.stats.drinkingWaterAvailable;
-
-        document.getElementById('pendingCount').innerText = res.pendingRegistrations.length;
-        document.getElementById('totalRegTabCount').innerText = res.allRegistrations.length;
-        document.getElementById('totalClusterTabCount').innerText = res.clusterRecords.length;
-        document.getElementById('totalLoginLogsCount').innerText = res.stats.totalLoginLogs;
-        document.getElementById('pendingGrievanceCount').innerText = res.pendingGrievanceCount;
-
-        cachedSurveyRecords = res.surveyRecords || [];
-        cachedAllRegistrations = res.allRegistrations || [];
-        cachedPendingRegs = res.pendingRegistrations || [];
-        cachedClusterRecords = res.clusterRecords || [];
-        cachedLoginLogs = res.loginLogs || [];
-        cachedAdminNotices = res.adminNotices || [];
-        cachedAdminGrievances = res.adminGrievances || [];
-        cachedAdminEvents = res.adminEvents || [];
-        cachedAdminAttendance = res.adminAttendanceRecords || [];
-        cachedAdminLeaves = res.adminLeaveRecords || [];
-        cachedAdminImageLogs = res.imageCompressionLogs || [];
-if (document.getElementById('totalImageLogsCount')) {
-  document.getElementById('totalImageLogsCount').innerText = cachedAdminImageLogs.length;
-}
-renderImageLogsTable(cachedAdminImageLogs);
-
-        document.getElementById('totalLeaveCount').innerText = cachedAdminLeaves.length;
-
-        initCharts(res.stats);
-        renderAdminTable(cachedSurveyRecords);
-        renderRegisteredTable(cachedAllRegistrations);
-        renderClusterTable(cachedClusterRecords);
-        renderLoginLogsTable(cachedLoginLogs);
-        renderPendingTable(cachedPendingRegs);
-        renderAdminNoticesTable(cachedAdminNotices);
-        renderAdminGrievancesTable(cachedAdminGrievances);
-        populateEventFilterDropdown(cachedAdminEvents);
-        renderAdminAttendanceTable(cachedAdminAttendance);
-        renderAdminLeaveTable(cachedAdminLeaves);
+        restoreAdminDashboard(res);
       }
     }).withFailureHandler(function() { hideLoader(); }).getAdminDashboardDataSecure(adminSessionToken);
   }
@@ -3648,8 +3714,8 @@ renderImageLogsTable(cachedAdminImageLogs);
         '<td>' +
           '<a href="' + waLink + '" target="_blank" class="btn-action-whatsapp" title="WhatsApp Chat"><i class="fa-brands fa-whatsapp"></i></a>' +
           '<button class="btn-action-allow" style="' + allowBtnBg + '" title="' + allowBtnTitle + '" onclick="grantUpdateApproval(' + r.rowIndex + ')">' + allowBtnIcon + '</button>' +
-          '<button class="btn-action-view" title="देखें" onclick="viewSurveyModal(' + i + ')"><i class="fa-solid fa-eye"></i></button>' +
-          '<button class="btn-action-edit" title="संपादित करें" onclick="openEditSurveyModal(' + i + ')"><i class="fa-solid fa-pen"></i></button>' +
+          '<button class="btn-action-view" title="देखें" onclick="viewSurveyModal(' + r.rowIndex + ')"><i class="fa-solid fa-eye"></i></button>' +
+          '<button class="btn-action-edit" title="संपादित करें" onclick="openEditSurveyModal(' + r.rowIndex + ')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="confirmUniversalDelete(\'survey\', ' + r.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
         '</td>';
       tbody.appendChild(tr);
@@ -3665,21 +3731,12 @@ renderImageLogsTable(cachedAdminImageLogs);
   }
 
   function grantUpdateApproval(rowIndex) {
-    if (confirm("क्या आप इस पंचायत सहायक को सर्वे फ़ॉर्म अद्यतन करने की अनुमति देना चाहते हैं?")) {
-      showLoader("अनुमति अपडेट हो रही है...");
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader();
-        showMsg("अनुमति स्थिति", res.message, res.success);
-        if (res.success) loadAdminDashboardData();
-      }).withFailureHandler(function(err) {
-        hideLoader();
-        showMsg("त्रुटि", err.toString(), false);
-      }).grantSurveyUpdateApprovalSecure(adminSessionToken, rowIndex);
-    }
+    confirmUniversalDelete('grantSurveyUpdate', rowIndex);
   }
 
-  function viewSurveyModal(index) {
-    var r = cachedSurveyRecords[index];
+  function viewSurveyModal(rowOrIdx) {
+    var r = findRecordByRowOrIdx(cachedSurveyRecords, rowOrIdx);
+    if (!r) return;
     var html = '<p><b>ग्राम पंचायत:</b> ' + escapeHtml(r.gramPanchayat) + '</p>' +
       '<p><b>पंचायत सहायक का नाम:</b> ' + escapeHtml(r.fullName) + '</p>' +
       '<p><b>पिता/पति का नाम:</b> ' + escapeHtml(r.guardianName) + '</p>' +
@@ -3705,8 +3762,9 @@ renderImageLogsTable(cachedAdminImageLogs);
     openModal('viewDetailsModal');
   }
 
-  function openEditSurveyModal(index) {
-    var r = cachedSurveyRecords[index];
+  function openEditSurveyModal(rowOrIdx) {
+    var r = findRecordByRowOrIdx(cachedSurveyRecords, rowOrIdx);
+    if (!r) return;
     document.getElementById('editRowIndex').value = r.rowIndex;
     document.getElementById('editGramPanchayat').value = r.gramPanchayat;
     document.getElementById('editFullName').value = r.fullName;
@@ -3746,7 +3804,7 @@ renderImageLogsTable(cachedAdminImageLogs);
       birthDeathRegister: document.getElementById('editBirthDeathRegister').value,
       toiletStatus: document.getElementById('editToiletStatus').value,
       registerWorker: document.getElementById('editRegisterWorker').value,
-      paymentWorker: document.getElementById('paymentWorker').value
+      paymentWorker: document.getElementById('editPaymentWorker').value
     };
 
     showLoader("सर्वे विवरण अद्यतन किया जा रहा है...");
@@ -3783,7 +3841,11 @@ renderImageLogsTable(cachedAdminImageLogs);
       var r = records[i];
       var tr = document.createElement('tr');
       var waLink = "https://wa.me/91" + r.mobile + "?text=" + encodeURIComponent("नमस्ते " + r.fullName + " जी, पंचायत सहायक कर्मचारी यूनियन उतरौला की तरफ से संपर्क किया जा रहा है।");
-      var badgeClass = (r.status === "Approved") ? "badge-approved" : ((r.status === "Rejected") ? "badge-rejected" : "badge-pending");
+      var isLockedAcc = (r.isLocked || r.status === "Locked");
+      var badgeClass = isLockedAcc ? "badge-locked" : ((r.status === "Approved") ? "badge-approved" : ((r.status === "Rejected") ? "badge-rejected" : "badge-pending"));
+      var statusLabel = isLockedAcc ? "🔒 Locked" : escapeHtml(r.status);
+      var unlockBtnStyle = isLockedAcc ? "background:#dc2626; color:#fff;" : "background:#10b981; color:#fff;";
+      var unlockBtnTitle = isLockedAcc ? "लॉक खाता अनलॉक / पासवर्ड रीसेट करें" : "खाता अनलॉक / पासवर्ड रीसेट करें";
 
       tr.innerHTML = '<td>' + (i + 1) + '</td>' +
         '<td><b>' + escapeHtml(r.gramPanchayat) + '</b></td>' +
@@ -3792,13 +3854,13 @@ renderImageLogsTable(cachedAdminImageLogs);
         '<td>' + escapeHtml(r.aadhaar) + '</td>' +
         '<td>' + escapeHtml(r.mobile) + '</td>' +
         '<td>' + escapeHtml(r.email) + '</td>' +
-        '<td><span class="badge-status ' + badgeClass + '">' + escapeHtml(r.status) + '</span></td>' +
+        '<td><span class="badge-status ' + badgeClass + '">' + statusLabel + '</span></td>' +
         '<td>' + escapeHtml(r.timestamp) + '</td>' +
         '<td>' +
           '<a href="' + waLink + '" target="_blank" class="btn-action-whatsapp" title="WhatsApp Chat"><i class="fa-brands fa-whatsapp"></i></a>' +
-        '<button class="btn-action-allow" style="background:#10b981; color:#fff;" title="खाता अनलॉक करें" onclick="handleAdminUnlockAccount(' + r.rowIndex + ', \'' + escapeHtml(r.fullName) + '\')"><i class="fa-solid fa-lock-open"></i></button>' +
-          '<button class="btn-action-view" title="देखें (PDF)" onclick="viewRegisteredModal(' + i + ')"><i class="fa-solid fa-eye"></i></button>' +
-          '<button class="btn-action-edit" title="संपादित करें" onclick="openEditRegisteredModal(' + i + ')"><i class="fa-solid fa-pen"></i></button>' +
+          '<button class="btn-action-allow" style="' + unlockBtnStyle + '" title="' + unlockBtnTitle + '" onclick="handleAdminUnlockAccount(' + r.rowIndex + ', \'' + escapeHtml(r.fullName).replace(/'/g, "\\'") + '\')"><i class="fa-solid fa-lock-open"></i></button>' +
+          '<button class="btn-action-view" title="देखें (PDF)" onclick="viewRegisteredModal(' + r.rowIndex + ')"><i class="fa-solid fa-eye"></i></button>' +
+          '<button class="btn-action-edit" title="संपादित करें" onclick="openEditRegisteredModal(' + r.rowIndex + ')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="confirmUniversalDelete(\'registered\', ' + r.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
         '</td>';
       tbody.appendChild(tr);
@@ -3808,13 +3870,14 @@ renderImageLogsTable(cachedAdminImageLogs);
   function filterRegisteredTable() {
     var q = document.getElementById('registeredSearchInput').value.toLowerCase().trim();
     var filtered = cachedAllRegistrations.filter(function(r) {
-      return r.gramPanchayat.toLowerCase().indexOf(q) !== -1 || r.fullName.toLowerCase().indexOf(q) !== -1 || r.email.toLowerCase().indexOf(q) !== -1;
+      return r.gramPanchayat.toLowerCase().indexOf(q) !== -1 || r.fullName.toLowerCase().indexOf(q) !== -1 || r.email.toLowerCase().indexOf(q) !== -1 || (r.mobile && r.mobile.indexOf(q) !== -1);
     });
     renderRegisteredTable(filtered);
   }
 
-  function viewRegisteredModal(index) {
-    var r = cachedAllRegistrations[index];
+  function viewRegisteredModal(rowOrIdx) {
+    var r = findRecordByRowOrIdx(cachedAllRegistrations, rowOrIdx);
+    if (!r) return;
     var html = '<h3 style="color:#2563eb; margin-bottom:10px; text-align:center;">पंचायत सहायक पंजीकरण प्रमाण पत्र</h3>' +
       '<p><b>ग्राम पंचायत:</b> ' + escapeHtml(r.gramPanchayat) + '</p>' +
       '<p><b>पंचायत सहायक का नाम:</b> ' + escapeHtml(r.fullName) + '</p>' +
@@ -3831,8 +3894,9 @@ renderImageLogsTable(cachedAdminImageLogs);
     openModal('viewDetailsModal');
   }
 
-  function openEditRegisteredModal(index) {
-    var r = cachedAllRegistrations[index];
+  function openEditRegisteredModal(rowOrIdx) {
+    var r = findRecordByRowOrIdx(cachedAllRegistrations, rowOrIdx);
+    if (!r) return;
     document.getElementById('editRegRowIndex').value = r.rowIndex;
     document.getElementById('editRegEmail').value = r.email;
     document.getElementById('editRegGramPanchayat').value = r.gramPanchayat;
@@ -3850,7 +3914,7 @@ renderImageLogsTable(cachedAdminImageLogs);
       email: document.getElementById('editRegEmail').value.trim(),
       gramPanchayat: document.getElementById('editRegGramPanchayat').value.trim(),
       fullName: document.getElementById('editRegFullName').value.trim(),
-      guardianName: document.getElementById('editGuardianName').value.trim(),
+      guardianName: document.getElementById('editRegGuardianName').value.trim(),
       mobile: document.getElementById('editRegMobile').value.trim(),
       status: document.getElementById('editRegStatus').value
     };
@@ -3918,8 +3982,8 @@ renderImageLogsTable(cachedAdminImageLogs);
         '<td>' + escapeHtml(c.psName || "-") + ' (' + escapeHtml(c.mobile || "-") + ')</td>' +
         '<td style="white-space:nowrap;">' +
           '<a href="' + waLink + '" target="_blank" class="btn-action-whatsapp" title="WhatsApp पर पूरा विवरण भेजें"><i class="fa-brands fa-whatsapp"></i></a>' +
-          '<button class="btn-action-view" title="देखें (PDF)" onclick="viewClusterModal(' + i + ')"><i class="fa-solid fa-eye"></i></button>' +
-          '<button class="btn-action-edit" title="संपादित करें" onclick="openEditClusterModal(' + i + ')"><i class="fa-solid fa-pen"></i></button>' +
+          '<button class="btn-action-view" title="देखें (PDF)" onclick="viewClusterModal(' + c.rowIndex + ')"><i class="fa-solid fa-eye"></i></button>' +
+          '<button class="btn-action-edit" title="संपादित करें" onclick="openEditClusterModal(' + c.rowIndex + ')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="confirmUniversalDelete(\'cluster\', ' + c.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
         '</td>';
       tbody.appendChild(tr);
@@ -3937,8 +4001,9 @@ renderImageLogsTable(cachedAdminImageLogs);
     renderClusterTable(filtered);
   }
 
-  function viewClusterModal(index) {
-    var c = cachedClusterRecords[index];
+  function viewClusterModal(rowOrIdx) {
+    var c = findRecordByRowOrIdx(cachedClusterRecords, rowOrIdx);
+    if (!c) return;
     var html = '<h3 style="color:#2563eb; margin-bottom:10px; text-align:center;">ग्राम पंचायत व क्लस्टर विवरण पत्र</h3>' +
       '<p><b>1. जिला:</b> ' + escapeHtml(c.district) + '</p>' +
       '<p><b>2. विकास खण्ड:</b> ' + escapeHtml(c.block) + '</p>' +
@@ -3961,8 +4026,9 @@ renderImageLogsTable(cachedAdminImageLogs);
     openModal('viewDetailsModal');
   }
 
-  function openEditClusterModal(index) {
-    var c = cachedClusterRecords[index];
+  function openEditClusterModal(rowOrIdx) {
+    var c = findRecordByRowOrIdx(cachedClusterRecords, rowOrIdx);
+    if (!c) return;
     document.getElementById('editClusterRowIndex').value = c.rowIndex;
     document.getElementById('editClusterName').value = c.clusterName;
     document.getElementById('editClusterHq').value = c.clusterHq;
@@ -4078,20 +4144,90 @@ renderImageLogsTable(cachedAdminImageLogs);
     window.print();
   }
 
-  function confirmUniversalDelete(type, rowIndex) {
+  function confirmUniversalDelete(type, rowIndex, extraLabel) {
     document.getElementById('deleteTargetType').value = type;
     document.getElementById('deleteTargetRowIndex').value = rowIndex;
-    var title = (type === 'survey') ? "सर्वे रिकॉर्ड हटाने की पुष्टि" : 
-                ((type === 'registered') ? "पंजीकरण हटाने की पुष्टि" : 
-                ((type === 'cluster') ? "क्लस्टर रिकॉर्ड हटाने की पुष्टि" : "अवकाश रिकॉर्ड हटाने की पुष्टि"));
-    document.getElementById('deleteModalTitle').innerText = title;
+    var iconBox = document.getElementById('deleteModalIconBox');
+    var msgElem = document.getElementById('deleteModalMsg');
+    var btnElem = document.getElementById('deleteModalConfirmBtn');
+    var resetCredsBox = document.getElementById('unlockResetCredsBox');
+    var resetCheck = document.getElementById('unlockResetPasswordCheck');
+    if (resetCheck) resetCheck.checked = false;
+    if (resetCredsBox) resetCredsBox.style.display = 'none';
+
+    if (type === 'grantSurveyUpdate') {
+      document.getElementById('deleteModalTitle').innerText = "सर्वे अद्यतन अनुमति";
+      if (msgElem) msgElem.innerText = "क्या आप इस पंचायत सहायक को सर्वे फ़ॉर्म अद्यतन (Update) करने की अनुमति देना चाहते हैं?";
+      if (iconBox) { iconBox.style.color = "#8b5cf6"; iconBox.innerHTML = '<i class="fa-solid fa-unlock-keyhole"></i>'; }
+      if (btnElem) { btnElem.style.background = "#16a34a"; btnElem.innerText = "हाँ, अनुमति दें"; }
+    } else if (type === 'unlockAccount') {
+      document.getElementById('deleteModalTitle').innerText = "खाता अनलॉक व रीसेट";
+      if (msgElem) msgElem.innerText = "क्या आप " + (extraLabel || "इस पंचायत सहायक") + " का खाता अनलॉक करना चाहते हैं?";
+      if (iconBox) { iconBox.style.color = "#10b981"; iconBox.innerHTML = '<i class="fa-solid fa-user-lock"></i>'; }
+      if (btnElem) { btnElem.style.background = "#16a34a"; btnElem.innerText = "हाँ, अनलॉक करें"; }
+      if (resetCredsBox) resetCredsBox.style.display = 'block';
+    } else {
+      var title = (type === 'survey') ? "सर्वे रिकॉर्ड हटाने की पुष्टि" : 
+                  ((type === 'registered') ? "पंजीकरण हटाने की पुष्टि" : 
+                  ((type === 'cluster') ? "क्लस्टर रिकॉर्ड हटाने की पुष्टि" : 
+                  ((type === 'notice') ? "नोटिस हटाने की पुष्टि" : "अवकाश रिकॉर्ड हटाने की पुष्टि")));
+      document.getElementById('deleteModalTitle').innerText = title;
+      if (msgElem) msgElem.innerText = "क्या आप इस रिकॉर्ड को निश्चित रूप से हटाना चाहते हैं?";
+      if (iconBox) { iconBox.style.color = "#dc2626"; iconBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>'; }
+      if (btnElem) { btnElem.style.background = "#dc2626"; btnElem.innerText = "हाँ, हटाएं"; }
+    }
     openModal('deleteConfirmModal');
   }
 
   function executeUniversalDelete() {
     var type = document.getElementById('deleteTargetType').value;
     var rIdx = document.getElementById('deleteTargetRowIndex').value;
+    var resetCheck = document.getElementById('unlockResetPasswordCheck');
+    var resetCredentials = resetCheck ? resetCheck.checked : false;
     closeModal('deleteConfirmModal');
+
+    if (type === 'grantSurveyUpdate') {
+      showLoader("अनुमति अपडेट हो रही है...");
+      google.script.run.withSuccessHandler(function(res) {
+        hideLoader();
+        showMsg("अनुमति स्थिति", res.message, res.success);
+        if (res.success) loadAdminDashboardData();
+      }).withFailureHandler(function(err) {
+        hideLoader();
+        showMsg("त्रुटि", err.toString(), false);
+      }).grantSurveyUpdateApprovalSecure(adminSessionToken, rIdx);
+      return;
+    }
+
+    if (type === 'unlockAccount') {
+      showLoader("खाता अनलॉक किया जा रहा है...");
+      google.script.run.withSuccessHandler(function(res) {
+        hideLoader();
+        if (res && res.success) {
+          showMsg("सफलता", res.message, false);
+          loadAdminDashboardData();
+        } else {
+          showMsg("त्रुटि", (res ? res.message : "अनलॉक करने में विफल"), false);
+        }
+      }).withFailureHandler(function(err) {
+        hideLoader();
+        showMsg("सर्वर त्रुटि", err.toString(), false);
+      }).unlockPsAccountSecure(adminSessionToken, rIdx, resetCredentials);
+      return;
+    }
+
+    if (type === 'notice') {
+      showLoader("नोटिस हटाया जा रहा है...");
+      google.script.run.withSuccessHandler(function(res) {
+        hideLoader();
+        showMsg("नोटिस स्थिति", res.message, res.success);
+        if (res.success) loadAdminDashboardData();
+      }).withFailureHandler(function(err) {
+        hideLoader();
+        showMsg("त्रुटि", err.toString(), false);
+      }).deleteNoticeSecure(adminSessionToken, rIdx);
+      return;
+    }
 
     showLoader("रिकॉर्ड हटाया जा रहा है...");
 
@@ -4241,7 +4377,7 @@ renderImageLogsTable(cachedAdminImageLogs);
         '<td style="text-align:center; white-space:nowrap;">' +
           '<a href="' + waLink + '" target="_blank" class="btn-action-whatsapp" title="व्हाट्सएप पर शेयर करें"><i class="fa-brands fa-whatsapp"></i></a>' +
           '<button class="btn-action-view" style="background:#0284c7;" title="नोटिस कॉपी करें" onclick="copyNoticeText(\'' + escapeHtml(n.noticeText).replace(/'/g, "\\'") + '\')"><i class="fa-solid fa-copy"></i></button>' +
-          '<button class="btn-action-edit" title="संपादित करें" onclick="openEditNoticeModal(' + i + ')"><i class="fa-solid fa-pen"></i></button>' +
+          '<button class="btn-action-edit" title="संपादित करें" onclick="openEditNoticeModal(' + n.rowIndex + ')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="deleteNotice(' + n.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
         '</td>';
       tbody.appendChild(tr);
@@ -4288,8 +4424,9 @@ renderImageLogsTable(cachedAdminImageLogs);
     }).addNoticeSecure(adminSessionToken, txt);
   }
 
-  function openEditNoticeModal(index) {
-    var n = cachedAdminNotices[index];
+  function openEditNoticeModal(rowOrIdx) {
+    var n = findRecordByRowOrIdx(cachedAdminNotices, rowOrIdx);
+    if (!n) return;
     document.getElementById('editNoticeRowIndex').value = n.rowIndex;
     document.getElementById('editNoticeText').value = n.noticeText;
     openModal('editNoticeModal');
@@ -4298,6 +4435,7 @@ renderImageLogsTable(cachedAdminImageLogs);
   function saveEditedNotice() {
     var rIdx = document.getElementById('editNoticeRowIndex').value;
     var txt = document.getElementById('editNoticeText').value.trim();
+    if (!txt) { showMsg("ध्यान दें", "कृपया नोटिस विवरण लिखें।", false); return; }
     showLoader("नोटिस अद्यतन हो रहा है...");
     google.script.run.withSuccessHandler(function(res) {
       hideLoader();
@@ -4311,17 +4449,7 @@ renderImageLogsTable(cachedAdminImageLogs);
   }
 
   function deleteNotice(rowIndex) {
-    if (confirm("क्या आप इस नोटिस को हटाना चाहते हैं?")) {
-      showLoader("नोटिस हटाया जा रहा है...");
-      google.script.run.withSuccessHandler(function(res) {
-        hideLoader();
-        showMsg("नोटिस स्थिति", res.message, res.success);
-        if (res.success) loadAdminDashboardData();
-      }).withFailureHandler(function(err) {
-        hideLoader();
-        showMsg("त्रुटि", err.toString(), false);
-      }).deleteNoticeSecure(adminSessionToken, rowIndex);
-    }
+    confirmUniversalDelete('notice', rowIndex);
   }
 
   function renderAdminGrievancesTable(grievances) {
@@ -4348,14 +4476,15 @@ renderImageLogsTable(cachedAdminImageLogs);
         '<td>' + escapeHtml(g.timestamp) + '</td>' +
         '<td>' +
           '<a href="' + waLink + '" target="_blank" class="btn-action-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>' +
-          '<button class="btn-action-edit" onclick="openEditGrievanceModal(' + i + ')"><i class="fa-solid fa-pen-to-square"></i> Action</button>' +
+          '<button class="btn-action-edit" onclick="openEditGrievanceModal(' + g.rowIndex + ')"><i class="fa-solid fa-pen-to-square"></i> Action</button>' +
         '</td>';
       tbody.appendChild(tr);
     }
   }
 
-  function openEditGrievanceModal(index) {
-    var g = cachedAdminGrievances[index];
+  function openEditGrievanceModal(rowOrIdx) {
+    var g = findRecordByRowOrIdx(cachedAdminGrievances, rowOrIdx);
+    if (!g) return;
     document.getElementById('editGrievanceRowIndex').value = g.rowIndex;
     document.getElementById('editGrievanceTicketId').value = g.ticketId;
     document.getElementById('editGrievanceUser').value = g.fullName + " (" + g.gramPanchayat + ")";
@@ -4480,7 +4609,7 @@ renderImageLogsTable(cachedAdminImageLogs);
         '<td><span class="badge-status badge-progress">' + escapeHtml(l.recipient) + '</span></td>' +
         '<td style="white-space:nowrap;">' +
           '<a href="' + waLink + '" target="_blank" class="btn-action-whatsapp" title="WhatsApp पर बात करें"><i class="fa-brands fa-whatsapp"></i></a>' +
-          '<button class="btn-action-view" title="पूरा पत्र देखें / प्रिंट" onclick="viewAdminLeaveModal(' + i + ')"><i class="fa-solid fa-eye"></i></button>' +
+          '<button class="btn-action-view" title="पूरा पत्र देखें / प्रिंट" onclick="viewAdminLeaveModal(' + l.rowIndex + ')"><i class="fa-solid fa-eye"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="confirmUniversalDelete(\'leave\', ' + l.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
         '</td>';
       tbody.appendChild(tr);
@@ -4498,8 +4627,8 @@ renderImageLogsTable(cachedAdminImageLogs);
     renderAdminLeaveTable(filtered);
   }
 
-function viewAdminLeaveModal(index) {
-  var l = cachedAdminLeaves[index];
+function viewAdminLeaveModal(rowOrIdx) {
+  var l = findRecordByRowOrIdx(cachedAdminLeaves, rowOrIdx);
   if (!l) return;
 
   var isFemale = (l.gender === 'female');
@@ -4728,31 +4857,7 @@ function viewAdminLeaveModal(index) {
     }).getEventDetailsForScan(evtId);
   }
 
-  function handleQRAttendanceSubmit(e) {
-    e.preventDefault();
-    var email = document.getElementById('qrScanEmail').value.trim();
-    var mob = document.getElementById('qrScanMobile').value.trim();
-    var btn = document.getElementById('btnQRSubmit');
-    btn.disabled = true;
 
-    showLoader("उपस्थिति दर्ज की जा रही है...");
-
-    google.script.run.withSuccessHandler(function(res) {
-      hideLoader();
-      btn.disabled = false;
-      if (res.success) {
-        document.getElementById('qrScanEmail').value = "";
-        document.getElementById('qrScanMobile').value = "";
-        showMsg("उपस्थिति दर्ज!", res.message, false);
-      } else {
-        showMsg("ध्यान दें", res.message, false);
-      }
-    }).withFailureHandler(function(err) {
-      hideLoader();
-      btn.disabled = false;
-      showMsg("त्रुटि", err.toString(), false);
-    }).submitQRAttendance(eventIdFromUrl, email, mob);
-  }
 
   function logoutAdmin() {
     adminSessionToken = "";
@@ -4922,7 +5027,11 @@ window.addEventListener('DOMContentLoaded', function() {
     flatpickr("#leaveSingleDate, #leaveStartDate, #leaveEndDate", {
       dateFormat: "d/m/Y",
       defaultDate: new Date(),
-      allowInput: true
+      allowInput: true,
+      onChange: function() {
+        calculateLeaveDays();
+        autoGenerateLeaveLetter();
+      }
     });
   }
 });
@@ -4950,16 +5059,21 @@ window.addEventListener('DOMContentLoaded', function() {
         hideLoader();
         if (res && res.success && res.isApproved) {
           closeModal('psLoginModal');
+          pendingPsLoginRes = res;
 
-          // सेशन व यूजर डेटा सुरक्षित करना
-          sessionStorage.setItem('psk_ps_email', email);
-          sessionStorage.setItem('psk_ps_mobile', passMob);
-          sessionStorage.setItem('psk_active_view', 'ps');
-          sessionStorage.setItem('psk_ps_tab', 'psHome');
+          // सुरक्षित सेशन टोकन व यूजर डेटा सहेजना (पासवर्ड या MPIN ब्राउज़र में कभी सेव न करें)
+          safeSetStorage(sessionStorage, 'psk_ps_email', email);
+          if (res.psSessionToken) {
+            safeSetStorage(sessionStorage, 'psk_ps_token', res.psSessionToken);
+          } else {
+            safeSetStorage(sessionStorage, 'psk_ps_mobile', passMob);
+          }
+          safeSetStorage(sessionStorage, 'psk_active_view', 'ps');
+          safeSetStorage(sessionStorage, 'psk_ps_tab', 'psHome');
 
-          localStorage.setItem('psUserLoggedIn', 'true');
-          localStorage.setItem('psUserData', JSON.stringify(res.userData || res));
-          localStorage.setItem('psLastActiveTime', Date.now().toString());
+          safeSetStorage(localStorage, 'psUserLoggedIn', 'true');
+          safeSetStorage(localStorage, 'psUserData', JSON.stringify(res.userData || {}));
+          safeSetStorage(localStorage, 'psLastActiveTime', Date.now().toString());
 
           var hiddenEmailEl = document.getElementById('setupEmailHidden');
           if (hiddenEmailEl) {
@@ -4967,7 +5081,11 @@ window.addEventListener('DOMContentLoaded', function() {
           }
 
           // प्रथम बार लॉगिन या 3 महीने (90 दिन) पूरे होने पर सेटअप पॉपअप खोलें
-          if (res.needsPasswordChange || !res.isPasswordChanged || !res.mpin || String(res.mpin).length !== 4) {
+          if (res.needsPasswordChange || !res.isPasswordChanged || (!res.hasMpin && (!res.mpin || String(res.mpin).length !== 4))) {
+            document.getElementById('setupOldPass').value = '';
+            document.getElementById('setupNewPass').value = '';
+            document.getElementById('setupConfirmPass').value = '';
+            document.getElementById('setupMpin').value = '';
             document.getElementById('firstTimeSetupModal').style.display = 'flex';
           } else {
             restorePsPortal(res);
@@ -4982,10 +5100,9 @@ window.addEventListener('DOMContentLoaded', function() {
         hideLoader();
         showMsg("सर्वर त्रुटि", err.toString(), false);
       })
-      .verifyPSLogin(email, passMob);
+      .verifyPSLogin(email, passMob, false);
   }
 
-  
 // ================= प्रथम लॉगिन: पासवर्ड व MPIN सेटअप =================
 function submitCredentialsSetup() {
   var oldP = document.getElementById('setupOldPass').value.trim();
@@ -4994,18 +5111,22 @@ function submitCredentialsSetup() {
   var mpin = document.getElementById('setupMpin').value.trim();
 
   var hiddenEmail = document.getElementById('setupEmailHidden') ? document.getElementById('setupEmailHidden').value.trim() : '';
-  var sessionEmail = sessionStorage.getItem('psk_ps_email') || '';
+  var sessionEmail = safeGetStorage(sessionStorage, 'psk_ps_email') || '';
   var loginEmail = document.getElementById('psLoginEmail') ? document.getElementById('psLoginEmail').value.trim() : '';
   
   var uData = {};
   try {
-    uData = JSON.parse(localStorage.getItem('psUserData') || '{}');
+    uData = JSON.parse(safeGetStorage(localStorage, 'psUserData') || '{}');
   } catch(e) {}
   
   var userKey = hiddenEmail || sessionEmail || loginEmail || uData.email || uData.mobile || '';
 
   if (!oldP || !newP || !confP || !mpin) {
     showMsg("ध्यान दें", "कृपया सभी फ़ील्ड भरें!", false);
+    return;
+  }
+  if (newP.length < 4) {
+    showMsg("त्रुटि", "नया पासवर्ड कम से कम 4 अक्षरों का होना चाहिए!", false);
     return;
   }
   if (newP !== confP) {
@@ -5031,14 +5152,23 @@ function submitCredentialsSetup() {
           document.getElementById('firstTimeSetupModal').style.display = 'none';
 
           uData.isPasswordChanged = true;
-          uData.mpin = mpin;
-          localStorage.setItem('psUserData', JSON.stringify(uData));
+          uData.hasMpin = true;
+          uData.needsPasswordChange = false;
+          safeSetStorage(localStorage, 'psUserData', JSON.stringify(uData));
+          if (res.psSessionToken) {
+            safeSetStorage(sessionStorage, 'psk_ps_token', res.psSessionToken);
+            safeRemoveStorage(sessionStorage, 'psk_ps_mobile');
+          } else {
+            safeSetStorage(sessionStorage, 'psk_ps_mobile', newP);
+          }
 
-          showMsg("सफलता", res.message || "पासवर्ड एवं MPIN सफलतापूर्वक सेट हो गया!", true);
+          showMsg("सफलता", res.message || "पासवर्ड एवं MPIN सफलतापूर्वक सेट हो गया!", false);
 
           try {
+            var fullRes = pendingPsLoginRes || { userData: uData, notices: [] };
+            fullRes.userData = uData;
             if (typeof restorePsPortal === "function") {
-              restorePsPortal({ userData: uData, notices: [] });
+              restorePsPortal(fullRes);
             }
             switchPsTab('psHome');
             if (typeof loadMyTickets === "function") {
@@ -5187,8 +5317,8 @@ function verifyAndUnlockSession() {
         if (errEl) errEl.style.display = 'none';
         localStorage.setItem('psLastActiveTime', Date.now().toString());
 
-        user.mpin = pin;
-        localStorage.setItem('psUserData', JSON.stringify(user));
+        user.hasMpin = true;
+        safeSetStorage(localStorage, 'psUserData', JSON.stringify(user));
       } else {
         pinInput.value = '';
         pinInput.focus();
@@ -5222,12 +5352,12 @@ function verifyAndUnlockSession() {
 }
 
 function forcePsLogout(msg) {
-  if (msg) alert(msg);
-  sessionStorage.clear();
-  localStorage.removeItem('psUserLoggedIn');
-  localStorage.removeItem('psUserData');
-  localStorage.removeItem('psLastActiveTime');
-  window.location.reload();
+  var lockModal = document.getElementById('mpinLockModal');
+  if (lockModal) lockModal.style.display = 'none';
+  logoutPS();
+  if (msg) {
+    showMsg("सत्र समाप्त", msg, false);
+  }
 }
   
   // पासवर्ड व MPIN बदलने का मोडल खोलने का फ़ंक्शन
@@ -5284,32 +5414,13 @@ function submitManualPasswordChange(e) {
     .updatePsCredentials(String(userKey), String(oldP), String(newP), String(mpin));
 }
 
-  // एडमिन द्वारा PS खाता अनलॉक करने का फ़ंक्शन
+  // एडमिन द्वारा PS खाता अनलॉक व पासवर्ड रीसेट करने का फ़ंक्शन
 function handleAdminUnlockAccount(rowIndex, userName) {
   if (!adminSessionToken) {
     showMsg("त्रुटि", "कृपया पहले एडमिन लॉगिन करें!", false);
     return;
   }
-
-  if (confirm("क्या आप " + userName + " का खाता अनलॉक करना चाहते हैं?")) {
-    showLoader(userName + " का खाता अनलॉक किया जा रहा है...");
-
-    google.script.run
-      .withSuccessHandler(function(res) {
-        hideLoader();
-        if (res && res.success) {
-          showMsg("सफलता", res.message, true);
-          loadAdminDashboardData(); // टेबल को रीफ्रेश करें
-        } else {
-          showMsg("त्रुटि", (res ? res.message : "अनलॉक करने में विफल"), false);
-        }
-      })
-      .withFailureHandler(function(err) {
-        hideLoader();
-        showMsg("सर्वर त्रुटि", err.toString(), false);
-      })
-      .unlockPsAccountSecure(adminSessionToken, rowIndex);
-  }
+  confirmUniversalDelete('unlockAccount', rowIndex, userName);
 }
 
  
@@ -5348,10 +5459,12 @@ function handleImageFileSelected(input) {
 
 function loadSelectedImageFile(file) {
   currentOriginalFile = file;
-  currentOriginalKB = Math.round(file.size / 1024);
+  currentImageBase64 = null;
+  currentOriginalKB = Math.max(1, Math.round(file.size / 1024));
 
   var reader = new FileReader();
   reader.onload = function(e) {
+    currentImageBase64 = e.target.result;
     workingImageObj = new Image();
     workingImageObj.onload = function() {
       workingAspect = workingImageObj.width / workingImageObj.height;
@@ -5371,15 +5484,27 @@ function updateWorkspaceMeta(fileName) {
   document.getElementById('imgMetaWidth').innerText = workingImageObj.width;
   document.getElementById('imgMetaHeight').innerText = workingImageObj.height;
 
-  var baseName = (fileName || (currentOriginalFile ? currentOriginalFile.name : "photo")).split('.')[0];
-  document.getElementById('finalRenameInput').value = baseName + "-50kb";
+  var baseName = (fileName || (currentOriginalFile ? currentOriginalFile.name : "photo")).replace(/\.[^/.]+$/, "");
+  var targetVal = document.getElementById('targetKbInput') ? document.getElementById('targetKbInput').value : "50";
+  document.getElementById('finalRenameInput').value = baseName + "-" + targetVal + "kb";
 }
 
 function resetImageTool() {
   currentOriginalFile = null;
+  currentImageBase64 = null;
+  processedBlob = null;
   document.getElementById('hiddenImgFileInput').value = '';
   document.getElementById('imgActiveWorkspace').style.display = 'none';
   document.getElementById('imgResultCard').style.display = 'none';
+}
+
+function setDimensionUnit(unit) {
+  activeDimensionUnit = unit || 'Pixels';
+  if (workingImageObj && workingImageObj.src) {
+    openResizeModal();
+  } else {
+    document.getElementById('hiddenImgFileInput').click();
+  }
 }
 
 // ----------------- UNIT & DPI CONVERSION ENGINE -----------------
@@ -5398,6 +5523,16 @@ function unitToPx(val, unit, dpi) {
   if (unit === 'MM') return Math.round((val / 25.4) * dpi);
   if (unit === 'CM') return Math.round((val / 2.54) * dpi);
   return Math.round(val);
+}
+
+function updateLivePixelReadout() {
+  var readout = document.getElementById('livePixelReadout');
+  if (!readout) return;
+  var inW = document.getElementById('resizeWidthInput').value;
+  var inH = document.getElementById('resizeHeightInput').value;
+  var pxW = unitToPx(inW, activeDimensionUnit, activeDPI);
+  var pxH = unitToPx(inH, activeDimensionUnit, activeDPI);
+  readout.innerText = "🎯 कुल पिक्सल: " + pxW + " × " + pxH + " PX";
 }
 
 function openResizeModal() {
@@ -5432,6 +5567,7 @@ function switchResizeUnit(unit) {
 
   document.getElementById('resizeWidthInput').value = pxToUnit(workingImageObj.width, unit, activeDPI);
   document.getElementById('resizeHeightInput').value = pxToUnit(workingImageObj.height, unit, activeDPI);
+  updateLivePixelReadout();
 }
 
 function onDpiChanged() {
@@ -5440,6 +5576,7 @@ function onDpiChanged() {
     document.getElementById('resizeWidthInput').value = pxToUnit(workingImageObj.width, activeDimensionUnit, activeDPI);
     document.getElementById('resizeHeightInput').value = pxToUnit(workingImageObj.height, activeDimensionUnit, activeDPI);
   }
+  updateLivePixelReadout();
 }
 
 function handleAspectToggle() {
@@ -5454,6 +5591,7 @@ function onResizeWidthChanged() {
     var h = +(w / workingAspect).toFixed(2);
     document.getElementById('resizeHeightInput').value = (activeDimensionUnit === 'Pixels') ? Math.round(h) : h;
   }
+  updateLivePixelReadout();
 }
 
 function onResizeHeightChanged() {
@@ -5462,6 +5600,7 @@ function onResizeHeightChanged() {
     var w = +(h * workingAspect).toFixed(2);
     document.getElementById('resizeWidthInput').value = (activeDimensionUnit === 'Pixels') ? Math.round(w) : w;
   }
+  updateLivePixelReadout();
 }
 
 function applyResizeImage() {
@@ -5471,8 +5610,8 @@ function applyResizeImage() {
   var targetPxW = unitToPx(inW, activeDimensionUnit, activeDPI);
   var targetPxH = unitToPx(inH, activeDimensionUnit, activeDPI);
 
-  if (!targetPxW || !targetPxH || targetPxW <= 0 || targetPxH <= 0) {
-    alert("अमान्य साइज!");
+  if (!targetPxW || !targetPxH || targetPxW <= 0 || targetPxH <= 0 || targetPxW > 8000 || targetPxH > 8000) {
+    showMsg("ध्यान दें", "कृपया वैध चौड़ाई और ऊंचाई दर्ज करें!", false);
     return;
   }
 
@@ -5483,6 +5622,7 @@ function applyResizeImage() {
   ctx.drawImage(workingImageObj, 0, 0, targetPxW, targetPxH);
 
   var resizedDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+  currentImageBase64 = resizedDataUrl;
   workingImageObj.onload = function() {
     workingAspect = workingImageObj.width / workingImageObj.height;
     updateWorkspaceMeta();
@@ -5602,7 +5742,7 @@ function applyCropImage() {
 
     if (!croppedCanvas) {
       hideLoader();
-      alert("क्रॉप करने में समस्या आई, कृपया पुनः प्रयास करें।");
+      showMsg("त्रुटि", "क्रॉप करने में समस्या आई, कृपया पुनः प्रयास करें।", false);
       return;
     }
 
