@@ -1231,18 +1231,18 @@ body.modal-open {
               <!-- Date Picker: Single Day -->
               <div class="field-group" id="singleDateBox">
                 <label>अवकाश की तारीख (दिनांक) <span class="req">*</span></label>
-                <input type="date" id="leaveSingleDate" class="field-input" onchange="autoGenerateLeaveLetter()">
+                <input type="text" id="leaveSingleDate" class="field-input" placeholder="DD/MM/YYYY" readonly onchange="autoGenerateLeaveLetter()">
               </div>
 
               <!-- Date Picker: Multiple Days -->
               <div id="multipleDateBox" style="display:none; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
                 <div>
                   <label style="font-weight:700; font-size:13.5px; display:block; margin-bottom:6px;">कब से (प्रारंभ दिनांक) <span class="req">*</span></label>
-                  <input type="date" id="leaveStartDate" class="field-input" onchange="calculateLeaveDays(); autoGenerateLeaveLetter();">
+                  <input type="text" id="leaveStartDate" class="field-input" placeholder="DD/MM/YYYY" readonly onchange="calculateLeaveDays(); autoGenerateLeaveLetter();">
                 </div>
                 <div>
                   <label style="font-weight:700; font-size:13.5px; display:block; margin-bottom:6px;">कब तक (अंतिम दिनांक) <span class="req">*</span></label>
-                  <input type="date" id="leaveEndDate" class="field-input" onchange="calculateLeaveDays(); autoGenerateLeaveLetter();">
+                  <input type="text" id="leaveEndDate" class="field-input" placeholder="DD/MM/YYYY" readonly onchange="calculateLeaveDays(); autoGenerateLeaveLetter();">
                 </div>
                 <div style="grid-column:1/-1; font-size:12.5px; color:#2563eb; font-weight:bold;" id="leaveDaysCountText"></div>
               </div>
@@ -2224,8 +2224,8 @@ body.modal-open {
   <div class="modal-box">
     <h3 style="color:#2563eb; font-family:'Rozha One', serif;"><i class="fa-solid fa-id-card"></i> पंचायत सहायक लॉगिन (PS Login)</h3>
     <p style="font-size:12px; color:#94a3b8; margin-bottom:12px;">पंजीकृत विवरण दर्ज करें</p>
-    <input type="email" id="psLoginEmail" class="field-input" placeholder="ईमेल आईडी (Gmail ID)" style="margin-bottom:10px;" required>
-    <input type="password" id="psLoginMobile" class="field-input" placeholder="पासवर्ड (मोबाइल नंबर)" style="margin-bottom:15px;" required>
+    <input type="email" id="psLoginEmail" class="field-input" placeholder="ईमेल आईडी (Gmail ID)" style="margin-bottom:10px;" onkeydown="if(event.key==='Enter'){event.preventDefault();submitPsLogin();}" required>
+    <input type="password" id="psLoginMobile" class="field-input" placeholder="पासवर्ड (मोबाइल नंबर)" style="margin-bottom:15px;" onkeydown="if(event.key==='Enter'){event.preventDefault();submitPsLogin();}" required>
     <button class="submit-btn" style="display:inline-block;" onclick="submitPsLogin()"><i class="fa-solid fa-right-to-bracket"></i> लॉगिन करें</button>
     <button class="submit-btn" onclick="closeModal('psLoginModal')" style="background:#64748b; margin-top:5px; font-size:14px; padding:8px; display:inline-block;">रद्द करें</button>
   </div>
@@ -2235,8 +2235,8 @@ body.modal-open {
 <div class="modal-backdrop" id="adminLoginModal">
   <div class="modal-box">
     <h3 style="color:#2563eb;"><i class="fa-solid fa-user-shield"></i> एडमिन पोर्टल लॉगिन</h3>
-    <input type="text" id="adminUserId" class="field-input" placeholder="यूज़र आईडी" style="margin:10px 0;">
-    <input type="password" id="adminPassword" class="field-input" placeholder="पासवर्ड दर्ज करें" style="margin-bottom:15px;">
+    <input type="text" id="adminUserId" class="field-input" placeholder="यूज़र आईडी" style="margin:10px 0;" onkeydown="if(event.key==='Enter'){event.preventDefault();submitAdminLogin();}">
+    <input type="password" id="adminPassword" class="field-input" placeholder="पासवर्ड दर्ज करें" style="margin-bottom:15px;" onkeydown="if(event.key==='Enter'){event.preventDefault();submitAdminLogin();}">
     <button class="submit-btn" style="display:inline-block;" onclick="submitAdminLogin()">लॉगिन</button>
     <button class="submit-btn" onclick="closeAdminLoginModal()" style="background:#64748b; margin-top:5px; font-size:14px; padding:8px; display:inline-block;">रद्द करें</button>
   </div>
@@ -2432,7 +2432,7 @@ body.modal-open {
       </div>
       <div class="input-group-modern">
         <label><i class="fa-solid fa-mobile-screen-button"></i> 4-अंकों का सिक्योरिटी MPIN *</label>
-        <input type="password" id="setupMpin" maxlength="4" pattern="\d{4}" inputmode="numeric" placeholder="जैसे: 1234">
+        <input type="password" id="setupMpin" maxlength="4" pattern="\d{4}" inputmode="numeric" placeholder="जैसे: 1234" onkeydown="if(event.key==='Enter'){event.preventDefault();submitCredentialsSetup();}">
         <small style="color:#64748b; font-size:11px;">(30 मिनट के अंदर पोर्टल दोबारा खोलने पर केवल यह MPIN लगेगा)</small>
       </div>
       <button type="button" class="btn-modern-submit" onclick="submitCredentialsSetup()">
@@ -2525,23 +2525,36 @@ function formatDateToIndian(dateVal) {
         },
         _callApi: function(action, payload) {
           var self = this;
-          fetch(BACKEND_API_URL, {
+          var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+          var timerId = controller ? setTimeout(function() { controller.abort(); }, 25000) : null;
+          var fetchOpts = {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({ action: action, payload: payload })
+          };
+          if (controller) fetchOpts.signal = controller.signal;
+
+          fetch(BACKEND_API_URL, fetchOpts)
+          .then(function(r) {
+            if (timerId) clearTimeout(timerId);
+            return r.json();
           })
-          .then(function(r) { return r.json(); })
           .then(function(res) {
             if (self._successHandler) self._successHandler(res);
           })
           .catch(function(err) {
-            if (self._failureHandler) self._failureHandler(err);
-            else if (self._successHandler) self._successHandler({ success: false, message: err.toString() });
+            if (timerId) clearTimeout(timerId);
+            var errMsg = (err && err.name === 'AbortError')
+              ? "सर्वर से कनेक्शन में अधिक समय लग रहा है। कृपया अपना इंटरनेट जांचें और पुनः प्रयास करें।"
+              : (err ? err.toString() : "Network Error");
+            if (self._failureHandler) self._failureHandler(new Error(errMsg));
+            else if (self._successHandler) self._successHandler({ success: false, message: errMsg });
           });
         },
         getPublicHomeStats: function() { this._callApi('getPublicHomeStats', {}); },
         verifyPSLogin: function(email, mobile, isSessionRestore) { this._callApi('verifyPSLogin', { email: email, mobile: mobile, isSessionRestore: !!isSessionRestore }); },
         loginAdminSecure: function(userId, password) { this._callApi('loginAdminSecure', { userId: userId, password: password }); },
+        logoutAdminSecure: function(token) { this._callApi('logoutAdminSecure', { token: token }); },
         getAdminDashboardDataSecure: function(token) { this._callApi('getAdminDashboardDataSecure', { token: token }); },
         processNewRegistration: function(data) { this._callApi('processNewRegistration', data); },
         processMainSurveyForm: function(data) { this._callApi('processMainSurveyForm', data); },
@@ -2605,14 +2618,27 @@ function formatDateToIndian(dateVal) {
   var lastSubmittedLeaveKey = "";
   var activeNotifications = [];
 
+  var _memStorageFallback = {};
   function safeSetStorage(store, key, val) {
-    try { store.setItem(key, val); } catch (e) {}
+    _memStorageFallback[key] = String(val);
+    try { if (store) store.setItem(key, val); } catch (e) {}
   }
   function safeGetStorage(store, key) {
-    try { return store.getItem(key); } catch (e) { return null; }
+    try {
+      if (store) {
+        var v = store.getItem(key);
+        if (v !== null && v !== undefined) return v;
+      }
+    } catch (e) {}
+    return _memStorageFallback.hasOwnProperty(key) ? _memStorageFallback[key] : null;
   }
   function safeRemoveStorage(store, key) {
-    try { store.removeItem(key); } catch (e) {}
+    delete _memStorageFallback[key];
+    try { if (store) store.removeItem(key); } catch (e) {}
+  }
+  function csvCell(val) {
+    var s = (val === null || val === undefined) ? "" : String(val);
+    return '"' + s.replace(/"/g, '""').replace(/\r?\n/g, " ") + '"';
   }
   function findRecordByRowOrIdx(list, rowOrIdx) {
     if (!list || !list.length) return null;
@@ -2820,6 +2846,20 @@ function closeModal(id) {
   var modal = document.getElementById(id);
   if (modal) {
     modal.style.display = 'none';
+  }
+  if (id === 'imgCropModal' && typeof cropperInstance !== 'undefined' && cropperInstance) {
+    try { cropperInstance.destroy(); } catch (e) {}
+    cropperInstance = null;
+  }
+  var anyOpen = false;
+  var allModals = document.querySelectorAll('.modal-backdrop, .custom-modal-overlay');
+  for (var i = 0; i < allModals.length; i++) {
+    if (allModals[i].style.display === 'flex' || allModals[i].style.display === 'block') {
+      anyOpen = true;
+      break;
+    }
+  }
+  if (!anyOpen) {
     document.body.classList.remove('modal-open');
   }
 }
@@ -2846,29 +2886,44 @@ function openAdminLoginModal() {
     loadPublicHomeStats();
   }
 
+  function applyHomeStatsToUI(res) {
+    if (!res || !res.success) return;
+    document.getElementById('homeGpCount').innerText = res.stats.totalGramPanchayat;
+    document.getElementById('homeAppointedPsCount').innerText = res.stats.totalAppointedPS;
+    document.getElementById('homePortalRegisteredCount').innerText = res.stats.totalRegisteredPS;
+    renderNoticesHTML('publicNoticesListContainer', res.notices);
+
+    var publicNotifs = [];
+    if (res.notices && res.notices.length > 0) {
+      publicNotifs.push({
+        title: "नवीनतम नोटिस प्रकाशित",
+        desc: res.notices[0].noticeText,
+        time: res.notices[0].timestamp,
+        icon: '<i class="fa-solid fa-bullhorn" style="color:#2563eb;"></i>',
+        type: 'info',
+        badge: 'नया'
+      });
+    }
+    updateNotificationBadge(publicNotifs);
+  }
+
   function loadPublicHomeStats() {
+    // 0ms Instant Render from local session cache while fetching fresh data in background
+    var cachedStr = safeGetStorage(sessionStorage, 'psk_home_stats_fast_cache');
+    if (cachedStr) {
+      try { applyHomeStatsToUI(JSON.parse(cachedStr)); } catch (e) {}
+    }
+
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       google.script.run.withSuccessHandler(function(res) {
-        if (res.success) {
-          document.getElementById('homeGpCount').innerText = res.stats.totalGramPanchayat;
-          document.getElementById('homeAppointedPsCount').innerText = res.stats.totalAppointedPS;
-          document.getElementById('homePortalRegisteredCount').innerText = res.stats.totalRegisteredPS;
-          
-          renderNoticesHTML('publicNoticesListContainer', res.notices);
-
-          var publicNotifs = [];
-          if (res.notices && res.notices.length > 0) {
-            publicNotifs.push({
-              title: "नवीनतम नोटिस प्रकाशित",
-              desc: res.notices[0].noticeText,
-              time: res.notices[0].timestamp,
-              icon: '<i class="fa-solid fa-bullhorn" style="color:#2563eb;"></i>',
-              type: 'info',
-              badge: 'नया'
-            });
-          }
-          updateNotificationBadge(publicNotifs);
+        if (res && res.success) {
+          safeSetStorage(sessionStorage, 'psk_home_stats_fast_cache', JSON.stringify(res));
+          applyHomeStatsToUI(res);
+        } else if (!cachedStr) {
+          renderNoticesHTML('publicNoticesListContainer', []);
         }
+      }).withFailureHandler(function() {
+        if (!cachedStr) renderNoticesHTML('publicNoticesListContainer', []);
       }).getPublicHomeStats();
     }
   }
@@ -2881,13 +2936,15 @@ function openAdminLoginModal() {
       c.innerHTML = '<div class="notice-item" style="font-style:italic; text-align:center;">कोई नया नोटिस उपलब्ध नहीं है।</div>';
       return;
     }
+    var frag = document.createDocumentFragment();
     for (var i = 0; i < notices.length; i++) {
       var n = notices[i];
       var div = document.createElement('div');
       div.className = 'notice-item';
       div.innerHTML = '<div><i class="fa-solid fa-bullhorn" style="color:#2563eb; margin-right:6px;"></i> ' + escapeHtml(n.noticeText) + '<div class="notice-date"><i class="fa-regular fa-clock"></i> ' + escapeHtml(n.timestamp) + '</div></div>';
-      c.appendChild(div);
+      frag.appendChild(div);
     }
+    c.appendChild(frag);
   }
 
   function showMsg(title, msg, isSuccess, payload) {
@@ -2920,8 +2977,8 @@ function openAdminLoginModal() {
     loggedInPsUser.previousSurveyData = res.previousSurveyData;
     loggedInPsCluster = res.clusterData;
 
-    document.getElementById('psPortalWelcomeName').innerText = "नमस्ते, " + escapeHtml(loggedInPsUser.fullName) + " जी";
-    document.getElementById('psPortalGramInfo').innerText = "ग्राम पंचायत: " + escapeHtml(loggedInPsUser.gramPanchayat) + " | विकास खंड: उतरौला";
+    document.getElementById('psPortalWelcomeName').innerText = "नमस्ते, " + (loggedInPsUser.fullName || "") + " जी";
+    document.getElementById('psPortalGramInfo').innerText = "ग्राम पंचायत: " + (loggedInPsUser.gramPanchayat || "-") + " | विकास खंड: उतरौला";
 
     document.getElementById('psDetEmail').innerText = loggedInPsUser.email;
     document.getElementById('psDetName').innerText = loggedInPsUser.fullName;
@@ -3019,7 +3076,7 @@ function openAdminLoginModal() {
   // ================= PS TAB SWITCHER =================
 // ================= PS TAB SWITCHER =================
   function switchPsTab(tab) {
-    sessionStorage.setItem('psk_ps_tab', tab);
+    safeSetStorage(sessionStorage, 'psk_ps_tab', tab);
 
     // यदि यूजर किसी दूसरे टैब पर जाए तो कैमरा तुरंत बंद करें
     if (tab !== 'psQrScan') {
@@ -3464,10 +3521,7 @@ function openAdminLoginModal() {
       gender: gender
     };
 
-    // यदि कारण ड्रॉपडाउन से चुना गया है (कस्टम टाइपिंग के बीच नहीं), तो सुरक्षित सेव करें
-    if (document.getElementById('leaveReasonSelect').value !== 'अन्य') {
-      saveCurrentLeaveToSheetOnce();
-    }
+    // नोट: अवकाश रिकॉर्ड तभी शीट में सेव होगा जब यूजर WhatsApp शेयर, Print/PDF या Word डाउनलोड बटन दबाएगा
   }
 
   function resetLeaveForm() {
@@ -3607,9 +3661,9 @@ function openAdminLoginModal() {
         adminSessionToken = res.sessionToken;
 
         // --- रीफ़्रेश होने पर एडमिन सेशन याद रखने के लिए सुरक्षित करना ---
-        sessionStorage.setItem('psk_admin_token', adminSessionToken);
-        sessionStorage.setItem('psk_active_view', 'admin');
-        sessionStorage.setItem('psk_admin_tab', 'survey');
+        safeSetStorage(sessionStorage, 'psk_admin_token', adminSessionToken);
+        safeSetStorage(sessionStorage, 'psk_active_view', 'admin');
+        safeSetStorage(sessionStorage, 'psk_admin_tab', 'survey');
         // -------------------------------------------------------------
 
         closeAdminLoginModal();
@@ -3638,7 +3692,7 @@ function openAdminLoginModal() {
   }
 
   function switchAdminTab(tab) {
-    sessionStorage.setItem('psk_admin_tab', tab);
+    safeSetStorage(sessionStorage, 'psk_admin_tab', tab);
 
     // Sabhi tabs ko hide/show karna
     document.getElementById('surveyTabContent').style.display = (tab === 'survey') ? 'block' : 'none';
@@ -3686,6 +3740,7 @@ function openAdminLoginModal() {
       tbody.innerHTML = '<tr><td colspan="18" style="text-align:center; padding:15px;">कोई सर्वे रिकॉर्ड उपलब्ध नहीं है।</td></tr>';
       return;
     }
+    var frag = document.createDocumentFragment();
     for (var i = 0; i < records.length; i++) {
       var r = records[i];
       var tr = document.createElement('tr');
@@ -3718,8 +3773,9 @@ function openAdminLoginModal() {
           '<button class="btn-action-edit" title="संपादित करें" onclick="openEditSurveyModal(' + r.rowIndex + ')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="confirmUniversalDelete(\'survey\', ' + r.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
         '</td>';
-      tbody.appendChild(tr);
+      frag.appendChild(tr);
     }
+    tbody.appendChild(frag);
   }
 
   function filterAdminTable() {
@@ -3824,7 +3880,7 @@ function openAdminLoginModal() {
     var csv = "क्र.,ग्राम पंचायत,पंचायत सहायक,मोबाइल,मानदेय बकाया,वाई-फ़ाई,ग्राम निधि रिचार्ज,पेयजल,बिजली,प्रिंटर,स्टेशनरी,परिवार रजिस्टर,जन्म-मृत्यु रजिस्टर,शौचालय,रजिस्टर कार्य,भुगतान कार्य,समय\n";
     for (var i = 0; i < cachedSurveyRecords.length; i++) {
       var r = cachedSurveyRecords[i];
-      csv += (i + 1) + ',"' + r.gramPanchayat + '","' + r.fullName + '","' + r.mobile + '","' + r.pendingSalaryMonths + '","' + r.wifiStatus + '","' + r.gramNidhiRecharge + '","' + r.drinkingWater + '","' + r.electricity + '","' + r.printerStatus + '","' + r.stationery + '","' + r.parivarRegister + '","' + r.birthDeathRegister + '","' + r.toiletStatus + '","' + r.registerWorker + '","' + r.paymentWorker + '","' + r.timestamp + '"\n';
+      csv += [i + 1, csvCell(r.gramPanchayat), csvCell(r.fullName), csvCell(r.mobile), csvCell(r.pendingSalaryMonths), csvCell(r.wifiStatus), csvCell(r.gramNidhiRecharge), csvCell(r.drinkingWater), csvCell(r.electricity), csvCell(r.printerStatus), csvCell(r.stationery), csvCell(r.parivarRegister), csvCell(r.birthDeathRegister), csvCell(r.toiletStatus), csvCell(r.registerWorker), csvCell(r.paymentWorker), csvCell(r.timestamp)].join(",") + "\n";
     }
     downloadCSVFile(csv, "Utraula_Panchayat_Sahayak_Survey_Data.csv");
   }
@@ -3837,6 +3893,7 @@ function openAdminLoginModal() {
       tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:15px;">कोई पंजीकरण रिकॉर्ड उपलब्ध नहीं है।</td></tr>';
       return;
     }
+    var frag = document.createDocumentFragment();
     for (var i = 0; i < records.length; i++) {
       var r = records[i];
       var tr = document.createElement('tr');
@@ -3863,8 +3920,9 @@ function openAdminLoginModal() {
           '<button class="btn-action-edit" title="संपादित करें" onclick="openEditRegisteredModal(' + r.rowIndex + ')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="confirmUniversalDelete(\'registered\', ' + r.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
         '</td>';
-      tbody.appendChild(tr);
+      frag.appendChild(tr);
     }
+    tbody.appendChild(frag);
   }
 
   function filterRegisteredTable() {
@@ -3936,7 +3994,7 @@ function openAdminLoginModal() {
     var csv = "क्र.,ग्राम पंचायत,पंचायत सहायक,पिता/पति का नाम,आधार नंबर,मोबाइल नंबर,ईमेल आईडी,स्थिति,पंजीकरण समय\n";
     for (var i = 0; i < cachedAllRegistrations.length; i++) {
       var r = cachedAllRegistrations[i];
-      csv += (i + 1) + ',"' + r.gramPanchayat + '","' + r.fullName + '","' + r.guardianName + '","' + r.aadhaar + '","' + r.mobile + '","' + r.email + '","' + r.status + '","' + r.timestamp + '"\n';
+      csv += [i + 1, csvCell(r.gramPanchayat), csvCell(r.fullName), csvCell(r.guardianName), csvCell(r.aadhaar), csvCell(r.mobile), csvCell(r.email), csvCell(r.status), csvCell(r.timestamp)].join(",") + "\n";
     }
     downloadCSVFile(csv, "Utraula_Registered_Panchayat_Sahayak.csv");
   }
@@ -3949,6 +4007,7 @@ function openAdminLoginModal() {
       tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:15px;">कोई क्लस्टर रिकॉर्ड उपलब्ध नहीं है।</td></tr>';
       return;
     }
+    var frag = document.createDocumentFragment();
     for (var i = 0; i < records.length; i++) {
       var c = records[i];
       var tr = document.createElement('tr');
@@ -3986,8 +4045,9 @@ function openAdminLoginModal() {
           '<button class="btn-action-edit" title="संपादित करें" onclick="openEditClusterModal(' + c.rowIndex + ')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="confirmUniversalDelete(\'cluster\', ' + c.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
         '</td>';
-      tbody.appendChild(tr);
+      frag.appendChild(tr);
     }
+    tbody.appendChild(frag);
   }
 
   function filterClusterTable() {
@@ -4084,7 +4144,7 @@ function openAdminLoginModal() {
     var csv = "क्र०सं०,जनपद,विकास खंड,क्लस्टर का नाम,क्लस्टर मुख्यालय,ग्राम पंचायत,LGD कोड,BDO नाम,BDO मोबाइल,ADO नाम,ADO मोबाइल,सचिव नाम,सचिव मोबाइल,पंचायत सहायक,पिता/पति नाम,आधार नंबर,मोबाइल,ईमेल\n";
     for (var i = 0; i < cachedClusterRecords.length; i++) {
       var c = cachedClusterRecords[i];
-      csv += (i + 1) + ',"' + c.district + '","' + c.block + '","' + c.clusterName + '","' + c.clusterHq + '","' + c.gramPanchayat + '","' + c.lgdCode + '","' + c.bdoName + '","' + c.bdoMobile + '","' + c.adoName + '","' + c.adoMobile + '","' + c.secretaryName + '","' + c.secretaryMobile + '","' + c.psName + '","' + c.guardianName + '","' + c.aadhaar + '","' + c.mobile + '","' + c.email + '"\n';
+      csv += [i + 1, csvCell(c.district), csvCell(c.block), csvCell(c.clusterName), csvCell(c.clusterHq), csvCell(c.gramPanchayat), csvCell(c.lgdCode), csvCell(c.bdoName), csvCell(c.bdoMobile), csvCell(c.adoName), csvCell(c.adoMobile), csvCell(c.secretaryName), csvCell(c.secretaryMobile), csvCell(c.psName), csvCell(c.guardianName), csvCell(c.aadhaar), csvCell(c.mobile), csvCell(c.email)].join(",") + "\n";
     }
     downloadCSVFile(csv, "Utraula_Cluster_Details.csv");
   }
@@ -4097,6 +4157,7 @@ function openAdminLoginModal() {
       tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:15px;">पिछले 7 दिनों में कोई लॉगिन गतिविधि नहीं मिली।</td></tr>';
       return;
     }
+    var frag = document.createDocumentFragment();
     for (var i = 0; i < logs.length; i++) {
       var l = logs[i];
       var tr = document.createElement('tr');
@@ -4107,8 +4168,9 @@ function openAdminLoginModal() {
         '<td>' + escapeHtml(l.timestamp) + '</td>' +
         '<td><span class="badge-status badge-count">' + escapeHtml(l.dayCount) + ' बार</span></td>' +
         '<td>' + escapeHtml(l.email) + '</td>';
-      tbody.appendChild(tr);
+      frag.appendChild(tr);
     }
+    tbody.appendChild(frag);
   }
 
   function filterLoginLogsTable() {
@@ -4126,7 +4188,7 @@ function openAdminLoginModal() {
     var csv = "क्र०,ग्राम पंचायत,पंचायत सहायक का नाम,मोबाइल नंबर,लॉगिन तारीख व समय,उस दिन कुल लॉगिन बार,ईमेल आईडी\n";
     for (var i = 0; i < cachedLoginLogs.length; i++) {
       var l = cachedLoginLogs[i];
-      csv += (i + 1) + ',"' + l.gramPanchayat + '","' + l.fullName + '","' + l.mobile + '","' + l.timestamp + '","' + l.dayCount + '","' + l.email + '"\n';
+      csv += [i + 1, csvCell(l.gramPanchayat), csvCell(l.fullName), csvCell(l.mobile), csvCell(l.timestamp), csvCell(l.dayCount), csvCell(l.email)].join(",") + "\n";
     }
     downloadCSVFile(csv, "Utraula_PS_Login_Logs_Last_7_Days.csv");
   }
@@ -4286,6 +4348,7 @@ function openAdminLoginModal() {
       tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:15px;">कोई नया लंबित (Pending) पंजीकरण नहीं है।</td></tr>';
       return;
     }
+    var frag = document.createDocumentFragment();
     for (var i = 0; i < pendingList.length; i++) {
       var p = pendingList[i];
       var tr = document.createElement('tr');
@@ -4301,8 +4364,9 @@ function openAdminLoginModal() {
           '<button class="btn-approve" onclick="changeRegStatus(' + p.rowIndex + ', \'Approved\')"><i class="fa-solid fa-check"></i> Approve</button>' +
           '<button class="btn-reject" onclick="changeRegStatus(' + p.rowIndex + ', \'Rejected\')"><i class="fa-solid fa-xmark"></i> Reject</button>' +
         '</td>';
-      tbody.appendChild(tr);
+      frag.appendChild(tr);
     }
+    tbody.appendChild(frag);
   }
 
   function changeRegStatus(rowIndex, action) {
@@ -4361,6 +4425,7 @@ function openAdminLoginModal() {
       return;
     }
 
+    var frag = document.createDocumentFragment();
     for (var i = 0; i < notices.length; i++) {
       var n = notices[i];
       var tr = document.createElement('tr');
@@ -4380,8 +4445,9 @@ function openAdminLoginModal() {
           '<button class="btn-action-edit" title="संपादित करें" onclick="openEditNoticeModal(' + n.rowIndex + ')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="deleteNotice(' + n.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
         '</td>';
-      tbody.appendChild(tr);
+      frag.appendChild(tr);
     }
+    tbody.appendChild(frag);
   }
 
   function filterAdminNoticesTable() {
@@ -4459,6 +4525,7 @@ function openAdminLoginModal() {
       tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:15px;">कोई शिकायत रिकॉर्ड उपलब्ध नहीं है।</td></tr>';
       return;
     }
+    var frag = document.createDocumentFragment();
     for (var i = 0; i < grievances.length; i++) {
       var g = grievances[i];
       var tr = document.createElement('tr');
@@ -4478,8 +4545,9 @@ function openAdminLoginModal() {
           '<a href="' + waLink + '" target="_blank" class="btn-action-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>' +
           '<button class="btn-action-edit" onclick="openEditGrievanceModal(' + g.rowIndex + ')"><i class="fa-solid fa-pen-to-square"></i> Action</button>' +
         '</td>';
-      tbody.appendChild(tr);
+      frag.appendChild(tr);
     }
+    tbody.appendChild(frag);
   }
 
   function openEditGrievanceModal(rowOrIdx) {
@@ -4577,6 +4645,8 @@ function openAdminLoginModal() {
           '<div class="notice-date" style="text-align:right;"><i class="fa-regular fa-clock"></i> दर्ज समय: ' + escapeHtml(t.timestamp) + '</div>';
         container.appendChild(div);
       }
+    }).withFailureHandler(function() {
+      container.innerHTML = '<div class="notice-item" style="text-align:center; color:#dc2626;">स्टेटस लोड करने में समस्या आई। कृपया पुनः प्रयास करें।</div>';
     }).getPsGrievanceTickets(loggedInPsUser.email);
   }
 
@@ -4592,6 +4662,7 @@ function openAdminLoginModal() {
       return;
     }
 
+    var frag = document.createDocumentFragment();
     for (var i = 0; i < records.length; i++) {
       var l = records[i];
       var tr = document.createElement('tr');
@@ -4612,8 +4683,9 @@ function openAdminLoginModal() {
           '<button class="btn-action-view" title="पूरा पत्र देखें / प्रिंट" onclick="viewAdminLeaveModal(' + l.rowIndex + ')"><i class="fa-solid fa-eye"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="confirmUniversalDelete(\'leave\', ' + l.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
         '</td>';
-      tbody.appendChild(tr);
+      frag.appendChild(tr);
     }
+    tbody.appendChild(frag);
   }
 
   function filterAdminLeaveTable() {
@@ -4650,9 +4722,9 @@ function viewAdminLeaveModal(rowOrIdx) {
     '<div style="text-align:right; font-size:12.5px; color:#475569; margin-bottom:10px;"><b>दिनांक:</b> ' + dateStr + '</div>' +
     '<div><b>सेवा में,</b></div>' +
     '<div style="margin-left: 55px; line-height: 1.9;">' +
-      'श्रीमान ' + escapeHtml(l.recipient) + ' महोदय,<br>' +
-      'ग्राम पंचायत- ' + escapeHtml(l.gramPanchayat) + ',<br>' +
-      'विकास खण्ड- उतरौला , जनपद- बलरामपुर(उ०प्र०)।' +
+      ((String(l.recipient).indexOf('ADO') !== -1 || String(l.recipient).indexOf('सहायक विकास') !== -1)
+        ? 'श्रीमान सहायक विकास अधिकारी (पं०) महोदय,<br>विकास खण्ड- उतरौला,<br>जनपद- बलरामपुर (उ०प्र०)।'
+        : 'श्रीमान ' + escapeHtml(l.recipient) + ' महोदय,<br>ग्राम पंचायत- ' + escapeHtml(l.gramPanchayat) + ',<br>विकास खण्ड- उतरौला , जनपद- बलरामपुर(उ०प्र०)।') +
     '</div>' +
     '<div style="margin:15px 0 12px 0; font-weight:bold; text-decoration:underline; font-size:14.5px;">' +
       'विषय: आकस्मिक अवकाश स्वीकृत किए जाने के संबंध में प्रार्थना पत्र।' +
@@ -4684,7 +4756,7 @@ function viewAdminLeaveModal(rowOrIdx) {
     var csv = "क्र.,आवेदन समय,क्लस्टर का नाम,ग्राम पंचायत,पंचायत सहायक,मोबाइल,अवकाश अवधि,कुल दिन,अवकाश का कारण,संबोधित अधिकारी\n";
     for (var i = 0; i < cachedAdminLeaves.length; i++) {
       var l = cachedAdminLeaves[i];
-      csv += (i + 1) + ',"' + l.timestamp + '","' + l.clusterName + '","' + l.gramPanchayat + '","' + l.fullName + '","' + l.mobile + '","' + l.dateText + '","' + l.totalDays + '","' + l.reason + '","' + l.recipient + '"\n';
+      csv += [i + 1, csvCell(l.timestamp), csvCell(l.clusterName), csvCell(l.gramPanchayat), csvCell(l.fullName), csvCell(l.mobile), csvCell(l.dateText), csvCell(l.totalDays), csvCell(l.reason), csvCell(l.recipient)].join(",") + "\n";
     }
     downloadCSVFile(csv, "Utraula_Panchayat_Sahayak_Leave_Records.csv");
   }
@@ -4788,6 +4860,7 @@ function viewAdminLeaveModal(rowOrIdx) {
       tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:15px;">कोई उपस्थिति रिकॉर्ड उपलब्ध नहीं है।</td></tr>';
       return;
     }
+    var frag = document.createDocumentFragment();
     for (var i = 0; i < records.length; i++) {
       var r = records[i];
       var tr = document.createElement('tr');
@@ -4799,8 +4872,9 @@ function viewAdminLeaveModal(rowOrIdx) {
         '<td>' + escapeHtml(r.mobile) + '</td>' +
         '<td><span class="badge-status badge-resolved">Present</span></td>' +
         '<td>' + escapeHtml(r.timestamp) + '</td>';
-      tbody.appendChild(tr);
+      frag.appendChild(tr);
     }
+    tbody.appendChild(frag);
   }
 
   function filterAttendanceTable() {
@@ -4860,10 +4934,14 @@ function viewAdminLeaveModal(rowOrIdx) {
 
 
   function logoutAdmin() {
+    var oldToken = adminSessionToken;
     adminSessionToken = "";
-    sessionStorage.removeItem('psk_admin_token');
-    sessionStorage.removeItem('psk_active_view');
-    sessionStorage.removeItem('psk_admin_tab');
+    safeRemoveStorage(sessionStorage, 'psk_admin_token');
+    safeRemoveStorage(sessionStorage, 'psk_active_view');
+    safeRemoveStorage(sessionStorage, 'psk_admin_tab');
+    if (oldToken && typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run.logoutAdminSecure(oldToken);
+    }
     document.getElementById('adminDashboardView').style.display = 'none';
     showHomeView();
   }
@@ -5028,6 +5106,7 @@ window.addEventListener('DOMContentLoaded', function() {
       dateFormat: "d/m/Y",
       defaultDate: new Date(),
       allowInput: true,
+      disableMobile: true,
       onChange: function() {
         calculateLeaveDays();
         autoGenerateLeaveLetter();
@@ -5197,8 +5276,8 @@ var SESSION_LIMIT_MS = 30 * 60 * 1000; // 30 मिनट में फुल �
 var hideStartTime = 0;
 
 function recordPsActivity() {
-  if (sessionStorage.getItem('psk_ps_email') || localStorage.getItem('psUserLoggedIn')) {
-    localStorage.setItem('psLastActiveTime', Date.now().toString());
+  if (safeGetStorage(sessionStorage, 'psk_ps_email') || safeGetStorage(localStorage, 'psUserLoggedIn')) {
+    safeSetStorage(localStorage, 'psLastActiveTime', Date.now().toString());
   }
 }
 ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'].forEach(function(evt) {
@@ -5207,8 +5286,8 @@ function recordPsActivity() {
 
 // केवल तभी लॉक होगा जब यूजर PS पोर्टल में हो और स्क्रीन सच में बैकग्राउंड में जाए
 document.addEventListener("visibilitychange", function() {
-  var isPsLoggedIn = sessionStorage.getItem('psk_ps_email');
-  var activeView = sessionStorage.getItem('psk_active_view');
+  var isPsLoggedIn = safeGetStorage(sessionStorage, 'psk_ps_email');
+  var activeView = safeGetStorage(sessionStorage, 'psk_active_view');
 
   // अगर यूजर PS पोर्टल में लॉगिन नहीं है, तो कुछ नहीं करना
   if (!isPsLoggedIn || activeView !== 'ps') return;
@@ -5225,8 +5304,8 @@ document.addEventListener("visibilitychange", function() {
 });
 
 function evaluatePsSession() {
-  var email = sessionStorage.getItem('psk_ps_email');
-  var lastActive = parseInt(localStorage.getItem('psLastActiveTime') || "0", 10);
+  var email = safeGetStorage(sessionStorage, 'psk_ps_email');
+  var lastActive = parseInt(safeGetStorage(localStorage, 'psLastActiveTime') || "0", 10);
   if (!email || !lastActive) return;
 
   var elapsed = Date.now() - lastActive;
@@ -5237,14 +5316,14 @@ function evaluatePsSession() {
 window.addEventListener("load", evaluatePsSession);
 
 function openMpinScreen() {
-  var isPsLoggedIn = sessionStorage.getItem('psk_ps_email');
-  var activeView = sessionStorage.getItem('psk_active_view');
+  var isPsLoggedIn = safeGetStorage(sessionStorage, 'psk_ps_email');
+  var activeView = safeGetStorage(sessionStorage, 'psk_active_view');
 
   if (!isPsLoggedIn || activeView !== 'ps') return;
 
   var user = {};
   try {
-    user = JSON.parse(localStorage.getItem('psUserData') || '{}');
+    user = JSON.parse(safeGetStorage(localStorage, 'psUserData') || '{}');
   } catch(e) {}
 
   if (user && user.fullName) {
@@ -5285,12 +5364,12 @@ function verifyAndUnlockSession() {
 
   var pinInput = document.getElementById('unlockMpin');
   var pin = pinInput.value.trim();
-  var email = sessionStorage.getItem('psk_ps_email') || '';
+  var email = safeGetStorage(sessionStorage, 'psk_ps_email') || '';
   var errEl = document.getElementById('mpinLiveError');
 
   var user = {};
   try {
-    user = JSON.parse(localStorage.getItem('psUserData') || '{}');
+    user = JSON.parse(safeGetStorage(localStorage, 'psUserData') || '{}');
   } catch(e) {}
 
   var userKey = email || user.email || user.mobile || '';
@@ -5315,7 +5394,7 @@ function verifyAndUnlockSession() {
         document.getElementById('mpinLockModal').style.display = 'none';
         pinInput.value = '';
         if (errEl) errEl.style.display = 'none';
-        localStorage.setItem('psLastActiveTime', Date.now().toString());
+        safeSetStorage(localStorage, 'psLastActiveTime', Date.now().toString());
 
         user.hasMpin = true;
         safeSetStorage(localStorage, 'psUserData', JSON.stringify(user));
@@ -5808,10 +5887,10 @@ function startCompressImage() {
       // Save record in Google Sheet safely
       var psUser = (typeof loggedInPsUser !== "undefined" && loggedInPsUser) ? loggedInPsUser : null;
       if (!psUser) {
-        try { psUser = JSON.parse(localStorage.getItem('psUserData') || '{}'); } catch(e){}
+        try { psUser = JSON.parse(safeGetStorage(localStorage, 'psUserData') || '{}'); } catch(e){}
       }
       var logPayload = {
-        email: (psUser && psUser.email) ? psUser.email : (sessionStorage.getItem('psk_ps_email') || "PS User"),
+        email: (psUser && psUser.email) ? psUser.email : (safeGetStorage(sessionStorage, 'psk_ps_email') || "PS User"),
         gramPanchayat: (psUser && psUser.gramPanchayat) ? psUser.gramPanchayat : "-",
         fullName: (psUser && psUser.fullName) ? psUser.fullName : "पंचायत सहायक",
         fileName: (currentOriginalFile ? currentOriginalFile.name : "photo.jpg"),
@@ -5900,7 +5979,8 @@ function renderImageLogsTable(logs) {
     return;
   }
 
-  for (var i = 0; i < logs.length; i++) {
+  var frag = document.createDocumentFragment();
+    for (var i = 0; i < logs.length; i++) {
     var l = logs[i];
     var tr = document.createElement('tr');
     tr.innerHTML = '<td>' + (i + 1) + '</td>' +
@@ -5911,8 +5991,9 @@ function renderImageLogsTable(logs) {
       '<td>' + escapeHtml(l.originalSize) + '</td>' +
       '<td><span class="badge-status badge-approved">' + escapeHtml(l.compressedSize) + '</span></td>' +
       '<td>' + escapeHtml(l.targetSize) + '</td>';
-    tbody.appendChild(tr);
-  }
+    frag.appendChild(tr);
+    }
+    tbody.appendChild(frag);
 }
 
 function filterImageLogsTable() {
@@ -5929,7 +6010,7 @@ function exportImageLogsToExcel() {
   var csv = "क्र०,तारीख व समय,ग्राम पंचायत,पंचायत सहायक का नाम,फ़ाइल नाम,मूल साइज़,कंप्रेस साइज़,लक्ष्य साइज़\n";
   for (var i = 0; i < cachedAdminImageLogs.length; i++) {
     var l = cachedAdminImageLogs[i];
-    csv += (i + 1) + ',"' + l.timestamp + '","' + l.gramPanchayat + '","' + l.fullName + '","' + l.fileName + '","' + l.originalSize + '","' + l.compressedSize + '","' + l.targetSize + '"\n';
+      csv += [i + 1, csvCell(l.timestamp), csvCell(l.gramPanchayat), csvCell(l.fullName), csvCell(l.fileName), csvCell(l.originalSize), csvCell(l.compressedSize), csvCell(l.targetSize)].join(",") + "\n";
   }
   downloadCSVFile(csv, "Panchayat_Sahayak_Image_Compress_Logs_15_Days.csv");
 }
