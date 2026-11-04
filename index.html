@@ -1062,18 +1062,9 @@ body.modal-open {
               </div>
 
               <div class="field-group">
-                <label><i class="fa-solid fa-user-shield"></i> 2. यूनियन में पद (Designation)</label>
-                <select id="idCardDesignationSelect" class="field-input" onchange="renderUnionIdCardLive()">
-                  <option value="पंचायत सहायक / सक्रिय सदस्य">पंचायत सहायक / सक्रिय सदस्य</option>
-                  <option value="ब्लॉक अध्यक्ष">ब्लॉक अध्यक्ष (उतरौला)</option>
-                  <option value="ब्लॉक उपाध्यक्ष">ब्लॉक उपाध्यक्ष (उतरौला)</option>
-                  <option value="ब्लॉक महामंत्री">ब्लॉक महामंत्री (उतरौला)</option>
-                  <option value="ब्लॉक कोषाध्यक्ष">ब्लॉक कोषाध्यक्ष (उतरौला)</option>
-                  <option value="ब्लॉक मीडिया प्रभारी">ब्लॉक मीडिया प्रभारी (उतरौला)</option>
-                  <option value="ब्लॉक सचिव">ब्लॉक सचिव (उतरौला)</option>
-                  <option value="ब्लॉक उपसचिव">ब्लॉक उपसचिव (उतरौला)</option>
-                  <option value="कार्यकारिणी सदस्य">ब्लॉक कार्यकारिणी सदस्य</option>
-                </select>
+                <label><i class="fa-solid fa-user-shield"></i> 2. यूनियन में पद (Auto-Verified by ID)</label>
+                <input type="text" id="idCardDesignationSelect" class="field-input field-readonly" value="पंचायत सहायक / सक्रिय सदस्य" readonly>
+                <small style="font-size:11px; color:#16a34a; font-weight:700; display:block; margin-top:4px;"><i class="fa-solid fa-lock"></i> यह पद आपकी लॉगिन आईडी व ब्लॉक कार्यकारिणी रिकॉर्ड से स्वतः सत्यापित है (मैनुअल बदला नहीं जा सकता)।</small>
               </div>
 
               <div class="field-group">
@@ -1153,7 +1144,7 @@ body.modal-open {
                     </div>
                     <div style="text-align:right; color:#1e3a8a; font-weight:700;">
                       <div id="idCardPresidentNameSig">प्रमोद वर्मा</div>
-                      <div style="font-size:10px; color:#64748b;">ब्लॉक अध्यक्ष (उतरौला)</div>
+                      <div style="font-size:10px; color:#64748b;" id="idCardPresidentRoleSig">ब्लॉक अध्यक्ष (उतरौला)</div>
                     </div>
                   </div>
                 </div>
@@ -3343,23 +3334,8 @@ function openAdminLoginModal() {
     var idSigEl = document.getElementById('idCardPresidentNameSig');
     if (idSigEl) idSigEl.innerText = pres.name;
 
-    // किसी भी नए कार्यकारिणी पद को ID Card ड्रॉपडाउन में स्वतः जोड़ें
-    var roleSelect = document.getElementById('idCardDesignationSelect');
-    if (roleSelect && cachedUnionExecutives) {
-      var existingOpts = {};
-      for (var r = 0; r < roleSelect.options.length; r++) {
-        existingOpts[roleSelect.options[r].value] = true;
-      }
-      for (var eIdx = 0; eIdx < cachedUnionExecutives.length; eIdx++) {
-        var dName = cachedUnionExecutives[eIdx].designation;
-        if (dName && !existingOpts[dName]) {
-          var newOpt = document.createElement('option');
-          newOpt.value = dName;
-          newOpt.text = dName + " (उतरौला)";
-          roleSelect.appendChild(newOpt);
-          existingOpts[dName] = true;
-        }
-      }
+    if (loggedInPsUser) {
+      initPsUnionIdCardDefaults();
     }
 
     var sideContainer = document.getElementById('executiveSidebarCardsContainer');
@@ -6649,22 +6625,51 @@ function handleSaveExecutiveSubmit(e) {
   }).saveUnionExecutiveSecure(adminSessionToken, payload);
 }
 
-// ================= NEW FEATURE 2: DIGITAL UNION ID CARD GENERATOR =================
-function initPsUnionIdCardDefaults() {
-  if (!loggedInPsUser) return;
-  var roleSelect = document.getElementById('idCardDesignationSelect');
-  if (roleSelect && cachedUnionExecutives) {
-    var userMob = String(loggedInPsUser.mobile || "").replace(/\D/g, "").slice(-10);
-    var matchedRole = "पंचायत सहायक / सक्रिय सदस्य";
+// ================= NEW FEATURE 2: DIGITAL UNION ID CARD GENERATOR (AUTO-LOCKED DESIGNATION BY ID) =================
+function normalizePersonName(nameStr) {
+  return String(nameStr || "")
+    .replace(/^(श्री|श्रीमती|सुश्री|कुमारी|कु०|कु\.)\s+/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+function getAutoVerifiedPsDesignation() {
+  if (!loggedInPsUser) return "पंचायत सहायक / सक्रिय सदस्य";
+  var userMob = String(loggedInPsUser.mobile || "").replace(/\D/g, "").slice(-10);
+  var userName = normalizePersonName(loggedInPsUser.fullName);
+
+  if (cachedUnionExecutives && cachedUnionExecutives.length > 0) {
     for (var i = 0; i < cachedUnionExecutives.length; i++) {
-      var exMob = String(cachedUnionExecutives[i].mobile || "").replace(/\D/g, "").slice(-10);
-      if ((userMob && exMob && userMob === exMob) || cachedUnionExecutives[i].name === loggedInPsUser.fullName) {
-        matchedRole = cachedUnionExecutives[i].designation;
-        break;
+      var exMobRaw = String(cachedUnionExecutives[i].mobile || "");
+      var exMobList = exMobRaw.match(/\d{10}/g) || [];
+      var exMobSingle = exMobRaw.replace(/\D/g, "").slice(-10);
+      var isMobMatch = (userMob.length === 10 && (exMobSingle === userMob || exMobList.indexOf(userMob) !== -1));
+      var exName = normalizePersonName(cachedUnionExecutives[i].name);
+      if (isMobMatch || (userName !== "" && exName === userName)) {
+        return cachedUnionExecutives[i].designation || "कार्यकारिणी पदाधिकारी";
       }
     }
-    roleSelect.value = matchedRole;
-    if (!roleSelect.value) roleSelect.value = "पंचायत सहायक / सक्रिय सदस्य";
+  }
+  if (loggedInPsUser.unionDesignation) {
+    return loggedInPsUser.unionDesignation;
+  }
+  return "पंचायत सहायक / सक्रिय सदस्य";
+}
+
+function initPsUnionIdCardDefaults() {
+  if (!loggedInPsUser) return;
+  var roleInput = document.getElementById('idCardDesignationSelect');
+  var verifiedRole = getAutoVerifiedPsDesignation();
+  if (roleInput) {
+    roleInput.value = verifiedRole;
+  }
+  // यदि यूजर ने पहले फोटो सेट की थी तो लोकल कैश से स्वतः लोड करें
+  var savedPhoto = safeGetStorage(localStorage, 'psk_id_photo_' + (loggedInPsUser.email || ''));
+  if (savedPhoto) {
+    customIdCardPhotoDataUrl = savedPhoto;
+    var imgEl = document.getElementById('idCardPhotoPreview');
+    if (imgEl) imgEl.src = savedPhoto;
   }
   renderUnionIdCardLive();
 }
@@ -6673,9 +6678,34 @@ function handleIdCardPhotoUpload(input) {
   if (input.files && input.files[0]) {
     var reader = new FileReader();
     reader.onload = function(e) {
-      customIdCardPhotoDataUrl = e.target.result;
-      var imgEl = document.getElementById('idCardPhotoPreview');
-      if (imgEl) imgEl.src = customIdCardPhotoDataUrl;
+      var tempImg = new Image();
+      tempImg.onload = function() {
+        // बड़ी कैमरा फोटो को स्वतः 300x360 पासपोर्ट अनुपात में सेंटर-क्रॉप व ऑप्टिमाइज़ करें (Zero Lag)
+        var c = document.createElement('canvas');
+        var targetW = 300, targetH = 360;
+        c.width = targetW; c.height = targetH;
+        var ctx = c.getContext('2d');
+        var srcRatio = tempImg.width / tempImg.height;
+        var dstRatio = targetW / targetH;
+        var sW = tempImg.width, sH = tempImg.height, sX = 0, sY = 0;
+        if (srcRatio > dstRatio) {
+          sW = tempImg.height * dstRatio;
+          sX = (tempImg.width - sW) / 2;
+        } else {
+          sH = tempImg.width / dstRatio;
+          sY = (tempImg.height - sH) / 4; // चेहरे को ऊपर से सही फ्रेम में रखने के लिए
+        }
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, targetW, targetH);
+        ctx.drawImage(tempImg, sX, sY, sW, sH, 0, 0, targetW, targetH);
+        customIdCardPhotoDataUrl = c.toDataURL('image/jpeg', 0.90);
+        var imgEl = document.getElementById('idCardPhotoPreview');
+        if (imgEl) imgEl.src = customIdCardPhotoDataUrl;
+        if (loggedInPsUser && loggedInPsUser.email) {
+          safeSetStorage(localStorage, 'psk_id_photo_' + loggedInPsUser.email, customIdCardPhotoDataUrl);
+        }
+      };
+      tempImg.src = e.target.result;
     };
     reader.readAsDataURL(input.files[0]);
   }
@@ -6684,7 +6714,9 @@ function handleIdCardPhotoUpload(input) {
 function renderUnionIdCardLive() {
   if (!loggedInPsUser) return;
   var pres = getDynamicPresidentObj();
-  var roleVal = document.getElementById('idCardDesignationSelect') ? document.getElementById('idCardDesignationSelect').value : "पंचायत सहायक / सक्रिय सदस्य";
+  var roleVal = getAutoVerifiedPsDesignation();
+  var roleInputEl = document.getElementById('idCardDesignationSelect');
+  if (roleInputEl) roleInputEl.value = roleVal;
   var bloodVal = document.getElementById('idCardBloodGroup') ? document.getElementById('idCardBloodGroup').value : "B+";
   var mobLast4 = String(loggedInPsUser.mobile || "0000").replace(/\D/g, "").slice(-4) || "0101";
   var uidStr = "PSKU-UTR-" + mobLast4;
@@ -6697,6 +6729,8 @@ function renderUnionIdCardLive() {
   document.getElementById('idCardMobileVal').innerText = loggedInPsUser.mobile || "-";
   document.getElementById('idCardBloodVal').innerText = bloodVal;
   document.getElementById('idCardPresidentNameSig').innerText = pres.name;
+  var roleSigEl = document.getElementById('idCardPresidentRoleSig');
+  if (roleSigEl) roleSigEl.innerText = pres.designation + " (उतरौला)";
 
   var qrVerifyText = "VERIFIED UNION ID\nID: " + uidStr +
     "\nName: " + (loggedInPsUser.fullName || "") +
@@ -6715,7 +6749,7 @@ function downloadUnionIdCardImage() {
   if (!loggedInPsUser) return;
   showLoader("HD यूनियन ID कार्ड इमेज तैयार हो रही है...");
   var pres = getDynamicPresidentObj();
-  var roleVal = document.getElementById('idCardDesignationSelect').value || "पंचायत सहायक / सक्रिय सदस्य";
+  var roleVal = getAutoVerifiedPsDesignation();
   var bloodVal = document.getElementById('idCardBloodGroup').value || "B+";
   var mobLast4 = String(loggedInPsUser.mobile || "0000").replace(/\D/g, "").slice(-4) || "0101";
   var uidStr = "PSKU-UTR-" + mobLast4;
