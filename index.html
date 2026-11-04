@@ -561,7 +561,12 @@ body.modal-open {
 @media print {
   @page {
     size: A4 portrait;
-    margin: 12mm 15mm 12mm 15mm; /* मानक A4 प्रिंट मार्जिन */
+    margin: 10mm 12mm 10mm 12mm;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   html, body {
@@ -586,16 +591,23 @@ body.modal-open {
     margin: 0 !important;
     padding: 0 !important;
     box-sizing: border-box !important;
-    page-break-after: avoid !important;
-    page-break-inside: avoid !important;
-    break-after: avoid !important;
-    break-inside: avoid !important;
   }
 
-  /* टेबल व टेक्स्ट ब्रेक कंट्रोल */
-  #printTemplateArea * {
-    page-break-inside: avoid;
-    break-inside: avoid;
+  #printTemplateArea table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+
+  #printTemplateArea thead {
+    display: table-header-group !important;
+  }
+
+  #printTemplateArea tr,
+  #printTemplateArea .union-id-card-box {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 }
 
@@ -2048,7 +2060,7 @@ body.modal-open {
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
       <input type="text" id="adminSearchInput" oninput="debounceTableSearch(filterAdminTable, 100)" onkeyup="debounceTableSearch(filterAdminTable, 100)" class="field-input" placeholder="🔍 नाम या ग्राम पंचायत से खोजें..." style="max-width:280px;">
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="submit-btn" style="background:linear-gradient(135deg, #dc2626, #991b1b); font-size:12px; padding:8px 14px; width:auto; margin:0;" onclick="openMemorandumModal()"><i class="fa-solid fa-file-contract"></i> 📋 आधिकारिक ज्ञापन / समस्या रिपोर्ट (BDO/DPRO)</button>
+        <button class="submit-btn" style="background:linear-gradient(135deg, #dc2626, #991b1b); font-size:12px; padding:8px 14px; width:auto; margin:0;" onclick="openMemorandumModal()"><i class="fa-solid fa-file-contract"></i> 📋 आधिकारिक ज्ञापन / समस्या रिपोर्ट (ADO/BDO/DPRO/CDO)</button>
         <button class="submit-btn" style="background:#16a34a; font-size:12px; padding:8px 14px; width:auto; margin:0;" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> Excel (CSV) डाउनलोड</button>
       </div>
     </div>
@@ -2721,31 +2733,35 @@ body.modal-open {
   </div>
 </div>
 
-<!-- 15. OFFICIAL MEMORANDUM / PROBLEM REPORT GENERATOR MODAL (BDO / DPRO) -->
+<!-- 15. OFFICIAL MEMORANDUM / PROBLEM REPORT GENERATOR MODAL (ADO / BDO / DPRO / CDO / DM) -->
 <div class="modal-backdrop" id="officialMemorandumModal">
-  <div class="modal-box" style="max-width:780px; text-align:left !important;">
+  <div class="modal-box" style="max-width:860px; text-align:left !important;">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--input-border); padding-bottom:10px; margin-bottom:14px;">
-      <h3 style="color:#dc2626; margin:0; font-size:18px;"><i class="fa-solid fa-file-contract"></i> आधिकारिक यूनियन ज्ञापन एवं समस्या रिपोर्ट जनरेटर</h3>
+      <h3 style="color:#dc2626; margin:0; font-size:18px;"><i class="fa-solid fa-file-contract"></i> आधिकारिक यूनियन लेटरहेड ज्ञापन एवं समस्या रिपोर्ट जनरेटर</h3>
       <button type="button" onclick="closeModal('officialMemorandumModal')" style="background:#dc2626; color:#fff; border:none; width:28px; height:28px; border-radius:50%; cursor:pointer;">✕</button>
     </div>
 
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:14px; background:var(--input-bg); padding:14px; border-radius:10px; border:1px solid var(--input-border);">
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:12px; background:var(--input-bg); padding:14px; border-radius:10px; border:1.5px solid var(--input-border);">
       <div>
-        <label style="font-size:12.5px; font-weight:700; display:block; margin-bottom:4px;">1. संबोधित अधिकारी चुनें:</label>
+        <label style="font-size:12.5px; font-weight:700; display:block; margin-bottom:4px;">1. संबोधित अधिकारी (Addressed To):</label>
         <select id="memoRecipientSelect" class="field-input" onchange="generateOfficialMemorandumPreview()" style="padding:8px;">
-          <option value="BDO">श्रीमान खंड विकास अधिकारी (BDO) महोदय, उतरौला</option>
+          <option value="ADO">श्रीमान सहायक विकास अधिकारी (पंचायत) महोदय, उतरौला</option>
+          <option value="BDO" selected>श्रीमान खंड विकास अधिकारी (BDO) महोदय, उतरौला</option>
+          <option value="JOINT_BLOCK">श्रीमान BDO एवं ADO (पंचायत) महोदय, उतरौला (संयुक्त)</option>
           <option value="DPRO">श्रीमान जिला पंचायत राज अधिकारी (DPRO) महोदय, बलरामपुर</option>
-          <option value="CDO">श्रीमान मुख्य विकास अधिकारी (CDO) / जिलाधिकारी महोदय, बलरामपुर</option>
+          <option value="CDO">श्रीमान मुख्य विकास अधिकारी (CDO) महोदय, बलरामपुर</option>
+          <option value="DM">श्रीमान जिलाधिकारी (DM) महोदय, बलरामपुर</option>
         </select>
       </div>
       <div>
-        <label style="font-size:12.5px; font-weight:700; display:block; margin-bottom:4px;">2. ज्ञापन का विषय / समस्या सूची:</label>
+        <label style="font-size:12.5px; font-weight:700; display:block; margin-bottom:4px;">2. ज्ञापन का विषय / समस्या श्रेणी:</label>
         <select id="memoCategorySelect" class="field-input" onchange="generateOfficialMemorandumPreview()" style="padding:8px;">
           <option value="PENDING_SALARY">💰 बकाया मानदेय ग्राम पंचायत सूची</option>
           <option value="NO_WIFI">📶 बिना वाई-फ़ाई / रिचार्ज लंबित ग्राम पंचायतें</option>
           <option value="BAD_PRINTER">🖨️ खराब या अनुपलब्ध प्रिंटर वाली ग्राम पंचायतें</option>
           <option value="NO_INFRA">⚡ बिजली / पेयजल / शौचालय समस्या वाली ग्राम पंचायतें</option>
           <option value="NO_STATIONERY">📦 स्टेशनरी व मोबाइल रिचार्ज लंबित ग्राम पंचायतें</option>
+          <option value="OUTSIDER_WORK">⚠️ बाहरी व्यक्ति / मुंशी द्वारा कार्य हस्तक्षेप सूची</option>
           <option value="ALL_SURVEY">📊 संपूर्ण ब्लॉक सर्वे समेकित रिपोर्ट</option>
         </select>
       </div>
@@ -2753,18 +2769,28 @@ body.modal-open {
         <label style="font-size:12.5px; font-weight:700; display:block; margin-bottom:4px;">3. पत्रांक संख्या (Ref No.):</label>
         <input type="text" id="memoRefNoInput" class="field-input" value="PSKU/UTR/2026/01" oninput="generateOfficialMemorandumPreview()" style="padding:8px;">
       </div>
+      <div style="grid-column: 1 / -1;">
+        <label style="font-size:12.5px; font-weight:700; display:block; margin-bottom:4px;">4. अतिरिक्त विशेष मांग / समय-सीमा टिप्पणी (वैकल्पिक - पत्र में स्वतः जुड़ेगी):</label>
+        <input type="text" id="memoCustomNoteInput" class="field-input" placeholder="उदा. कृपया 7 कार्यदिवस के भीतर समस्त लंबित समस्याओं का निस्तारण कराने की कृपा करें..." oninput="generateOfficialMemorandumPreview()" style="padding:8px;">
+      </div>
     </div>
 
-    <div style="display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-      <button type="button" class="submit-btn" style="background:#dc2626; width:auto; font-size:13px; padding:8px 16px; margin:0;" onclick="printOfficialMemorandumPDF()">
-        <i class="fa-solid fa-print"></i> 🖨️ लेटरहेड पर A4 PDF प्रिंट / डाउनलोड करें
-      </button>
-      <button type="button" class="submit-btn" style="background:#0284c7; width:auto; font-size:13px; padding:8px 16px; margin:0;" onclick="downloadOfficialMemorandumWord()">
-        <i class="fa-solid fa-file-word"></i> Word (.doc) डाउनलोड करें
-      </button>
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+      <span style="font-size:12px; font-weight:700; color:#16a34a;"><i class="fa-solid fa-circle-check"></i> आधिकारिक यूनियन लेटरहेड प्रारूप (A4 Print Ready)</span>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <a href="#" id="btnShareMemoWhatsApp" target="_blank" class="submit-btn" style="background:#25d366; width:auto; font-size:13px; padding:8px 14px; margin:0; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp पर भेजें
+        </a>
+        <button type="button" class="submit-btn" style="background:#dc2626; width:auto; font-size:13px; padding:8px 16px; margin:0;" onclick="printOfficialMemorandumPDF()">
+          <i class="fa-solid fa-print"></i> 🖨️ लेटरहेड पर A4 PDF प्रिंट / डाउनलोड करें
+        </button>
+        <button type="button" class="submit-btn" style="background:#0284c7; width:auto; font-size:13px; padding:8px 16px; margin:0;" onclick="downloadOfficialMemorandumWord()">
+          <i class="fa-solid fa-file-word"></i> Word (.doc) डाउनलोड करें
+        </button>
+      </div>
     </div>
 
-    <div id="memoPreviewContainer" style="background:#ffffff; color:#000000; border:2px solid #1e3a8a; border-radius:8px; padding:20px; max-height:48vh; overflow-y:auto; font-family:'Tiro Devanagari Hindi', serif; line-height:1.7; font-size:13.5px;"></div>
+    <div id="memoPreviewContainer" style="background:#ffffff; color:#000000; border:2px solid #1e3a8a; border-radius:8px; padding:24px; max-height:50vh; overflow-y:auto; font-family:'Tiro Devanagari Hindi', serif; line-height:1.75; font-size:13.5px; box-shadow:inset 0 0 10px rgba(0,0,0,0.03);"></div>
   </div>
 </div>
 
@@ -6849,9 +6875,11 @@ function downloadUnionIdCardImage() {
 }
 
 function printUnionIdCardPDF() {
-  var cardHtml = document.getElementById('unionIdCardVisual').outerHTML;
+  var cardEl = document.getElementById('unionIdCardVisual');
+  if (!cardEl) return;
+  var cleanCardHtml = cardEl.outerHTML.replace(/\sid="[^"]*"/g, "");
   var printArea = document.getElementById('printTemplateArea');
-  printArea.innerHTML = '<div style="padding:25px; display:flex; justify-content:center; align-items:center;">' + cardHtml + '</div>';
+  printArea.innerHTML = '<div style="padding:25px; display:flex; justify-content:center; align-items:center;">' + cleanCardHtml + '</div>';
   window.print();
 }
 
@@ -6905,39 +6933,120 @@ function handleAdminQuickResetPassword(rowIndex, userName) {
   confirmUniversalDelete('resetPassOnly', rowIndex, userName);
 }
 
-// ================= NEW FEATURE 5: OFFICIAL MEMORANDUM / PROBLEM REPORT GENERATOR =================
+// ================= NEW FEATURE 5: ULTRA-PROFESSIONAL OFFICIAL MEMORANDUM GENERATOR (ADO / BDO / DPRO / CDO / DM) =================
 function openMemorandumModal() {
   generateOfficialMemorandumPreview();
   openModal('officialMemorandumModal');
+}
+
+function buildOfficialUnionLetterheadHTML(pres) {
+  var execSummaryList = [];
+  if (cachedUnionExecutives && cachedUnionExecutives.length > 0) {
+    for (var i = 0; i < cachedUnionExecutives.length; i++) {
+      var ex = cachedUnionExecutives[i];
+      if (ex.roleType === "President") continue;
+      execSummaryList.push(escapeHtml(ex.name) + " (" + escapeHtml(ex.designation) + ")");
+      if (execSummaryList.length >= 3) break;
+    }
+  }
+  var rightBearersText = execSummaryList.length > 0
+    ? execSummaryList.join(" • ")
+    : "प्रभावती (उपाध्यक्ष) • पूर्णिमा सिंह (महामंत्री)";
+
+  return '<div style="border-bottom:3.5px double #1e3a8a; padding-bottom:10px; margin-bottom:14px; color:#0f172a;">' +
+    '<div style="display:flex; justify-content:space-between; align-items:center; background:#0f172a; color:#ffffff; padding:5px 12px; border-radius:4px; font-size:11px; font-weight:700; margin-bottom:8px;">' +
+      '<span>पंजीकरण सं०: LUC/08494/2024-2025</span>' +
+      '<span style="color:#facc15;">॥ अधिकार • सम्मान • सेवा सुरक्षा ॥</span>' +
+      '<span>Email: pskunionutraula@gmail.com</span>' +
+    '</div>' +
+    '<div style="text-align:center;">' +
+      '<div style="font-family:\'Rozha One\', \'Tiro Devanagari Hindi\', serif; font-size:24px; font-weight:800; color:#1e3a8a; line-height:1.15; letter-spacing:0.3px;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</div>' +
+      '<div style="font-size:15px; font-weight:800; color:#dc2626; margin-top:3px;">ब्लॉक इकाई: विकास खण्ड- उतरौला, जनपद- बलरामपुर (उत्तर प्रदेश)</div>' +
+      '<div style="font-size:11.5px; font-weight:700; color:#334155; margin-top:2px;">कार्यालय: विकास खण्ड परिसर उतरौला, जनपद- बलरामपुर, पिन कोड- 271604</div>' +
+    '</div>' +
+    '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-top:8px; padding-top:6px; border-top:1px solid #cbd5e1; font-size:11.5px; font-weight:700; color:#1e3a8a;">' +
+      '<span>👤 ' + escapeHtml(pres.designation) + ': श्री ' + escapeHtml(pres.name) + ' (मो०: ' + escapeHtml(pres.mobile) + ')</span>' +
+      '<span style="color:#334155;">मुख्य कार्यकारिणी: ' + rightBearersText + '</span>' +
+    '</div>' +
+  '</div>';
 }
 
 function generateOfficialMemorandumPreview() {
   var recipientCode = document.getElementById('memoRecipientSelect').value;
   var categoryCode = document.getElementById('memoCategorySelect').value;
   var refNo = document.getElementById('memoRefNoInput').value.trim() || "PSKU/UTR/2026/01";
+  var customNote = document.getElementById('memoCustomNoteInput') ? document.getElementById('memoCustomNoteInput').value.trim() : "";
   var pres = getDynamicPresidentObj();
   var now = new Date();
   var todayStr = ("0" + now.getDate()).slice(-2) + "/" + ("0" + (now.getMonth() + 1)).slice(-2) + "/" + now.getFullYear();
 
   var recipientHtml = "";
-  if (recipientCode === "BDO") {
+  var recipientPlain = "";
+  var copyToItems = [];
+
+  if (recipientCode === "ADO") {
+    recipientHtml = "श्रीमान सहायक विकास अधिकारी (पंचायत) महोदय,<br>विकास खण्ड- उतरौला, जनपद- बलरामपुर (उ०प्र०)।";
+    recipientPlain = "श्रीमान सहायक विकास अधिकारी (पंचायत) महोदय, विकास खण्ड- उतरौला (बलरामपुर)";
+    copyToItems = [
+      "श्रीमान खंड विकास अधिकारी महोदय, विकास खण्ड- उतरौला, बलरामपुर को सादर सूचनार्थ।",
+      "श्रीमान जिला पंचायत राज अधिकारी महोदय, जनपद- बलरामपुर को सादर सूचनार्थ।",
+      "जिला/प्रदेश कार्यकारिणी, पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश।"
+    ];
+  } else if (recipientCode === "BDO") {
     recipientHtml = "श्रीमान खंड विकास अधिकारी (BDO) महोदय,<br>विकास खण्ड- उतरौला, जनपद- बलरामपुर (उ०प्र०)।";
+    recipientPlain = "श्रीमान खंड विकास अधिकारी (BDO) महोदय, विकास खण्ड- उतरौला (बलरामपुर)";
+    copyToItems = [
+      "श्रीमान सहायक विकास अधिकारी (पंचायत) महोदय, विकास खण्ड- उतरौला को आवश्यक कार्यवाही हेतु।",
+      "श्रीमान जिला पंचायत राज अधिकारी महोदय, जनपद- बलरामपुर को सादर सूचनार्थ।",
+      "श्रीमान मुख्य विकास अधिकारी महोदय, जनपद- बलरामपुर को सादर सूचनार्थ।"
+    ];
+  } else if (recipientCode === "JOINT_BLOCK") {
+    recipientHtml = "श्रीमान खंड विकास अधिकारी महोदय / श्रीमान सहायक विकास अधिकारी (पंचायत) महोदय,<br>विकास खण्ड- उतरौला, जनपद- बलरामपुर (उ०प्र०)।";
+    recipientPlain = "श्रीमान खंड विकास अधिकारी एवं सहायक विकास अधिकारी (पंचायत) महोदय, उतरौला";
+    copyToItems = [
+      "श्रीमान जिला पंचायत राज अधिकारी महोदय, जनपद- बलरामपुर को सादर सूचनार्थ।",
+      "श्रीमान मुख्य विकास अधिकारी महोदय, जनपद- बलरामपुर को सादर सूचनार्थ।",
+      "जिला/प्रदेश कार्यकारिणी, पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश।"
+    ];
   } else if (recipientCode === "DPRO") {
     recipientHtml = "श्रीमान जिला पंचायत राज अधिकारी (DPRO) महोदय,<br>जनपद- बलरामपुर (उ०प्र०)।";
+    recipientPlain = "श्रीमान जिला पंचायत राज अधिकारी (DPRO) महोदय, जनपद- बलरामपुर";
+    copyToItems = [
+      "श्रीमान जिलाधिकारी महोदय, जनपद- बलरामपुर को सादर सूचनार्थ।",
+      "श्रीमान मुख्य विकास अधिकारी महोदय, जनपद- बलरामपुर को सादर सूचनार्थ।",
+      "श्रीमान खंड विकास अधिकारी / सहायक विकास अधिकारी (पं०), विकास खण्ड- उतरौला को आवश्यक कार्यवाही हेतु।"
+    ];
+  } else if (recipientCode === "CDO") {
+    recipientHtml = "श्रीमान मुख्य विकास अधिकारी (CDO) महोदय,<br>जनपद- बलरामपुर (उ०प्र०)।";
+    recipientPlain = "श्रीमान मुख्य विकास अधिकारी (CDO) महोदय, जनपद- बलरामपुर";
+    copyToItems = [
+      "श्रीमान जिलाधिकारी महोदय, जनपद- बलरामपुर को सादर सूचनार्थ।",
+      "श्रीमान जिला पंचायत राज अधिकारी महोदय, बलरामपुर को आवश्यक कार्यवाही हेतु।",
+      "श्रीमान खंड विकास अधिकारी / सहायक विकास अधिकारी (पं०), उतरौला को आवश्यक कार्यवाही हेतु।"
+    ];
   } else {
-    recipientHtml = "श्रीमान मुख्य विकास अधिकारी (CDO) / जिलाधिकारी महोदय,<br>जनपद- बलरामपुर (उ०प्र०)।";
+    recipientHtml = "श्रीमान जिलाधिकारी (DM) महोदय,<br>जनपद- बलरामपुर (उ०प्र०)।";
+    recipientPlain = "श्रीमान जिलाधिकारी (DM) महोदय, जनपद- बलरामपुर";
+    copyToItems = [
+      "श्रीमान मुख्य विकास अधिकारी महोदय, जनपद- बलरामपुर को सादर सूचनार्थ।",
+      "श्रीमान जिला पंचायत राज अधिकारी महोदय, बलरामपुर को आवश्यक कार्यवाही हेतु।",
+      "श्रीमान खंड विकास अधिकारी / सहायक विकास अधिकारी (पं०), उतरौला को आवश्यक कार्यवाही हेतु।"
+    ];
   }
 
   var subjectText = "";
   var introPara = "";
+  var demandPoints = [];
   var colHeader = "समस्या / वर्तमान स्थिति";
   var filteredRows = [];
+  var totalSalaryMonthsSum = 0;
 
   for (var i = 0; i < cachedSurveyRecords.length; i++) {
     var r = cachedSurveyRecords[i];
     if (categoryCode === "PENDING_SALARY") {
       var m = parseInt(r.pendingSalaryMonths, 10) || 0;
       if (m > 0) {
+        totalSalaryMonthsSum += m;
         filteredRows.push({ gp: r.gramPanchayat, name: r.fullName, mobile: r.mobile, detail: m + " माह का मानदेय लंबित" });
       }
     } else if (categoryCode === "NO_WIFI") {
@@ -6950,18 +7059,25 @@ function generateOfficialMemorandumPreview() {
       }
     } else if (categoryCode === "NO_INFRA") {
       var issues = [];
-      if (String(r.electricity).indexOf("नहीं") !== -1) issues.push("बिजली नहीं");
-      if (String(r.drinkingWater).indexOf("नहीं") !== -1) issues.push("पेयजल नहीं");
-      if (String(r.toiletStatus).indexOf("नहीं") !== -1) issues.push("शौचालय समस्या");
+      if (String(r.electricity).indexOf("नहीं") !== -1) issues.push("बिजली अनुपलब्ध");
+      if (String(r.drinkingWater).indexOf("नहीं") !== -1) issues.push("पेयजल अनुपलब्ध");
+      if (String(r.toiletStatus).indexOf("नहीं") !== -1) issues.push("शौचालय अस्वच्छ/अनुपलब्ध");
       if (issues.length > 0) {
         filteredRows.push({ gp: r.gramPanchayat, name: r.fullName, mobile: r.mobile, detail: issues.join(", ") });
       }
     } else if (categoryCode === "NO_STATIONERY") {
       var stIssues = [];
       if (String(r.stationery).indexOf("नहीं") !== -1) stIssues.push("स्टेशनरी अनुपलब्ध");
-      if (String(r.gramNidhiRecharge).indexOf("नहीं") !== -1) stIssues.push("मोबाइल रिचार्ज लंबित");
+      if (String(r.gramNidhiRecharge).indexOf("नहीं") !== -1) stIssues.push("ग्राम निधि रिचार्ज लंबित");
       if (stIssues.length > 0) {
         filteredRows.push({ gp: r.gramPanchayat, name: r.fullName, mobile: r.mobile, detail: stIssues.join(", ") });
+      }
+    } else if (categoryCode === "OUTSIDER_WORK") {
+      var outIssues = [];
+      if (String(r.registerWorker).indexOf("मुंशी") !== -1) outIssues.push("रजिस्टर कार्य: " + r.registerWorker);
+      if (String(r.paymentWorker).indexOf("बाहरी") !== -1) outIssues.push("भुगतान कार्य: " + r.paymentWorker);
+      if (outIssues.length > 0) {
+        filteredRows.push({ gp: r.gramPanchayat, name: r.fullName, mobile: r.mobile, detail: outIssues.join(" | ") });
       }
     } else {
       filteredRows.push({
@@ -6973,100 +7089,217 @@ function generateOfficialMemorandumPreview() {
     }
   }
 
+  filteredRows.sort(function(a, b) {
+    return String(a.gp || "").localeCompare(String(b.gp || ""), 'hi');
+  });
+
   if (categoryCode === "PENDING_SALARY") {
-    subjectText = "विकास खण्ड उतरौला की ग्राम पंचायतों में कार्यरत पंचायत सहायकों के लंबित मानदेय भुगतान कराए जाने के संबंध में ज्ञापन।";
-    introPara = "सविनय अवगत कराना है कि विकास खण्ड उतरौला (जनपद बलरामपुर) की निम्नलिखित ग्राम पंचायतों में कार्यरत पंचायत सहायकों का कई माह से मानदेय भुगतान लंबित है, जिसके कारण अल्प मानदेय में कार्य कर रहे पंचायत सहायकों के समक्ष गंभीर आर्थिक संकट उत्पन्न हो गया है।";
-    colHeader = "लंबित मानदेय (माह)";
+    subjectText = "विकास खण्ड उतरौला की ग्राम पंचायतों में कार्यरत पंचायत सहायकों के कई माह से लंबित मानदेय का अविलंब भुगतान कराए जाने के संबंध में।";
+    introPara = "सादर अवगत कराना है कि उत्तर प्रदेश शासन की महत्वाकांक्षी 'ग्राम सचिवालय' योजना के अंतर्गत विकास खण्ड उतरौला की ग्राम पंचायतों में कार्यरत पंचायत सहायक / एकाउंटेंट-कम-डाटा एंट्री ऑपरेटर पूर्ण निष्ठा से शासकीय कार्यों का संपादन कर रहे हैं। किंतु अत्यंत खेद का विषय है कि निम्नलिखित ग्राम पंचायतों में कार्यरत पंचायत सहायकों का कई माह से मानदेय भुगतान लंबित है, जिससे मात्र ₹6,000/- अल्प मानदेय पाने वाले कर्मियों के समक्ष गंभीर आर्थिक एवं पारिवारिक संकट उत्पन्न हो गया है।";
+    colHeader = "लंबित मानदेय की स्थिति";
+    demandPoints = [
+      "संबंधित ग्राम पंचायत सचिवों को निर्देशित कर लंबित मानदेय का भुगतान ग्राम निधि (PFMS/डिजिटल डोंगल) के माध्यम से प्राथमिकता के आधार पर तत्काल कराया जाए।",
+      "शासनादेश के अनुपालन में प्रत्येक माह की निश्चित तिथि तक पंचायत सहायकों के नियमित मानदेय भुगतान की व्यवस्था सुनिश्चित की जाए।"
+    ];
   } else if (categoryCode === "NO_WIFI") {
-    subjectText = "ग्राम सचिवालयों में वाई-फ़ाई (Wi-Fi) कनेक्शन एवं रिचार्ज व्यवस्था सुचारू कराए जाने के संबंध में ज्ञापन।";
-    introPara = "सविनय अवगत कराना है कि निम्नलिखित ग्राम पंचायतों के सचिवालयों में वाई-फ़ाई सुविधा उपलब्ध नहीं है अथवा रिचार्ज लंबित है, जिससे ई-डिस्ट्रिक्ट व शासकीय ऑनलाइन कार्यों के संपादन में भारी कठिनाई हो रही है।";
-    colHeader = "वाई-फ़ाई की स्थिति";
+    subjectText = "ग्राम पंचायत सचिवालयों में हाई-स्पीड वाई-फ़ाई (Wi-Fi) कनेक्शन एवं नियमित रिचार्ज व्यवस्था सुचारू कराए जाने के संबंध में।";
+    introPara = "सादर अवगत कराना है कि ग्राम सचिवालयों से ग्रामीणों को ई-डिस्ट्रिक्ट पोर्टल, आय/जाति/निवास प्रमाण-पत्र, पेंशन, आयुष्मान कार्ड एवं पीएफएमएस (PFMS) भुगतान जैसी ऑनलाइन सेवाएं प्रदान की जाती हैं। किंतु निम्नलिखित ग्राम पंचायतों के सचिवालयों में वाई-फ़ाई कनेक्शन उपलब्ध नहीं है अथवा रिचार्ज लंबित होने से इंटरनेट सेवा बाधित है, जिससे शासकीय ऑनलाइन कार्य प्रभावित हो रहे हैं।";
+    colHeader = "वाई-फ़ाई / इंटरनेट स्थिति";
+    demandPoints = [
+      "सूचीबद्ध ग्राम पंचायतों के पंचायत भवनों में तत्काल प्रभाव से ब्रॉडबैंड/वाई-फ़ाई कनेक्शन एवं लंबित रिचार्ज कराया जाए।",
+      "इंटरनेट के अभाव में पंचायत सहायकों को अपने निजी मोबाइल डेटा से शासकीय कार्य करने हेतु बाध्य न किया जाए।"
+    ];
   } else if (categoryCode === "BAD_PRINTER") {
-    subjectText = "ग्राम पंचायत सचिवालयों में खराब / अनुपलब्ध प्रिंटर को ठीक कराए जाने के संबंध में ज्ञापन।";
-    introPara = "सविनय अवगत कराना है कि निम्नलिखित ग्राम पंचायतों के पंचायत भवनों में प्रिंटर खराब है अथवा उपलब्ध नहीं है, जिससे ग्रामीणों को प्रमाण-पत्र व शासकीय प्रिंट निकालने में समस्या हो रही है।";
-    colHeader = "प्रिंटर की स्थिति";
+    subjectText = "ग्राम पंचायत सचिवालयों में खराब / अनुपलब्ध प्रिंटर एवं कंप्यूटर उपकरणों को तत्काल ठीक कराए जाने के संबंध में।";
+    introPara = "सादर अवगत कराना है कि ग्राम पंचायत सचिवालयों में दैनिक शासकीय पत्राचार, परिवार रजिस्टर नकल, जन्म-मृत्यु प्रमाण-पत्र एवं योजनाओं के आवेदन प्रिंट करने हेतु प्रिंटर की आवश्यकता होती है। किंतु निम्नलिखित ग्राम पंचायतों में प्रिंटर खराब पड़ा है अथवा उपलब्ध नहीं है, जिससे ग्रामीणों को सेवाएं देने में भारी असुविधा हो रही है।";
+    colHeader = "प्रिंटर की वर्तमान स्थिति";
+    demandPoints = [
+      "खराब पड़े प्रिंटर एवं कंप्यूटर सिस्टम की मरम्मत/टोनर रिफिलिंग ग्राम पंचायत के प्रशासनिक मद से तत्काल कराई जाए।",
+      "जिन पंचायत भवनों में प्रिंटर उपलब्ध नहीं है, वहाँ शासन के निर्देशानुसार अविलंब प्रिंटर उपलब्ध कराया जाए।"
+    ];
   } else if (categoryCode === "NO_INFRA") {
-    subjectText = "ग्राम पंचायत भवनों में मूलभूत सुविधाओं (बिजली, पेयजल एवं शौचालय स्वच्छता) की व्यवस्था कराए जाने के संबंध में।";
-    introPara = "सविनय अवगत कराना है कि निम्नलिखित ग्राम पंचायत भवनों में बिजली, पेयजल अथवा शौचालय की समुचित व्यवस्था न होने से पंचायत सहायकों एवं ग्रामीणों को अत्यंत असुविधा का सामना करना पड़ रहा है।";
-    colHeader = "मूलभूत समस्या विवरण";
+    subjectText = "ग्राम पंचायत भवनों में मूलभूत सुविधाओं (विद्युत, शुद्ध पेयजल एवं शौचालय स्वच्छता) की समुचित व्यवस्था कराए जाने के संबंध में।";
+    introPara = "सादर अवगत कराना है कि ग्राम पंचायत सचिवालय पर प्रतिदिन बड़ी संख्या में ग्रामीण एवं महिला/पुरुष पंचायत सहायक उपस्थित रहकर शासकीय कार्य करते हैं। किंतु निम्नलिखित ग्राम पंचायत भवनों में बिजली, शुद्ध पेयजल अथवा शौचालय की साफ-सफाई की व्यवस्था न होने से विशेषकर महिला पंचायत सहायकों को अत्यंत कठिनाइयों का सामना करना पड़ रहा है।";
+    colHeader = "मूलभूत असुविधा का विवरण";
+    demandPoints = [
+      "संबंधित पंचायत भवनों में निर्बाध विद्युत आपूर्ति (इन्वर्टर/कनेक्शन) एवं शुद्ध पेयजल की व्यवस्था तत्काल कराई जाए।",
+      "पंचायत भवन के शौचालयों की नियमित साफ-सफाई हेतु सफाई कर्मी को निर्देशित किया जाए।"
+    ];
   } else if (categoryCode === "NO_STATIONERY") {
-    subjectText = "ग्राम सचिवालयों में स्टेशनरी सामग्री एवं ग्राम निधि से मोबाइल रिचार्ज उपलब्ध कराए जाने के संबंध में।";
-    introPara = "सविनय अवगत कराना है कि निम्नलिखित ग्राम पंचायतों में दैनिक शासकीय कार्य हेतु स्टेशनरी सामग्री एवं मोबाइल रिचार्ज की सुविधा लंबित है।";
-    colHeader = "लंबित सुविधा";
+    subjectText = "ग्राम सचिवालयों में स्टेशनरी सामग्री (A4 पेपर, रजिस्टर आदि) एवं ग्राम निधि से मोबाइल रिचार्ज उपलब्ध कराए जाने के संबंध में।";
+    introPara = "सादर अवगत कराना है कि निम्नलिखित ग्राम पंचायत सचिवालयों में दैनिक कार्यालयीय उपयोग हेतु स्टेशनरी सामग्री (A4 पेपर, पत्रावली, पेन, रजिस्टर आदि) एवं शासकीय कार्यों हेतु ग्राम निधि से देय मोबाइल रिचार्ज लंबित है।";
+    colHeader = "लंबित सामग्री / रिचार्ज";
+    demandPoints = [
+      "समस्त सूचीबद्ध ग्राम पंचायतों में तत्काल आवश्यक स्टेशनरी सामग्री उपलब्ध कराई जाए।",
+      "शासकीय ऑनलाइन ओटीपी (OTP) एवं पोर्टल संचालन हेतु पंचायत सहायकों के मोबाइल रिचार्ज की प्रतिपूर्ति ग्राम निधि से कराई जाए।"
+    ];
+  } else if (categoryCode === "OUTSIDER_WORK") {
+    subjectText = "ग्राम पंचायतों में अनधिकृत बाहरी व्यक्तियों / निजी मुंशियों के हस्तक्षेप को रोककर पंचायत सहायकों से ही पदीय कार्य लिए जाने के संबंध में।";
+    introPara = "सादर अवगत कराना है कि पंचायती राज विभाग के स्पष्ट शासनादेश के अनुसार ग्राम पंचायत का समस्त ऑनलाइन भुगतान (PFMS), परिवार रजिस्टर एवं जन्म-मृत्यु पंजीकरण का कार्य केवल नियुक्त पंचायत सहायक द्वारा ही पंचायत भवन से किया जाना अनिवार्य है। किंतु निम्नलिखित ग्राम पंचायतों में अनधिकृत बाहरी व्यक्तियों/मुंशियों द्वारा कार्य किया जा रहा है, जो शासनादेश का उल्लंघन है।";
+    colHeader = "अनधिकृत कार्य हस्तक्षेप विवरण";
+    demandPoints = [
+      "शासनादेश के कड़ाई से अनुपालन में बाहरी व्यक्तियों/निजी मुंशियों से शासकीय पोर्टल व डोंगल का कार्य तत्काल प्रभाव से बंद कराया जाए।",
+      "समस्त ऑनलाइन भुगतान एवं रजिस्टर संबंधी कार्य केवल संबंधित ग्राम पंचायत के पंचायत सहायक के माध्यम से ही संपादित कराया जाए।"
+    ];
   } else {
-    subjectText = "विकास खण्ड उतरौला के ग्राम पंचायत सचिवालयों की भौतिक स्थिति एवं समस्याओं के निराकरण हेतु समेकित ज्ञापन।";
-    introPara = "सविनय अवगत कराना है कि पंचायत सहायक कर्मचारी यूनियन उतरौला द्वारा किए गए ऑनलाइन सर्वेक्षण में ग्राम पंचायत भवनों की वर्तमान स्थिति निम्नवत पाई गई है, जिनका त्वरित संज्ञान लेकर निराकरण कराया जाना अत्यंत आवश्यक है।";
-    colHeader = "सर्वे स्थिति सारांश";
+    subjectText = "विकास खण्ड उतरौला के ग्राम पंचायत सचिवालयों की भौतिक स्थिति एवं पंचायत सहायकों की समस्याओं के त्वरित निराकरण हेतु समेकित ज्ञापन।";
+    introPara = "सादर अवगत कराना है कि पंचायत सहायक कर्मचारी यूनियन विकास खण्ड उतरौला द्वारा ग्राम सचिवालयों के सुचारू संचालन हेतु किए गए ब्लॉक स्तरीय सर्वेक्षण में मानदेय, वाई-फ़ाई, प्रिंटर एवं मूलभूत सुविधाओं की अद्यतन स्थिति निम्नवत पाई गई है:";
+    colHeader = "सर्वेक्षण स्थिति सारांश";
+    demandPoints = [
+      "समस्त लंबित मानदेय का भुगतान एवं ग्राम सचिवालयों में वाई-फ़ाई, प्रिंटर व स्टेशनरी की व्यवस्था समयबद्ध रूप से सुनिश्चित कराई जाए।",
+      "प्रत्येक माह विकास खण्ड स्तर पर पंचायत सहायकों की समस्याओं के समाधान हेतु समीक्षा बैठक आयोजित की जाए।"
+    ];
   }
 
-  var tableHtml = '<table border="1" style="width:100%; border-collapse:collapse; font-size:12.5px; margin:12px 0; text-align:left;" cellpadding="6">' +
-    '<tr style="background:#1e3a8a; color:#ffffff;"><th>क्र०सं०</th><th>ग्राम पंचायत का नाम</th><th>पंचायत सहायक का नाम</th><th>मोबाइल नंबर</th><th>' + escapeHtml(colHeader) + '</th></tr>';
+  if (customNote) {
+    demandPoints.push(escapeHtml(customNote));
+  }
+
+  var summaryStripHtml = '<div style="background:#f8fafc; border:1.5px solid #1e3a8a; border-left:5px solid #dc2626; border-radius:6px; padding:8px 12px; margin:10px 0; font-size:12.5px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">' +
+    '<span><b>📌 चिन्हित/प्रभावित ग्राम पंचायतों की संख्या:</b> <span style="color:#dc2626; font-weight:800; font-size:14px;">' + filteredRows.length + ' ग्राम पंचायतें</span></span>' +
+    (categoryCode === "PENDING_SALARY" ? '<span><b>💰 कुल लंबित मानदेय माह योग:</b> <span style="color:#1e3a8a; font-weight:800;">' + totalSalaryMonthsSum + ' माह</span></span>' : '<span><b>📋 सर्वेक्षण इकाई:</b> विकास खण्ड- उतरौला (बलरामपुर)</span>') +
+  '</div>';
+
+  var tableHtml = '<table border="1" style="width:100%; border-collapse:collapse; font-size:12px; margin:10px 0; text-align:left; border-color:#1e3a8a;" cellpadding="6">' +
+    '<thead><tr style="background:#1e3a8a; color:#ffffff;">' +
+      '<th style="width:48px; text-align:center;">क्र०सं०</th>' +
+      '<th>ग्राम पंचायत का नाम</th>' +
+      '<th>पंचायत सहायक का नाम</th>' +
+      '<th>मोबाइल नंबर</th>' +
+      '<th>' + escapeHtml(colHeader) + '</th>' +
+    '</tr></thead><tbody>';
 
   if (filteredRows.length === 0) {
-    tableHtml += '<tr><td colspan="5" style="text-align:center; padding:12px;">इस श्रेणी में कोई लंबित रिकॉर्ड नहीं मिला।</td></tr>';
+    tableHtml += '<tr><td colspan="5" style="text-align:center; padding:14px; color:#64748b; font-style:italic;">इस श्रेणी में वर्तमान सर्वे डेटा में कोई लंबित रिकॉर्ड नहीं है।</td></tr>';
   } else {
     for (var j = 0; j < filteredRows.length; j++) {
       var item = filteredRows[j];
-      tableHtml += '<tr>' +
-        '<td style="text-align:center;">' + (j + 1) + '</td>' +
+      var rowBg = (j % 2 === 1) ? 'background:#f8fafc;' : 'background:#ffffff;';
+      tableHtml += '<tr style="' + rowBg + '">' +
+        '<td style="text-align:center; font-weight:bold;">' + (j + 1) + '</td>' +
         '<td><b>' + escapeHtml(item.gp) + '</b></td>' +
         '<td>' + escapeHtml(item.name) + '</td>' +
         '<td>' + escapeHtml(item.mobile) + '</td>' +
-        '<td style="color:#dc2626; font-weight:bold;">' + escapeHtml(item.detail) + '</td>' +
+        '<td style="color:#b91c1c; font-weight:bold;">' + escapeHtml(item.detail) + '</td>' +
       '</tr>';
     }
   }
-  tableHtml += '</table>';
+  tableHtml += '</tbody></table>';
 
-  // कार्यकारिणी हस्ताक्षर ब्लॉक
-  var execSigsHtml = '<div style="margin-top:28px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:15px;">' +
-    '<div style="font-size:12px; text-align:left;">' +
-      '<b>प्रतिलिपि सूचनार्थ एवं आवश्यक कार्यवाही हेतु:</b><br>' +
-      '1. श्रीमान जिलाधिकारी महोदय, बलरामपुर।<br>' +
-      '2. श्रीमान मुख्य विकास अधिकारी महोदय, बलरामपुर।<br>' +
-      '3. जिला/प्रदेश कार्यकारिणी, पंचायत सहायक कर्मचारी यूनियन उ०प्र०।' +
+  var demandsHtml = '<div style="margin:12px 0; background:#fffbeb; border:1px solid #fde68a; border-left:4px solid #d97706; padding:10px 14px; border-radius:6px;">' +
+    '<div style="font-weight:800; color:#92400e; margin-bottom:4px; font-size:13px;">संगठन की प्रमुख मांगें एवं निवेदन:</div>' +
+    '<ol style="margin:0; padding-left:20px; line-height:1.7; font-size:13px; color:#0f172a;">';
+  for (var d = 0; d < demandPoints.length; d++) {
+    demandsHtml += '<li>' + demandPoints[d] + '</li>';
+  }
+  demandsHtml += '</ol></div>';
+
+  var copyToHtml = '';
+  for (var cIdx = 0; cIdx < copyToItems.length; cIdx++) {
+    copyToHtml += (cIdx + 1) + '. ' + copyToItems[cIdx] + '<br>';
+  }
+
+  // समस्त कार्यकारिणी सह-हस्ताक्षरकर्ता सूची
+  var coSigners = [];
+  if (cachedUnionExecutives && cachedUnionExecutives.length > 0) {
+    for (var exIdx = 0; exIdx < cachedUnionExecutives.length; exIdx++) {
+      var member = cachedUnionExecutives[exIdx];
+      if (member.roleType === "President") continue;
+      coSigners.push(escapeHtml(member.name) + " (" + escapeHtml(member.designation) + ")");
+    }
+  }
+
+  var execSigsHtml = '<div style="margin-top:24px; padding-top:12px; border-top:1.5px dashed #94a3b8; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">' +
+    '<div style="font-size:11.5px; text-align:left; line-height:1.65; flex:1.2; min-width:240px;">' +
+      '<b style="color:#1e3a8a; text-decoration:underline;">प्रतिलिपि सूचनार्थ एवं आवश्यक कार्यवाही हेतु सादर प्रेषित:</b><br>' +
+      copyToHtml +
     '</div>' +
-    '<div style="text-align:center; min-width:220px;">' +
-      '<b>भवदीय / निवेदक</b><br><br>' +
-      '<b style="font-size:15px; color:#1e3a8a;">(' + escapeHtml(pres.name) + ')</b><br>' +
-      '<b>' + escapeHtml(pres.designation) + ' - विकास खण्ड उतरौला</b><br>' +
-      'मो०: ' + escapeHtml(pres.mobile) + '<br>' +
-      'पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश' +
+    '<div style="text-align:center; min-width:230px; flex:0.8;">' +
+      '<b>भवदीय / निवेदक</b><br>' +
+      '<span style="font-size:11px; color:#475569;">(वास्ते समस्त पंचायत सहायक, विकास खण्ड उतरौला)</span><br><br>' +
+      '<b style="font-size:15.5px; color:#1e3a8a;">(' + escapeHtml(pres.name) + ')</b><br>' +
+      '<b style="color:#dc2626;">' + escapeHtml(pres.designation) + ' - विकास खण्ड उतरौला</b><br>' +
+      '<b>मो०: ' + escapeHtml(pres.mobile) + '</b><br>' +
+      '<span style="font-size:11.5px; font-weight:700;">पंचायत सहायक कर्मचारी यूनियन उ०प्र०</span>' +
     '</div>' +
   '</div>';
 
-  var fullMemoHtml = getDynamicPrintHeaderHTML() +
-    '<div style="display:flex; justify-content:space-between; font-size:13px; font-weight:bold; margin-bottom:12px;">' +
-      '<span>पत्रांक: ' + escapeHtml(refNo) + '</span>' +
+  if (coSigners.length > 0) {
+    execSigsHtml += '<div style="margin-top:12px; padding-top:8px; border-top:1px solid #e2e8f0; font-size:11px; color:#334155; text-align:center;">' +
+      '<b>ब्लॉक कार्यकारिणी पदाधिकारीगण (उतरौला):</b> ' + coSigners.join(" &nbsp;|&nbsp; ") +
+    '</div>';
+  }
+
+  var fullMemoHtml = buildOfficialUnionLetterheadHTML(pres) +
+    '<div style="display:flex; justify-content:space-between; font-size:13px; font-weight:800; color:#0f172a; margin-bottom:12px; background:#f1f5f9; padding:6px 10px; border-radius:4px;">' +
+      '<span>पत्रांक संख्या: ' + escapeHtml(refNo) + '</span>' +
       '<span>दिनांक: ' + todayStr + '</span>' +
     '</div>' +
-    '<div><b>सेवा में,</b></div>' +
-    '<div style="margin-left:40px; font-weight:bold; margin-bottom:12px;">' + recipientHtml + '</div>' +
-    '<div style="font-weight:bold; text-decoration:underline; margin-bottom:10px;">विषय: ' + escapeHtml(subjectText) + '</div>' +
-    '<div><b>महोदय,</b></div>' +
-    '<p style="text-indent:30px; text-align:justify; margin:6px 0;">' + introPara + ' संबंधित ग्राम पंचायतों का विवरण निम्नवत है (कुल ग्राम पंचायतें: <b>' + filteredRows.length + '</b>):</p>' +
+    '<div style="font-weight:bold;">सेवा में,</div>' +
+    '<div style="margin-left:36px; font-weight:800; color:#0f172a; margin-bottom:12px; line-height:1.65;">' + recipientHtml + '</div>' +
+    '<div style="background:#eff6ff; border-left:4px solid #1e3a8a; padding:7px 12px; font-weight:800; color:#1e3a8a; margin-bottom:12px; font-size:13.5px;">' +
+      'विषय: ' + escapeHtml(subjectText) +
+    '</div>' +
+    '<div style="font-weight:bold;">महोदय,</div>' +
+    '<p style="text-indent:32px; text-align:justify; margin:6px 0; line-height:1.75;">' + introPara + '</p>' +
+    summaryStripHtml +
     tableHtml +
-    '<p style="text-indent:30px; text-align:justify; margin:10px 0;">अतः श्रीमान जी से विनम्र अनुरोध है कि उपरोक्त सूची का संज्ञान लेते हुए संबंधित ग्राम पंचायतों की समस्याओं का त्वरित निस्तारण करने हेतु संबंधित को निर्देशित करने की कृपा करें। यूनियन आपका सदैव आभारी रहेगा।</p>' +
+    demandsHtml +
+    '<p style="text-indent:32px; text-align:justify; margin:10px 0; line-height:1.75;">अतः श्रीमान जी से सादर एवं विनम्र अनुरोध है कि उपरोक्त सूची का गंभीरतापूर्वक संज्ञान लेते हुए संबंधित ग्राम पंचायतों की समस्याओं का समयबद्ध निस्तारण कराने हेतु अपने स्तर से आवश्यक आदेश निर्गत करने की कृपा करें। इसके लिए पंचायत सहायक कर्मचारी यूनियन उतरौला आपका सदैव आभारी रहेगा।</p>' +
     execSigsHtml;
 
   document.getElementById('memoPreviewContainer').innerHTML = fullMemoHtml;
+
+  // WhatsApp Share Link
+  var waLines = [
+    "🏛️ *पंचायत सहायक कर्मचारी यूनियन - विकास खण्ड उतरौला (बलरामपुर)*",
+    "📄 *पत्रांक:* " + refNo + " | *दिनांक:* " + todayStr,
+    "──────────────────────",
+    "*सेवा में,*",
+    recipientPlain,
+    "",
+    "📌 *विषय:* " + subjectText,
+    "",
+    "📊 *कुल चिन्हित ग्राम पंचायतें:* " + filteredRows.length
+  ];
+  for (var w = 0; w < Math.min(filteredRows.length, 25); w++) {
+    waLines.push((w + 1) + ". *" + filteredRows[w].gp + "* (" + filteredRows[w].name + ") — " + filteredRows[w].detail);
+  }
+  if (filteredRows.length > 25) {
+    waLines.push("...एवं " + (filteredRows.length - 25) + " अन्य ग्राम पंचायतें।");
+  }
+  if (customNote) {
+    waLines.push("", "⚠️ *विशेष अनुरोध:* " + customNote);
+  }
+  waLines.push(
+    "──────────────────────",
+    "भवदीय:",
+    "*" + pres.name + "* (" + pres.designation + ", उतरौला)",
+    "📞 मो०: " + pres.mobile
+  );
+
+  var waMemoBtn = document.getElementById('btnShareMemoWhatsApp');
+  if (waMemoBtn) {
+    waMemoBtn.href = "https://api.whatsapp.com/send?text=" + encodeURIComponent(waLines.join("\n"));
+  }
 }
 
 function printOfficialMemorandumPDF() {
   var content = document.getElementById('memoPreviewContainer').innerHTML;
   var printArea = document.getElementById('printTemplateArea');
-  printArea.innerHTML = '<div style="padding:15px; font-family:\'Tiro Devanagari Hindi\', serif; color:#000000; line-height:1.65;">' + content + '</div>';
+  printArea.innerHTML = '<div style="padding:10px 14px; font-family:\'Tiro Devanagari Hindi\', serif; color:#000000; line-height:1.65;">' + content + '</div>';
   window.print();
 }
 
 function downloadOfficialMemorandumWord() {
   var content = document.getElementById('memoPreviewContainer').innerHTML;
   var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>" +
-    "<head><meta charset='utf-8'><title>Union Memorandum</title><style>body{font-family:'Arial', sans-serif; line-height:1.6;} table{border-collapse:collapse; width:100%;} td,th{border:1px solid #000; padding:6px;}</style></head><body>";
+    "<head><meta charset='utf-8'><title>Union Official Memorandum</title><style>body{font-family:'Mangal', 'Arial', sans-serif; line-height:1.65; color:#000;} table{border-collapse:collapse; width:100%; margin:10px 0;} td,th{border:1px solid #1e3a8a; padding:6px; font-size:11pt;}</style></head><body>";
   var blob = new Blob(['\ufeff' + header + content + "</body></html>"], { type: 'application/msword' });
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = "Union_Memorandum_Utraula.doc";
+  var recCode = document.getElementById('memoRecipientSelect') ? document.getElementById('memoRecipientSelect').value : "Officer";
+  a.download = "Union_Memorandum_To_" + recCode + "_Utraula.doc";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
