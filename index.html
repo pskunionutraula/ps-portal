@@ -2887,10 +2887,15 @@ function formatDateToIndian(dateVal) {
   var eventIdFromUrl = urlParams.get('event_id') || "";
   var systemWebAppUrl = window.location.href.split('?')[0];
 
-  // GitHub Pages API Bridge
+  // Hybrid Dual-Mode API Bridge (Native Google Apps Script RPC + GitHub Pages / Web Hosting Fetch Bridge)
+  var _nativeGasRun = (typeof window !== 'undefined' && window.google && window.google.script && window.google.script.run && !window.google.script.run._isHybridBridge)
+    ? window.google.script.run
+    : null;
+
   var google = {
     script: {
       run: {
+        _isHybridBridge: true,
         _successHandler: null,
         _failureHandler: null,
         withSuccessHandler: function(fn) {
@@ -2903,8 +2908,26 @@ function formatDateToIndian(dateVal) {
           o._failureHandler = fn;
           return o;
         },
-        _callApi: function(action, payload) {
+        _callApi: function(action, payload, argsList) {
           var self = this;
+          // यदि वेबसाइट सीधे Google Apps Script (HtmlService) के अंदर खुली है तो Native RPC का उपयोग करें
+          if (_nativeGasRun && typeof _nativeGasRun[action] === 'function') {
+            try {
+              var runner = _nativeGasRun;
+              if (self._successHandler) runner = runner.withSuccessHandler(self._successHandler);
+              if (self._failureHandler) {
+                runner = runner.withFailureHandler(self._failureHandler);
+              } else if (self._successHandler) {
+                runner = runner.withFailureHandler(function(err) {
+                  self._successHandler({ success: false, message: err ? err.toString() : "Server Error" });
+                });
+              }
+              runner[action].apply(runner, argsList || []);
+              return;
+            } catch (e) {}
+          }
+
+          // GitHub Pages / Custom Domain / बाहरी वेब होस्टिंग के लिए हाई-स्पीड Fetch API Bridge
           var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
           var timerId = controller ? setTimeout(function() { controller.abort(); }, 25000) : null;
           var fetchOpts = {
@@ -2931,58 +2954,58 @@ function formatDateToIndian(dateVal) {
             else if (self._successHandler) self._successHandler({ success: false, message: errMsg });
           });
         },
-        getPublicHomeStats: function() { this._callApi('getPublicHomeStats', {}); },
-        verifyPSLogin: function(email, mobile, isSessionRestore) { this._callApi('verifyPSLogin', { email: email, mobile: mobile, isSessionRestore: !!isSessionRestore }); },
-        loginAdminSecure: function(userId, password) { this._callApi('loginAdminSecure', { userId: userId, password: password }); },
-        logoutAdminSecure: function(token) { this._callApi('logoutAdminSecure', { token: token }); },
-        getAdminDashboardDataSecure: function(token) { this._callApi('getAdminDashboardDataSecure', { token: token }); },
-        processNewRegistration: function(data) { this._callApi('processNewRegistration', data); },
-        processMainSurveyForm: function(data) { this._callApi('processMainSurveyForm', data); },
-        submitGrievanceTicket: function(data) { this._callApi('submitGrievanceTicket', data); },
-        getPsGrievanceTickets: function(email) { this._callApi('getPsGrievanceTickets', { email: email }); },
-        submitLeaveApplication: function(data) { this._callApi('submitLeaveApplication', data); },
-        getEventDetailsForScan: function(eventId) { this._callApi('getEventDetailsForScan', { eventId: eventId }); },
-        submitQRAttendance: function(eventId, email, mobile) { this._callApi('submitQRAttendance', { eventId: eventId, email: email, mobile: mobile }); },
-        addNoticeSecure: function(token, text) { this._callApi('addNoticeSecure', { token: token, text: text }); },
-        editNoticeSecure: function(token, rowIndex, text) { this._callApi('editNoticeSecure', { token: token, rowIndex: rowIndex, text: text }); },
-        deleteNoticeSecure: function(token, rowIndex) { this._callApi('deleteNoticeSecure', { token: token, rowIndex: rowIndex }); },
-        updateRegistrationStatusSecure: function(token, rowIndex, status) { this._callApi('updateRegistrationStatusSecure', { token: token, rowIndex: rowIndex, status: status }); },
-        grantSurveyUpdateApprovalSecure: function(token, rowIndex) { this._callApi('grantSurveyUpdateApprovalSecure', { token: token, rowIndex: rowIndex }); },
-        createEventSecure: function(token, title, date, location) { this._callApi('createEventSecure', { token: token, title: title, date: date, location: location }); },
-        updateGrievanceStatusSecure: function(token, rowIndex, status, remark) { this._callApi('updateGrievanceStatusSecure', { token: token, rowIndex: rowIndex, status: status, remark: remark }); },
-        deleteRecordSecure: function(token, rowIndex) { this._callApi('deleteRecordSecure', { token: token, rowIndex: rowIndex }); },
-        deleteRegistrationRecordSecure: function(token, rowIndex) { this._callApi('deleteRegistrationRecordSecure', { token: token, rowIndex: rowIndex }); },
-        deleteClusterRecordSecure: function(token, rowIndex) { this._callApi('deleteClusterRecordSecure', { token: token, rowIndex: rowIndex }); },
-        updateClusterRecordSecure: function(token, recordData) { this._callApi('updateClusterRecordSecure', { token: token, recordData: recordData }); },
-        updateRegisteredUserSecure: function(token, recordData) { this._callApi('updateRegisteredUserSecure', { token: token, recordData: recordData }); },
-       updateSurveyRecordSecure: function(token, recordData) { this._callApi('updateSurveyRecordSecure', { token: token, recordData: recordData }); },
-        deleteLeaveRecordSecure: function(token, rowIndex) { this._callApi('deleteLeaveRecordSecure', { token: token, rowIndex: rowIndex }); },
+        getPublicHomeStats: function() { this._callApi('getPublicHomeStats', {}, []); },
+        verifyPSLogin: function(email, mobile, isSessionRestore) { this._callApi('verifyPSLogin', { email: email, mobile: mobile, isSessionRestore: !!isSessionRestore }, [email, mobile, !!isSessionRestore]); },
+        loginAdminSecure: function(userId, password) { this._callApi('loginAdminSecure', { userId: userId, password: password }, [userId, password]); },
+        logoutAdminSecure: function(token) { this._callApi('logoutAdminSecure', { token: token }, [token]); },
+        getAdminDashboardDataSecure: function(token) { this._callApi('getAdminDashboardDataSecure', { token: token }, [token]); },
+        processNewRegistration: function(data) { this._callApi('processNewRegistration', data, [data]); },
+        processMainSurveyForm: function(data) { this._callApi('processMainSurveyForm', data, [data]); },
+        submitGrievanceTicket: function(data) { this._callApi('submitGrievanceTicket', data, [data]); },
+        getPsGrievanceTickets: function(email) { this._callApi('getPsGrievanceTickets', { email: email }, [email]); },
+        submitLeaveApplication: function(data) { this._callApi('submitLeaveApplication', data, [data]); },
+        getEventDetailsForScan: function(eventId) { this._callApi('getEventDetailsForScan', { eventId: eventId }, [eventId]); },
+        submitQRAttendance: function(eventId, email, mobile) { this._callApi('submitQRAttendance', { eventId: eventId, email: email, mobile: mobile }, [eventId, email, mobile]); },
+        addNoticeSecure: function(token, text) { this._callApi('addNoticeSecure', { token: token, text: text }, [token, text]); },
+        editNoticeSecure: function(token, rowIndex, text) { this._callApi('editNoticeSecure', { token: token, rowIndex: rowIndex, text: text }, [token, rowIndex, text]); },
+        deleteNoticeSecure: function(token, rowIndex) { this._callApi('deleteNoticeSecure', { token: token, rowIndex: rowIndex }, [token, rowIndex]); },
+        updateRegistrationStatusSecure: function(token, rowIndex, status) { this._callApi('updateRegistrationStatusSecure', { token: token, rowIndex: rowIndex, status: status }, [token, rowIndex, status]); },
+        grantSurveyUpdateApprovalSecure: function(token, rowIndex) { this._callApi('grantSurveyUpdateApprovalSecure', { token: token, rowIndex: rowIndex }, [token, rowIndex]); },
+        createEventSecure: function(token, title, date, location) { this._callApi('createEventSecure', { token: token, title: title, date: date, location: location }, [token, title, date, location]); },
+        updateGrievanceStatusSecure: function(token, rowIndex, status, remark) { this._callApi('updateGrievanceStatusSecure', { token: token, rowIndex: rowIndex, status: status, remark: remark }, [token, rowIndex, status, remark]); },
+        deleteRecordSecure: function(token, rowIndex) { this._callApi('deleteRecordSecure', { token: token, rowIndex: rowIndex }, [token, rowIndex]); },
+        deleteRegistrationRecordSecure: function(token, rowIndex) { this._callApi('deleteRegistrationRecordSecure', { token: token, rowIndex: rowIndex }, [token, rowIndex]); },
+        deleteClusterRecordSecure: function(token, rowIndex) { this._callApi('deleteClusterRecordSecure', { token: token, rowIndex: rowIndex }, [token, rowIndex]); },
+        updateClusterRecordSecure: function(token, recordData) { this._callApi('updateClusterRecordSecure', { token: token, recordData: recordData }, [token, recordData]); },
+        updateRegisteredUserSecure: function(token, recordData) { this._callApi('updateRegisteredUserSecure', { token: token, recordData: recordData }, [token, recordData]); },
+        updateSurveyRecordSecure: function(token, recordData) { this._callApi('updateSurveyRecordSecure', { token: token, recordData: recordData }, [token, recordData]); },
+        deleteLeaveRecordSecure: function(token, rowIndex) { this._callApi('deleteLeaveRecordSecure', { token: token, rowIndex: rowIndex }, [token, rowIndex]); },
         updatePsCredentials: function(userEmailOrMobile, oldPass, newPass, mpin) {
-          this._callApi('updatePsCredentials', { userEmailOrMobile: userEmailOrMobile, oldPass: oldPass, newPass: newPass, mpin: mpin });
+          this._callApi('updatePsCredentials', { userEmailOrMobile: userEmailOrMobile, oldPass: oldPass, newPass: newPass, mpin: mpin }, [userEmailOrMobile, oldPass, newPass, mpin]);
         },
-      verifyPsMpin: function(userEmailOrMobile, mpin) {
-          this._callApi('verifyPsMpin', { userEmailOrMobile: userEmailOrMobile, mpin: mpin });
+        verifyPsMpin: function(userEmailOrMobile, mpin) {
+          this._callApi('verifyPsMpin', { userEmailOrMobile: userEmailOrMobile, mpin: mpin }, [userEmailOrMobile, mpin]);
         },
-       unlockPsAccountSecure: function(token, rowIndex, resetCredentials) {
-          this._callApi('unlockPsAccountSecure', { token: token, rowIndex: rowIndex, resetCredentials: !!resetCredentials });
+        unlockPsAccountSecure: function(token, rowIndex, resetCredentials) {
+          this._callApi('unlockPsAccountSecure', { token: token, rowIndex: rowIndex, resetCredentials: !!resetCredentials }, [token, rowIndex, !!resetCredentials]);
         },
         logImageCompressionActivity: function(data) {
-          this._callApi('logImageCompressionActivity', data);
+          this._callApi('logImageCompressionActivity', data, [data]);
         },
         getImageCompressionLogsSecure: function(token) {
-          this._callApi('getImageCompressionLogsSecure', { token: token });
+          this._callApi('getImageCompressionLogsSecure', { token: token }, [token]);
         },
         saveUnionExecutiveSecure: function(token, execData) {
-          this._callApi('saveUnionExecutiveSecure', { token: token, execData: execData });
+          this._callApi('saveUnionExecutiveSecure', { token: token, execData: execData }, [token, execData]);
         },
         deleteUnionExecutiveSecure: function(token, rowIndex) {
-          this._callApi('deleteUnionExecutiveSecure', { token: token, rowIndex: rowIndex });
+          this._callApi('deleteUnionExecutiveSecure', { token: token, rowIndex: rowIndex }, [token, rowIndex]);
         },
         addClusterRecordSecure: function(token, recordData) {
-          this._callApi('addClusterRecordSecure', { token: token, recordData: recordData });
+          this._callApi('addClusterRecordSecure', { token: token, recordData: recordData }, [token, recordData]);
         },
         resetForgottenPsCredentials: function(email, mobile, aadhaar, newPass, newMpin) {
-          this._callApi('resetForgottenPsCredentials', { email: email, mobile: mobile, aadhaar: aadhaar, newPass: newPass, newMpin: newMpin });
+          this._callApi('resetForgottenPsCredentials', { email: email, mobile: mobile, aadhaar: aadhaar, newPass: newPass, newMpin: newMpin }, [email, mobile, aadhaar, newPass, newMpin]);
         }
       }
     }
@@ -3758,9 +3781,20 @@ function openAdminLoginModal() {
 
     google.script.run.withSuccessHandler(function(res) {
       hideLoader();
-      closeNewRegisterModal();
-      showMsg(res.success ? "पंजीकरण जमा!" : "ध्यान दें", res.message, false);
-      loadPublicHomeStats();
+      if (res && res.success) {
+        document.getElementById('regEmail').value = "";
+        document.getElementById('regGramPanchayat').value = "";
+        document.getElementById('regFullName').value = "";
+        document.getElementById('regGuardianName').value = "";
+        document.getElementById('regAadhaar').value = "";
+        document.getElementById('regMobile').value = "";
+        closeNewRegisterModal();
+        safeRemoveStorage(sessionStorage, 'psk_home_stats_fast_cache');
+        loadPublicHomeStats();
+        showMsg("पंजीकरण जमा!", res.message, false);
+      } else {
+        showMsg("ध्यान दें", (res ? res.message : "पंजीकरण विफल"), false);
+      }
     }).withFailureHandler(function(err) {
       hideLoader();
       showMsg("सर्वर त्रुटि", err.toString(), false);
@@ -3801,7 +3835,19 @@ function openAdminLoginModal() {
       btn.disabled = false;
       if (res.success) {
         document.getElementById('mainSurveyForm').reset();
-        if (loggedInPsUser) { loggedInPsUser.alreadySubmitted = true; loggedInPsUser.canUpdate = false; }
+        var subBoxes = document.querySelectorAll('#mainSurveyForm .sub-option-box');
+        for (var sb = 0; sb < subBoxes.length; sb++) { subBoxes[sb].style.display = 'none'; }
+        if (loggedInPsUser) {
+          loggedInPsUser.alreadySubmitted = true;
+          loggedInPsUser.canUpdate = false;
+          document.getElementById('email').value = loggedInPsUser.email || "";
+          document.getElementById('district').value = loggedInPsUser.district || "बलरामपुर";
+          document.getElementById('block').value = loggedInPsUser.block || "उतरौला";
+          document.getElementById('gramPanchayat').value = loggedInPsUser.gramPanchayat || "";
+          document.getElementById('fullName').value = loggedInPsUser.fullName || "";
+          document.getElementById('guardianName').value = loggedInPsUser.guardianName || "";
+          document.getElementById('mobile').value = loggedInPsUser.mobile || "";
+        }
         switchPsTab('psDetails');
         showMsg("सफलतापूर्वक जमा हुआ!", res.message, true, payload);
         loadPublicHomeStats();
@@ -4181,6 +4227,7 @@ function openAdminLoginModal() {
         safeSetStorage(sessionStorage, 'psk_admin_tab', 'survey');
         // -------------------------------------------------------------
 
+        document.getElementById('adminPassword').value = "";
         closeAdminLoginModal();
         restoreAdminDashboard(res);
         switchAdminTab('survey');
@@ -5351,7 +5398,15 @@ function viewAdminLeaveModal(rowOrIdx) {
 
         document.getElementById('displayQRTitle').innerText = title;
         document.getElementById('displayQRDetails').innerText = "ईवेंट ID: " + res.eventId + " | तिथि: " + date + " | स्थान: " + loc;
-        document.getElementById('displayQRImage').src = qrImgUrl;
+        var dispQrEl = document.getElementById('displayQRImage');
+        dispQrEl.src = qrImgUrl;
+        if (typeof fetch !== 'undefined') {
+          fetch(qrImgUrl).then(function(r) { return r.blob(); }).then(function(b) {
+            var rdr = new FileReader();
+            rdr.onloadend = function() { if (rdr.result) dispQrEl.src = rdr.result; };
+            rdr.readAsDataURL(b);
+          }).catch(function() {});
+        }
         document.getElementById('activeEventQRCard').style.display = 'block';
 
         showMsg("QR जनरेट!", "बैठक का सुरक्षित QR कोड सफलतापूर्वक तैयार हो गया है।", false);
@@ -5373,7 +5428,7 @@ function viewAdminLeaveModal(rowOrIdx) {
       '<h2 style="color:#2563eb; font-size:22px; margin-bottom:8px;">' + escapeHtml(title) + '</h2>' +
       '<p style="font-size:15px; font-weight:bold; margin-bottom:15px;">' + escapeHtml(details) + '</p>' +
       '<img src="' + imgSrc + '" style="width:280px; height:280px; border:4px solid #2563eb; border-radius:10px;">' +
-      '<h3 style="color:#dc2626; margin-top:15px; font-size:16px;">कृपया अपने मोबाइल कैमरे से QR कोड स्कैन करके उपस्थिति दर्ज करें</h3>' +
+      '<h3 style="color:#dc2626; margin-top:15px; font-size:16px;">कृपया PS पोर्टल में लॉगिन कर "📸 QR स्कैन" टैब से यह QR कोड स्कैन करके उपस्थिति दर्ज करें</h3>' +
       '</div>';
     var printArea = document.getElementById('printTemplateArea');
     printArea.innerHTML = '<div style="padding:20px; font-family:sans-serif;">' + headerHTML + qrContent + '</div>';
@@ -5673,6 +5728,7 @@ window.addEventListener('DOMContentLoaded', function() {
       .withSuccessHandler(function(res) {
         hideLoader();
         if (res && res.success && res.isApproved) {
+          if (passMobInput) passMobInput.value = "";
           closeModal('psLoginModal');
           pendingPsLoginRes = res;
 
@@ -6740,8 +6796,18 @@ function renderUnionIdCardLive() {
     "\nMobile: " + (loggedInPsUser.mobile || "");
   var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=4&data=" + encodeURIComponent(qrVerifyText);
   var qrImg = document.getElementById('idCardQrImg');
-  if (qrImg && qrImg.src !== qrUrl) {
+  if (qrImg && qrImg.getAttribute('data-qr-src') !== qrUrl) {
+    qrImg.setAttribute('data-qr-src', qrUrl);
     qrImg.src = qrUrl;
+    if (typeof fetch !== 'undefined') {
+      fetch(qrUrl).then(function(r) { return r.blob(); }).then(function(blob) {
+        var reader = new FileReader();
+        reader.onloadend = function() {
+          if (reader.result) qrImg.src = reader.result;
+        };
+        reader.readAsDataURL(blob);
+      }).catch(function() {});
+    }
   }
 }
 
