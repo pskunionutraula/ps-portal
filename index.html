@@ -600,7 +600,60 @@ body.modal-open {
 }
 
     .badge-locked { background: #fee2e2; color: #991b1b; border: 1.5px solid #ef4444; font-weight: 800; }
+    .modern-pill-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 6px;
+      background: var(--input-bg);
+      border: 1.5px solid var(--input-border);
+      border-radius: 14px;
+    }
+    .modern-pill-nav .admin-tab-btn {
+      border-radius: 22px;
+      padding: 8px 15px;
+      font-size: 13px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .modern-pill-nav .admin-tab-btn.active {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: #ffffff;
+      border-color: #2563eb;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+      transform: translateY(-1px);
+    }
+    .union-id-card-box {
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      background: #ffffff;
+      color: #0f172a;
+      border: 3px solid #1e3a8a;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(15, 23, 42, 0.25);
+      font-family: 'Tiro Devanagari Hindi', 'Poppins', sans-serif;
+      position: relative;
+    }
     @media (max-width: 768px) {
+      .modern-pill-nav {
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 8px 6px;
+      }
+      .modern-pill-nav::-webkit-scrollbar { display: none; }
+      .modern-pill-nav .admin-tab-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+      }
       body { padding: 4px; font-size: 14px; }
       .content-layout { flex-direction: column; }
       .executive-sidebar { width: 100%; border-right: none; border-bottom: 2px solid var(--input-border); padding: 12px; }
@@ -790,10 +843,10 @@ body.modal-open {
       <h3>विकास खण्ड- उतरौला, जनपद- बलरामपुर, उत्तर प्रदेश</h3>
       <span class="office-badge">कार्यालय- उतरौला, जनपद- बलरामपुर, 271604 | Email: pskunionutraula@gmail.com</span>
     </div>
-    <div class="district-chief-center">
-      <span style="font-weight:700; color:#2563eb; font-size:16px;">प्रमोद वर्मा</span>
-      <span style="font-weight:700; font-size:13px;">(ब्लॉक अध्यक्ष)</span>
-      <span style="color:#16a34a; font-weight:700; font-size:13px; margin-left:6px;"><i class="fa-solid fa-phone"></i> 9119323310</span>
+    <div class="district-chief-center" id="headerChiefCenterBox">
+      <span style="font-weight:700; color:#2563eb; font-size:16px;" id="headerPresidentName">प्रमोद वर्मा</span>
+      <span style="font-weight:700; font-size:13px;" id="headerPresidentRole">(ब्लॉक अध्यक्ष)</span>
+      <span style="color:#16a34a; font-weight:700; font-size:13px; margin-left:6px;"><i class="fa-solid fa-phone"></i> <span id="headerPresidentMobile">9119323310</span></span>
     </div>
   </div>
 
@@ -801,12 +854,14 @@ body.modal-open {
     <!-- EXECUTIVE SIDEBAR -->
     <div class="executive-sidebar">
       <div class="sidebar-heading"><i class="fa-solid fa-users-gear"></i> ब्लॉक पदाधिकारी (उतरौला)</div>
-      <div class="exec-card"><div><b>प्रभावती</b></div><div style="font-size:11px; opacity:0.8;">ब्लॉक उपाध्यक्ष | 9930419598</div></div>
-      <div class="exec-card"><div><b>पूर्णिमा सिंह</b></div><div style="font-size:11px; opacity:0.8;">ब्लॉक महामंत्री | 8354079057</div></div>
-      <div class="exec-card"><div><b>सुरजीत वर्मा</b></div><div style="font-size:11px; opacity:0.8;">ब्लॉक कोषाध्यक्ष | 9118331584</div></div>
-      <div class="exec-card"><div><b>विशाल यादव</b></div><div style="font-size:11px; opacity:0.8;">ब्लॉक मीडिया प्रभारी | 9838376193</div></div>
-      <div class="exec-card"><div><b>हेमराज</b></div><div style="font-size:11px; opacity:0.8;">ब्लॉक सचिव | 9838880255</div></div>
-      <div class="exec-card"><div><b>ईश्वर चन्द यादव</b></div><div style="font-size:11px; opacity:0.8;">ब्लॉक उपसचिव | 7800841125</div></div>
+      <div id="executiveSidebarCardsContainer">
+        <div class="exec-card"><div><b>प्रभावती</b></div><div style="font-size:11px; opacity:0.8;">ब्लॉक उपाध्यक्ष | 9930419598</div></div>
+        <div class="exec-card"><div><b>पूर्णिमा सिंह</b></div><div style="font-size:11px; opacity:0.8;">ब्लॉक महामंत्री | 8354079057</div></div>
+        <div class="exec-card"><div><b>सुरजीत वर्मा</b></div><div style="font-size:11px; opacity:0.8;">ब्लॉक कोषाध्यक्ष | 9118331584</div></div>
+        <div class="exec-card"><div><b>विशाल यादव</b></div><div style="font-size:11px; opacity:0.8;">ब्लॉक मीडिया प्रभारी | 9838376193</div></div>
+        <div class="exec-card"><div><b>हेमराज</b></div><div style="font-size:11px; opacity:0.8;">ब्लॉक सचिव | 9838880255</div></div>
+        <div class="exec-card"><div><b>ईश्वर चन्द यादव</b></div><div style="font-size:11px; opacity:0.8;">ब्लॉक उपसचिव | 7800841125</div></div>
+      </div>
 
       <div style="margin-top:12px; border-top:1px dashed var(--input-border); padding-top:10px;">
         <button class="btn-side-action btn-home" onclick="showHomeView()"><i class="fa-solid fa-house"></i> होम पेज</button>
@@ -932,10 +987,11 @@ body.modal-open {
           <button class="btn-side-action" style="background:#dc2626; color:#fff; width:auto; padding:6px 14px; font-size:12px; margin:0;" onclick="logoutPS()"><i class="fa-solid fa-right-from-bracket"></i> लॉगआउट</button>
         </div>
 
-        <!-- PS Navigation Bar -->
-        <div style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; justify-content:center;">
+        <!-- PS Navigation Bar (Modern Scrollable Pill Bar) -->
+        <div class="modern-pill-nav" id="psPillNavBar">
           <button class="admin-tab-btn active" id="psNavHomeBtn" onclick="switchPsTab('psHome')"><i class="fa-solid fa-house"></i> PS होम</button>
           <button class="admin-tab-btn" id="psNavDetailsBtn" onclick="switchPsTab('psDetails')"><i class="fa-solid fa-id-card"></i> PS विवरण (मेरी जानकारी)</button>
+          <button class="admin-tab-btn" id="psNavIdCardBtn" onclick="switchPsTab('psIdCard')"><i class="fa-solid fa-id-badge"></i> 🪪 यूनियन ID कार्ड</button>
           <button class="admin-tab-btn" id="psNavClusterBtn" onclick="switchPsTab('psCluster')"><i class="fa-solid fa-sitemap"></i> क्लस्टर विवरण</button>
           <button class="admin-tab-btn" id="psNavSurveyBtn" onclick="handlePsSurveyClick()"><i class="fa-solid fa-file-pen"></i> नया सर्वे फ़ॉर्म</button>
           <button class="admin-tab-btn" id="psNavGrievanceBtn" onclick="switchPsTab('psGrievance')"><i class="fa-solid fa-headset"></i> 🚨 शिकायत व सहायता</button>
@@ -973,6 +1029,129 @@ body.modal-open {
             <p><b>आधार कार्ड नंबर:</b> <span id="psDetAadhaar"></span></p>
             <p><b>खाता स्थिति (Status):</b> <span id="psDetStatus" style="color:#16a34a; font-weight:bold;">Approved</span></p>
             <div style="margin-top:10px; font-size:12px; color:#dc2626; font-style:italic;">* सुरक्षा कारणों से पंजीकृत विवरण में संपादन केवल एडमिन द्वारा ही संभव है।</div>
+          </div>
+        </div>
+
+        <!-- PS TAB 2B: DIGITAL UNION ID CARD GENERATOR (डिजिटल यूनियन परिचय पत्र) -->
+        <div id="psIdCardTabContent" style="display:none;">
+          <div class="form-header-banner" style="background:linear-gradient(135deg, #1e3a8a, #0f172a);">
+            <h2 style="font-size:18px; text-align:center;"><i class="fa-solid fa-id-badge"></i> आधिकारिक डिजिटल यूनियन परिचय पत्र (ID Card with QR)</h2>
+          </div>
+
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap:20px; align-items:start;">
+            <!-- Left: ID Card Setup Controls -->
+            <div style="background:var(--input-bg); border:2px solid var(--input-border); border-radius:12px; padding:18px;">
+              <h3 style="color:#2563eb; font-size:16px; margin-bottom:12px;"><i class="fa-solid fa-sliders"></i> परिचय पत्र विवरण व फोटो सेटअप</h3>
+              
+              <div class="field-group">
+                <label><i class="fa-solid fa-camera"></i> 1. अपनी पासपोर्ट साइज फोटो चुनें <span class="req">*</span></label>
+                <input type="file" id="idCardPhotoInput" accept="image/*" class="field-input" onchange="handleIdCardPhotoUpload(this)" style="padding:8px;">
+                <small style="font-size:11.5px; color:#64748b;">(साफ़ पासपोर्ट फोटो चुनें, यह तुरंत ID कार्ड पर सेट हो जाएगी)</small>
+              </div>
+
+              <div class="field-group">
+                <label><i class="fa-solid fa-user-shield"></i> 2. यूनियन में पद (Designation)</label>
+                <select id="idCardDesignationSelect" class="field-input" onchange="renderUnionIdCardLive()">
+                  <option value="पंचायत सहायक / सक्रिय सदस्य">पंचायत सहायक / सक्रिय सदस्य</option>
+                  <option value="ब्लॉक अध्यक्ष">ब्लॉक अध्यक्ष (उतरौला)</option>
+                  <option value="ब्लॉक उपाध्यक्ष">ब्लॉक उपाध्यक्ष (उतरौला)</option>
+                  <option value="ब्लॉक महामंत्री">ब्लॉक महामंत्री (उतरौला)</option>
+                  <option value="ब्लॉक कोषाध्यक्ष">ब्लॉक कोषाध्यक्ष (उतरौला)</option>
+                  <option value="ब्लॉक मीडिया प्रभारी">ब्लॉक मीडिया प्रभारी (उतरौला)</option>
+                  <option value="ब्लॉक सचिव">ब्लॉक सचिव (उतरौला)</option>
+                  <option value="ब्लॉक उपसचिव">ब्लॉक उपसचिव (उतरौला)</option>
+                  <option value="कार्यकारिणी सदस्य">ब्लॉक कार्यकारिणी सदस्य</option>
+                </select>
+              </div>
+
+              <div class="field-group">
+                <label><i class="fa-solid fa-droplet" style="color:#dc2626;"></i> 3. ब्लड ग्रुप (Blood Group)</label>
+                <select id="idCardBloodGroup" class="field-input" onchange="renderUnionIdCardLive()">
+                  <option value="B+">B+ (Positive)</option>
+                  <option value="O+">O+ (Positive)</option>
+                  <option value="A+">A+ (Positive)</option>
+                  <option value="AB+">AB+ (Positive)</option>
+                  <option value="B-">B- (Negative)</option>
+                  <option value="O-">O- (Negative)</option>
+                  <option value="A-">A- (Negative)</option>
+                  <option value="AB-">AB- (Negative)</option>
+                  <option value="-">ज्ञात नहीं (-)</option>
+                </select>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:10px; margin-top:16px;">
+                <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #16a34a, #15803d); font-size:15px; padding:11px; margin:0; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="downloadUnionIdCardImage()">
+                  <i class="fa-solid fa-download"></i> 🖼️ 1-Click HD Image (PNG) डाउनलोड करें
+                </button>
+                <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #2563eb, #1e3a8a); font-size:15px; padding:11px; margin:0; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="printUnionIdCardPDF()">
+                  <i class="fa-solid fa-file-pdf"></i> 🖨️ 1-Click ID Card PDF प्रिंट / सेव करें
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Live Official Digital ID Card Preview -->
+            <div>
+              <div class="union-id-card-box" id="unionIdCardVisual">
+                <!-- Tricolor Top Accent -->
+                <div style="height:6px; background:linear-gradient(90deg, #f97316 0%, #f97316 33%, #ffffff 33%, #ffffff 66%, #16a34a 66%, #16a34a 100%);"></div>
+                <!-- Card Header -->
+                <div style="background:linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); color:#ffffff; padding:12px 14px; text-align:center; border-bottom:3px solid #dc2626;">
+                  <div style="font-size:10.5px; color:#facc15; font-weight:700; letter-spacing:0.5px;">REG.NO - LUC/08494/2024-2025</div>
+                  <div style="font-family:'Rozha One', serif; font-size:19px; color:#ffffff; line-height:1.2; margin-top:2px;">पंचायत सहायक कर्मचारी यूनियन</div>
+                  <div style="font-size:12px; color:#38bdf8; font-weight:700; margin-top:2px;">विकास खण्ड- उतरौला, जनपद- बलरामपुर (उ०प्र०)</div>
+                </div>
+
+                <!-- Card Body -->
+                <div style="padding:14px 16px; background:#ffffff; color:#0f172a; text-align:center;">
+                  <div style="display:inline-block; background:#eff6ff; color:#1e3a8a; border:1px solid #93c5fd; padding:2px 12px; border-radius:12px; font-size:11px; font-weight:800; margin-bottom:10px;" id="idCardUidText">ID: PSKU-UTR-2026-001</div>
+
+                  <!-- Photo & QR Row -->
+                  <div style="display:flex; justify-content:center; align-items:center; gap:18px; margin-bottom:10px;">
+                    <div style="width:96px; height:112px; border:3px solid #1e3a8a; border-radius:10px; overflow:hidden; background:#f1f5f9; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.12);">
+                      <img id="idCardPhotoPreview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='120' viewBox='0 0 100 120'><rect width='100' height='120' fill='%23e2e8f0'/><circle cx='50' cy='42' r='20' fill='%2364748b'/><path d='M18 110 C18 78 82 78 82 110 Z' fill='%2364748b'/></svg>" alt="Member Photo" style="width:100%; height:100%; object-fit:cover; display:block;">
+                    </div>
+                    <div style="text-align:center;">
+                      <div style="width:86px; height:86px; border:2px solid #cbd5e1; border-radius:8px; padding:4px; background:#ffffff; margin:0 auto;">
+                        <img id="idCardQrImg" src="" alt="QR" crossOrigin="anonymous" style="width:100%; height:100%; display:block;">
+                      </div>
+                      <div style="font-size:10px; font-weight:700; color:#16a34a; margin-top:3px;"><i class="fa-solid fa-circle-check"></i> सत्यापित QR</div>
+                    </div>
+                  </div>
+
+                  <!-- Name & Designation -->
+                  <div style="font-size:18px; font-weight:800; color:#1e3a8a; line-height:1.2;" id="idCardNameVal">-</div>
+                  <div style="display:inline-block; background:linear-gradient(135deg, #dc2626, #b91c1c); color:#ffffff; padding:3px 14px; border-radius:15px; font-size:12px; font-weight:700; margin:5px 0 10px 0;" id="idCardRoleVal">पंचायत सहायक / सक्रिय सदस्य</div>
+
+                  <!-- Info Table -->
+                  <div style="text-align:left; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:10px; padding:10px 12px; font-size:12.5px; line-height:1.75; color:#0f172a;">
+                    <div><b>पिता/पति का नाम:</b> <span id="idCardGuardianVal">-</span></div>
+                    <div><b>ग्राम पंचायत:</b> <span id="idCardGpVal" style="color:#1e3a8a; font-weight:700;">-</span></div>
+                    <div><b>विकास खंड / जनपद:</b> उतरौला, बलरामपुर</div>
+                    <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+                      <span><b>मोबाइल:</b> <span id="idCardMobileVal">-</span></span>
+                      <span><b>ब्लड ग्रुप:</b> <span id="idCardBloodVal" style="color:#dc2626; font-weight:800;">B+</span></span>
+                    </div>
+                  </div>
+
+                  <!-- Footer Signatory -->
+                  <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:12px; padding-top:8px; border-top:1.5px dashed #cbd5e1; font-size:11px;">
+                    <div style="text-align:left; color:#475569;">
+                      <div style="font-weight:700; color:#16a34a;">● वैध यूनियन सदस्यता</div>
+                      <div>अधिकार • सम्मान • सेवा सुरक्षा</div>
+                    </div>
+                    <div style="text-align:right; color:#1e3a8a; font-weight:700;">
+                      <div id="idCardPresidentNameSig">प्रमोद वर्मा</div>
+                      <div style="font-size:10px; color:#64748b;">ब्लॉक अध्यक्ष (उतरौला)</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bottom Strip -->
+                <div style="background:#0f172a; color:#f8fafc; font-size:10.5px; padding:6px 10px; text-align:center; font-weight:600;">
+                  कार्यालय: विकास खण्ड उतरौला, बलरामपुर (उ०प्र०) - 271604
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1270,10 +1449,16 @@ body.modal-open {
           <!-- Generated Formal Letter View (लाइव डिस्प्ले) -->
           <div id="generatedLetterCard" style="display:none; background:var(--card-bg); border:2px solid #2563eb; border-radius:12px; padding:22px; margin-bottom:20px; box-shadow:0 10px 25px rgba(0,0,0,0.15);">
             
-            <!-- Letter Header Actions (साथ में Clear / नया पत्र बटन) -->
+            <!-- Letter Header Actions (Save & Share / Print बटन सहित) -->
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
-              <span style="font-weight:bold; color:#16a34a; font-size:14px;"><i class="fa-solid fa-circle-check"></i> औपचारिक पत्र तैयार है:</span>
+              <div>
+                <span style="font-weight:bold; color:#16a34a; font-size:14px;"><i class="fa-solid fa-circle-check"></i> औपचारिक पत्र तैयार है:</span>
+                <span id="leaveSavedStatusBadge" style="display:none; margin-left:8px; background:#dcfce7; color:#15803d; border:1px solid #86efac; padding:3px 9px; border-radius:12px; font-size:11.5px; font-weight:bold;">✓ पोर्टल पर सेव हो गया</span>
+              </div>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button type="button" id="btnManualSaveLeave" onclick="saveLeaveApplicationManual()" class="submit-btn" style="background:#16a34a; width:auto; font-size:13px; padding:8px 14px; display:inline-flex; align-items:center; gap:6px; margin:0;">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> अवकाश दर्ज करें (Save)
+                </button>
                 <a href="#" id="btnShareWhatsAppLeave" target="_blank" class="submit-btn" style="background:#25d366; width:auto; font-size:13px; padding:8px 14px; text-decoration:none; display:inline-flex; align-items:center; gap:6px; margin:0;">
                   <i class="fa-brands fa-whatsapp" style="font-size:16px;"></i> व्हाट्सएप शेयर
                 </a>
@@ -1305,7 +1490,7 @@ body.modal-open {
         
           <!-- Search Filter -->
           <div class="links-search-box">
-            <input type="text" id="linkSearchInput" onkeyup="filterPortalLinks()" class="links-search-input" placeholder="🔍 किसी भी पोर्टल या सेवा का नाम खोजें (उदा. e-district, राशन, पेंशन)...">
+            <input type="text" id="linkSearchInput" oninput="debounceTableSearch(filterPortalLinks, 100)" onkeyup="debounceTableSearch(filterPortalLinks, 100)" class="links-search-input" placeholder="🔍 किसी भी पोर्टल या सेवा का नाम खोजें (उदा. e-district, राशन, पेंशन)...">
           </div>
 
           <div id="linksContainer">
@@ -1817,16 +2002,17 @@ body.modal-open {
   <div class="admin-header-bar">
     <h2 style="font-size:18px;"><i class="fa-solid fa-chart-line"></i> उतरौला ब्लॉक - सर्वे एनालिटिक्स व अप्रूवल पोर्टल</h2>
     <div>
-      <span style="margin-right:10px; font-weight:bold; font-size:13px;">अध्यक्ष: प्रमोद वर्मा (9119323310)</span>
+      <span style="margin-right:10px; font-weight:bold; font-size:13px;" id="adminHeaderPresidentInfo">अध्यक्ष: प्रमोद वर्मा (9119323310)</span>
       <button class="submit-btn" style="background:#dc2626; padding:5px 12px; font-size:12px; width:auto; display:inline-block;" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> लॉगआउट</button>
     </div>
   </div>
 
-  <!-- ADMIN NAVIGATION TABS -->
-  <div class="admin-tab-bar">
+  <!-- ADMIN NAVIGATION TABS (Modern Scrollable Pill Bar) -->
+  <div class="admin-tab-bar modern-pill-nav" id="adminPillNavBar">
     <button class="admin-tab-btn active" id="tabSurveyBtn" onclick="switchAdminTab('survey')"><i class="fa-solid fa-poll"></i> मुख्य सर्वे रिपोर्ट</button>
     <button class="admin-tab-btn" id="tabRegisteredBtn" onclick="switchAdminTab('registered')"><i class="fa-solid fa-address-book"></i> पंजीकृत PS (<span id="totalRegTabCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabClusterBtn" onclick="switchAdminTab('cluster')"><i class="fa-solid fa-sitemap"></i> क्लस्टर विवरण (<span id="totalClusterTabCount">0</span>)</button>
+    <button class="admin-tab-btn" id="tabExecutivesBtn" onclick="switchAdminTab('executives')"><i class="fa-solid fa-users-gear"></i> 🏛️ कार्यकारिणी प्रबंधन (<span id="totalExecTabCount">7</span>)</button>
     <button class="admin-tab-btn" id="tabLoginLogsBtn" onclick="switchAdminTab('loginLogs')"><i class="fa-solid fa-clock-rotate-left"></i> PS लॉगिन ट्रैकर (<span id="totalLoginLogsCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabApprovalBtn" onclick="switchAdminTab('approval')"><i class="fa-solid fa-user-check"></i> नया पंजीकरण अप्रूवल (<span id="pendingCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabNoticesBtn" onclick="switchAdminTab('notices')"><i class="fa-solid fa-bullhorn"></i> नोटिस बोर्ड प्रबंधक</button>
@@ -1861,8 +2047,9 @@ body.modal-open {
 
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
       <input type="text" id="adminSearchInput" oninput="debounceTableSearch(filterAdminTable, 100)" onkeyup="debounceTableSearch(filterAdminTable, 100)" class="field-input" placeholder="🔍 नाम या ग्राम पंचायत से खोजें..." style="max-width:280px;">
-      <div>
-        <button class="submit-btn" style="background:#16a34a; font-size:12px; padding:8px 14px; width:auto;" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> Excel (CSV) डाउनलोड</button>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="submit-btn" style="background:linear-gradient(135deg, #dc2626, #991b1b); font-size:12px; padding:8px 14px; width:auto; margin:0;" onclick="openMemorandumModal()"><i class="fa-solid fa-file-contract"></i> 📋 आधिकारिक ज्ञापन / समस्या रिपोर्ट (BDO/DPRO)</button>
+        <button class="submit-btn" style="background:#16a34a; font-size:12px; padding:8px 14px; width:auto; margin:0;" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> Excel (CSV) डाउनलोड</button>
       </div>
     </div>
 
@@ -1903,8 +2090,9 @@ body.modal-open {
   <div id="clusterTabContent" style="display:none;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
       <input type="text" id="clusterSearchInput" oninput="debounceTableSearch(filterClusterTable, 100)" onkeyup="debounceTableSearch(filterClusterTable, 100)" class="field-input" placeholder="🔍 क्लस्टर / ग्राम पंचायत / सचिव से खोजें..." style="max-width:280px;">
-      <div>
-        <button class="submit-btn" style="background:#16a34a; font-size:12px; padding:8px 14px; width:auto;" onclick="exportClusterToExcel()"><i class="fa-solid fa-file-excel"></i> Cluster CSV डाउनलोड</button>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="submit-btn" style="background:#2563eb; font-size:12px; padding:8px 14px; width:auto; margin:0;" onclick="openAddClusterModal()"><i class="fa-solid fa-plus-circle"></i> + नया क्लस्टर / ग्राम पंचायत जोड़ें</button>
+        <button class="submit-btn" style="background:#16a34a; font-size:12px; padding:8px 14px; width:auto; margin:0;" onclick="exportClusterToExcel()"><i class="fa-solid fa-file-excel"></i> Cluster CSV डाउनलोड</button>
       </div>
     </div>
 
@@ -2142,6 +2330,36 @@ body.modal-open {
       </table>
     </div>
   </div>
+
+  <!-- TAB 11: UNION EXECUTIVES / KARYAKARINI MANAGER (ब्लॉक कार्यकारिणी प्रबंधन) -->
+  <div id="executivesTabContent" style="display:none;">
+    <div style="background:linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); color:#ffffff; border-radius:12px; padding:16px 20px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <div>
+        <h3 style="font-family:'Rozha One', serif; font-size:20px; color:#38bdf8; margin-bottom:4px;"><i class="fa-solid fa-users-gear"></i> पंचायत सहायक कर्मचारी यूनियन (उतरौला) - कार्यकारिणी प्रबंधन</h3>
+        <p style="font-size:12.5px; color:#cbd5e1; margin:0;">यहाँ से ब्लॉक अध्यक्ष या किसी भी पदाधिकारी का नाम, पद व मोबाइल बदलने पर पूरी वेबसाइट, साइडबार, PDF प्रिंट और ID कार्ड पर स्वतः बदल जाएगा।</p>
+      </div>
+      <button type="button" class="submit-btn" style="background:#16a34a; width:auto; font-size:13px; padding:9px 18px; margin:0;" onclick="openExecutiveModal()">
+        <i class="fa-solid fa-user-plus"></i> + नया पदाधिकारी जोड़ें
+      </button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>क्रम</th>
+            <th>पदाधिकारी का नाम</th>
+            <th>पद (Designation)</th>
+            <th>मोबाइल नंबर</th>
+            <th>भूमिका प्रकार (Role)</th>
+            <th>अंतिम अद्यतन</th>
+            <th>कार्रवाई (Actions)</th>
+          </tr>
+        </thead>
+        <tbody id="adminExecutivesTableBody"></tbody>
+      </table>
+    </div>
+  </div>
   
 </div>
 
@@ -2225,7 +2443,10 @@ body.modal-open {
     <h3 style="color:#2563eb; font-family:'Rozha One', serif;"><i class="fa-solid fa-id-card"></i> पंचायत सहायक लॉगिन (PS Login)</h3>
     <p style="font-size:12px; color:#94a3b8; margin-bottom:12px;">पंजीकृत विवरण दर्ज करें</p>
     <input type="email" id="psLoginEmail" class="field-input" placeholder="ईमेल आईडी (Gmail ID)" style="margin-bottom:10px;" onkeydown="if(event.key==='Enter'){event.preventDefault();submitPsLogin();}" required>
-    <input type="password" id="psLoginMobile" class="field-input" placeholder="पासवर्ड (मोबाइल नंबर)" style="margin-bottom:15px;" onkeydown="if(event.key==='Enter'){event.preventDefault();submitPsLogin();}" required>
+    <input type="password" id="psLoginMobile" class="field-input" placeholder="पासवर्ड (डिफ़ॉल्ट मोबाइल नंबर)" style="margin-bottom:10px;" onkeydown="if(event.key==='Enter'){event.preventDefault();submitPsLogin();}" required>
+    <div style="text-align:right; margin-bottom:12px;">
+      <a href="javascript:void(0)" onclick="closeModal('psLoginModal'); openForgotPasswordModal();" style="font-size:12.5px; color:#2563eb; font-weight:700; text-decoration:none;"><i class="fa-solid fa-key"></i> पासवर्ड / MPIN भूल गए? रीसेट करें</a>
+    </div>
     <button class="submit-btn" style="display:inline-block;" onclick="submitPsLogin()"><i class="fa-solid fa-right-to-bracket"></i> लॉगिन करें</button>
     <button class="submit-btn" onclick="closeModal('psLoginModal')" style="background:#64748b; margin-top:5px; font-size:14px; padding:8px; display:inline-block;">रद्द करें</button>
   </div>
@@ -2267,7 +2488,7 @@ body.modal-open {
     <div style="text-align:center; border-bottom:2px double #2563eb; padding-bottom:10px; margin-bottom:12px;">
       <h2 style="color:#2563eb; font-family:'Rozha One', 'Yatra One', serif; font-size:22px; margin-bottom:4px; font-weight:800; text-align:center !important;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>
       <h4 style="font-size:15px; font-weight:800; margin-bottom:4px; text-align:center !important;">विकास खंड- उतरौला, जिला- बलरामपुर।</h4>
-      <p style="font-size:13px; font-weight:800; margin:0; text-align:center !important;">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>
+      <p style="font-size:13px; font-weight:800; margin:0; text-align:center !important;" id="modalHeaderPresidentInfo">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>
     </div>
     <div id="detailsCardContent" style="font-size:13px; line-height:1.6; max-height:55vh; overflow-y:auto; padding-right:5px; text-align:left !important;"></div>
     <div style="display:flex; justify-content:center; gap:10px; margin-top:15px; flex-wrap:wrap;">
@@ -2395,13 +2616,155 @@ body.modal-open {
     <h2 id="modalTitle" style="font-family:'Rozha One', serif; font-size:24px; color:#2563eb; margin-bottom:8px; text-align:center !important;">सूचना</h2>
     <p id="modalMsg" style="margin:12px 0; font-size:15px; text-align:center !important; white-space: pre-line;"></p>
     <div id="modalSignature" style="border-top:2px solid var(--input-border); padding-top:10px; margin-top:10px; text-align:center !important;">
-      <div style="font-weight:700; color:#2563eb; font-size:17px; text-align:center !important;">प्रमोद वर्मा</div>
-      <div style="font-size:12px; color:#94a3b8; margin-bottom:10px; text-align:center !important;">ब्लॉक अध्यक्ष - उतरौला (बलरामपुर)<br>पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</div>
+      <div style="font-weight:700; color:#2563eb; font-size:17px; text-align:center !important;" id="modalSigPresidentName">प्रमोद वर्मा</div>
+      <div style="font-size:12px; color:#94a3b8; margin-bottom:10px; text-align:center !important;" id="modalSigPresidentRole">ब्लॉक अध्यक्ष - उतरौला (बलरामपुर)<br>पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</div>
       <a href="#" id="whatsappSendReceiptBtn" target="_blank" style="display:none; align-items:center; justify-content:center; gap:10px; width:100%; background:#25d366; color:#ffffff; text-decoration:none; padding:12px 18px; font-size:15px; font-weight:bold; border-radius:8px; margin:12px auto 0 auto; text-align:center !important;">
         <i class="fa-brands fa-whatsapp" style="font-size:20px;"></i> व्हाट्सएप पर शेयर करें
       </a>
     </div>
     <button class="submit-btn" onclick="closeStatusModal()" style="background:#64748b; margin:12px auto 0 auto; font-size:13px; padding:8px 20px; width:auto; display:inline-block;">बंद करें</button>
+  </div>
+</div>
+
+<!-- 12. FORGOT PASSWORD / MPIN SELF-RESET MODAL -->
+<div class="modal-backdrop" id="forgotPasswordModal">
+  <div class="modal-box" style="max-width:440px; text-align:center;">
+    <div style="background:linear-gradient(135deg, #dc2626, #0f172a); color:#fff; padding:14px; border-radius:10px; margin-bottom:14px;">
+      <i class="fa-solid fa-unlock-keyhole" style="font-size:24px; color:#facc15;"></i>
+      <h3 style="margin:6px 0 2px 0; font-size:17px;">पासवर्ड व MPIN फॉरगॉट / रीसेट</h3>
+      <p style="font-size:11.5px; color:#e2e8f0; margin:0;">अपनी पंजीकृत ईमेल, मोबाइल व 12-अंकों का आधार सत्यापित करके नया पासवर्ड बनाएं</p>
+    </div>
+    <form onsubmit="handleForgotPasswordSubmit(event)">
+      <div class="field-group" style="text-align:left;">
+        <label>1. पंजीकृत ईमेल आईडी <span class="req">*</span></label>
+        <input type="email" id="forgotEmail" class="field-input" placeholder="पंजीकृत ईमेल दर्ज करें" required>
+      </div>
+      <div class="field-group" style="text-align:left;">
+        <label>2. पंजीकृत मोबाइल नंबर (10 अंक) <span class="req">*</span></label>
+        <input type="tel" id="forgotMobile" class="field-input" maxlength="10" pattern="[0-9]{10}" placeholder="10-अंकों का मोबाइल नंबर" required>
+      </div>
+      <div class="field-group" style="text-align:left;">
+        <label>3. पंजीकृत आधार नंबर (12 अंक) <span class="req">*</span></label>
+        <input type="text" id="forgotAadhaar" class="field-input" maxlength="12" pattern="[0-9]{12}" placeholder="12-अंकों का आधार कार्ड नंबर" required>
+      </div>
+      <div class="field-group" style="text-align:left;">
+        <label>4. नया पासवर्ड बनाएं <span class="req">*</span></label>
+        <input type="password" id="forgotNewPass" class="field-input" placeholder="कम से कम 4 अक्षरों का नया पासवर्ड" required>
+      </div>
+      <div class="field-group" style="text-align:left;">
+        <label>5. नया 4-अंकों का MPIN <span class="req">*</span></label>
+        <input type="password" id="forgotNewMpin" class="field-input" maxlength="4" pattern="\d{4}" inputmode="numeric" placeholder="उदा. 1234" required>
+      </div>
+      <button type="submit" class="submit-btn" style="background:#16a34a; display:inline-block;"><i class="fa-solid fa-check-circle"></i> सत्यापित करें व पासवर्ड रीसेट करें</button>
+      <button type="button" class="submit-btn" onclick="closeModal('forgotPasswordModal')" style="background:#64748b; margin-top:6px; font-size:13px; padding:8px; display:inline-block;">रद्द करें</button>
+    </form>
+  </div>
+</div>
+
+<!-- 13. ADD NEW CLUSTER RECORD MODAL (+ Add Cluster) -->
+<div class="modal-backdrop" id="addClusterModal">
+  <div class="modal-box" style="text-align:center; max-width:580px;">
+    <h3 style="text-align:center; color:#2563eb; margin-bottom:15px;"><i class="fa-solid fa-plus-circle"></i> नया क्लस्टर / ग्राम पंचायत रिकॉर्ड जोड़ें</h3>
+    <form onsubmit="handleAddClusterSubmit(event)">
+      <div class="field-group" style="text-align:left;"><label>क्लस्टर का नाम <span class="req">*</span></label><input type="text" id="addClusterName" class="field-input" placeholder="क्लस्टर का नाम" required></div>
+      <div class="field-group" style="text-align:left;"><label>क्लस्टर मुख्यालय का नाम</label><input type="text" id="addClusterHq" class="field-input" placeholder="क्लस्टर मुख्यालय"></div>
+      <div class="field-group" style="text-align:left;"><label>ग्राम पंचायत का नाम <span class="req">*</span></label><input type="text" id="addClusterGp" class="field-input" placeholder="ग्राम पंचायत का नाम" required></div>
+      <div class="field-group" style="text-align:left;"><label>ग्राम पंचायत कोड (LGD)</label><input type="text" id="addClusterLgd" class="field-input" placeholder="LGD कोड"></div>
+      <div class="field-group" style="text-align:left;"><label>खंड विकास अधिकारी (BDO) का नाम</label><input type="text" id="addClusterBdoName" class="field-input" value="श्री संजय कुमार"></div>
+      <div class="field-group" style="text-align:left;"><label>BDO का मोबाइल नंबर</label><input type="text" id="addClusterBdoMobile" class="field-input" value="9717412423"></div>
+      <div class="field-group" style="text-align:left;"><label>सहायक विकास अधिकारी (ADO) का नाम</label><input type="text" id="addClusterAdoName" class="field-input"></div>
+      <div class="field-group" style="text-align:left;"><label>ADO का मोबाइल नंबर</label><input type="text" id="addClusterAdoMobile" class="field-input"></div>
+      <div class="field-group" style="text-align:left;"><label>सचिव का नाम</label><input type="text" id="addClusterSecName" class="field-input"></div>
+      <div class="field-group" style="text-align:left;"><label>सचिव का मोबाइल नंबर</label><input type="text" id="addClusterSecMobile" class="field-input"></div>
+      <div class="field-group" style="text-align:left;"><label>पंचायत सहायक का नाम</label><input type="text" id="addClusterPsName" class="field-input"></div>
+      <div class="field-group" style="text-align:left;"><label>पिता/पति का नाम</label><input type="text" id="addClusterGuardian" class="field-input"></div>
+      <div class="field-group" style="text-align:left;"><label>पंचायत सहायक मोबाइल नंबर</label><input type="text" id="addClusterMobile" class="field-input" maxlength="10"></div>
+      <div class="field-group" style="text-align:left;"><label>पंचायत सहायक ईमेल आईडी</label><input type="email" id="addClusterEmail" class="field-input"></div>
+      <button type="submit" class="submit-btn" style="background:#16a34a; display:inline-block;"><i class="fa-solid fa-floppy-disk"></i> क्लस्टर रिकॉर्ड जोड़ें</button>
+      <button type="button" class="submit-btn" onclick="closeModal('addClusterModal')" style="background:#64748b; margin-top:5px; font-size:14px; padding:8px; display:inline-block;">रद्द करें</button>
+    </form>
+  </div>
+</div>
+
+<!-- 14. ADD / EDIT UNION EXECUTIVE (KARYAKARINI) MODAL -->
+<div class="modal-backdrop" id="executiveModal">
+  <div class="modal-box" style="text-align:center; max-width:460px;">
+    <h3 style="text-align:center; color:#2563eb; margin-bottom:14px;" id="execModalHeading"><i class="fa-solid fa-users-gear"></i> कार्यकारिणी पदाधिकारी विवरण</h3>
+    <form onsubmit="handleSaveExecutiveSubmit(event)">
+      <input type="hidden" id="execRowIndexInput">
+      <div class="field-group" style="text-align:left;">
+        <label>1. प्रदर्शन क्रम (Order Number) <span class="req">*</span></label>
+        <input type="number" id="execOrderInput" class="field-input" value="1" min="1" required>
+      </div>
+      <div class="field-group" style="text-align:left;">
+        <label>2. पदाधिकारी का नाम <span class="req">*</span></label>
+        <input type="text" id="execNameInput" class="field-input" placeholder="उदा. प्रमोद वर्मा" required>
+      </div>
+      <div class="field-group" style="text-align:left;">
+        <label>3. पद (Designation) <span class="req">*</span></label>
+        <input type="text" id="execDesignationInput" class="field-input" placeholder="उदा. ब्लॉक अध्यक्ष / ब्लॉक उपाध्यक्ष / महामंत्री" required>
+      </div>
+      <div class="field-group" style="text-align:left;">
+        <label>4. मोबाइल नंबर <span class="req">*</span></label>
+        <input type="text" id="execMobileInput" class="field-input" maxlength="15" placeholder="10-अंकों का मोबाइल नंबर" required>
+      </div>
+      <div class="field-group" style="text-align:left;">
+        <label>5. भूमिका प्रकार (Role Type) <span class="req">*</span></label>
+        <select id="execRoleTypeInput" class="field-input">
+          <option value="Member">कार्यकारिणी पदाधिकारी (Sidebar में दिखेगा)</option>
+          <option value="President">मुख्य ब्लॉक अध्यक्ष (Header, Print व सभी हस्ताक्षर में दिखेगा)</option>
+        </select>
+      </div>
+      <button type="submit" class="submit-btn" style="background:#16a34a; display:inline-block;"><i class="fa-solid fa-floppy-disk"></i> सुरक्षित करें</button>
+      <button type="button" class="submit-btn" onclick="closeModal('executiveModal')" style="background:#64748b; margin-top:5px; font-size:14px; padding:8px; display:inline-block;">रद्द करें</button>
+    </form>
+  </div>
+</div>
+
+<!-- 15. OFFICIAL MEMORANDUM / PROBLEM REPORT GENERATOR MODAL (BDO / DPRO) -->
+<div class="modal-backdrop" id="officialMemorandumModal">
+  <div class="modal-box" style="max-width:780px; text-align:left !important;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--input-border); padding-bottom:10px; margin-bottom:14px;">
+      <h3 style="color:#dc2626; margin:0; font-size:18px;"><i class="fa-solid fa-file-contract"></i> आधिकारिक यूनियन ज्ञापन एवं समस्या रिपोर्ट जनरेटर</h3>
+      <button type="button" onclick="closeModal('officialMemorandumModal')" style="background:#dc2626; color:#fff; border:none; width:28px; height:28px; border-radius:50%; cursor:pointer;">✕</button>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:14px; background:var(--input-bg); padding:14px; border-radius:10px; border:1px solid var(--input-border);">
+      <div>
+        <label style="font-size:12.5px; font-weight:700; display:block; margin-bottom:4px;">1. संबोधित अधिकारी चुनें:</label>
+        <select id="memoRecipientSelect" class="field-input" onchange="generateOfficialMemorandumPreview()" style="padding:8px;">
+          <option value="BDO">श्रीमान खंड विकास अधिकारी (BDO) महोदय, उतरौला</option>
+          <option value="DPRO">श्रीमान जिला पंचायत राज अधिकारी (DPRO) महोदय, बलरामपुर</option>
+          <option value="CDO">श्रीमान मुख्य विकास अधिकारी (CDO) / जिलाधिकारी महोदय, बलरामपुर</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12.5px; font-weight:700; display:block; margin-bottom:4px;">2. ज्ञापन का विषय / समस्या सूची:</label>
+        <select id="memoCategorySelect" class="field-input" onchange="generateOfficialMemorandumPreview()" style="padding:8px;">
+          <option value="PENDING_SALARY">💰 बकाया मानदेय ग्राम पंचायत सूची</option>
+          <option value="NO_WIFI">📶 बिना वाई-फ़ाई / रिचार्ज लंबित ग्राम पंचायतें</option>
+          <option value="BAD_PRINTER">🖨️ खराब या अनुपलब्ध प्रिंटर वाली ग्राम पंचायतें</option>
+          <option value="NO_INFRA">⚡ बिजली / पेयजल / शौचालय समस्या वाली ग्राम पंचायतें</option>
+          <option value="NO_STATIONERY">📦 स्टेशनरी व मोबाइल रिचार्ज लंबित ग्राम पंचायतें</option>
+          <option value="ALL_SURVEY">📊 संपूर्ण ब्लॉक सर्वे समेकित रिपोर्ट</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12.5px; font-weight:700; display:block; margin-bottom:4px;">3. पत्रांक संख्या (Ref No.):</label>
+        <input type="text" id="memoRefNoInput" class="field-input" value="PSKU/UTR/2026/01" oninput="generateOfficialMemorandumPreview()" style="padding:8px;">
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+      <button type="button" class="submit-btn" style="background:#dc2626; width:auto; font-size:13px; padding:8px 16px; margin:0;" onclick="printOfficialMemorandumPDF()">
+        <i class="fa-solid fa-print"></i> 🖨️ लेटरहेड पर A4 PDF प्रिंट / डाउनलोड करें
+      </button>
+      <button type="button" class="submit-btn" style="background:#0284c7; width:auto; font-size:13px; padding:8px 16px; margin:0;" onclick="downloadOfficialMemorandumWord()">
+        <i class="fa-solid fa-file-word"></i> Word (.doc) डाउनलोड करें
+      </button>
+    </div>
+
+    <div id="memoPreviewContainer" style="background:#ffffff; color:#000000; border:2px solid #1e3a8a; border-radius:8px; padding:20px; max-height:48vh; overflow-y:auto; font-family:'Tiro Devanagari Hindi', serif; line-height:1.7; font-size:13.5px;"></div>
   </div>
 </div>
 
@@ -2591,6 +2954,18 @@ function formatDateToIndian(dateVal) {
         },
         getImageCompressionLogsSecure: function(token) {
           this._callApi('getImageCompressionLogsSecure', { token: token });
+        },
+        saveUnionExecutiveSecure: function(token, execData) {
+          this._callApi('saveUnionExecutiveSecure', { token: token, execData: execData });
+        },
+        deleteUnionExecutiveSecure: function(token, rowIndex) {
+          this._callApi('deleteUnionExecutiveSecure', { token: token, rowIndex: rowIndex });
+        },
+        addClusterRecordSecure: function(token, recordData) {
+          this._callApi('addClusterRecordSecure', { token: token, recordData: recordData });
+        },
+        resetForgottenPsCredentials: function(email, mobile, aadhaar, newPass, newMpin) {
+          this._callApi('resetForgottenPsCredentials', { email: email, mobile: mobile, aadhaar: aadhaar, newPass: newPass, newMpin: newMpin });
         }
       }
     }
@@ -2609,7 +2984,17 @@ function formatDateToIndian(dateVal) {
   var cachedAdminAttendance = [];
   var cachedAdminLeaves = [];
   var cachedAdminImageLogs = [];
+  var cachedUnionExecutives = [
+    { rowIndex: 2, order: 1, name: "प्रमोद वर्मा", designation: "ब्लॉक अध्यक्ष", mobile: "9119323310", roleType: "President" },
+    { rowIndex: 3, order: 2, name: "प्रभावती", designation: "ब्लॉक उपाध्यक्ष", mobile: "9930419598", roleType: "Member" },
+    { rowIndex: 4, order: 3, name: "पूर्णिमा सिंह", designation: "ब्लॉक महामंत्री", mobile: "8354079057", roleType: "Member" },
+    { rowIndex: 5, order: 4, name: "सुरजीत वर्मा", designation: "ब्लॉक कोषाध्यक्ष", mobile: "9118331584", roleType: "Member" },
+    { rowIndex: 6, order: 5, name: "विशाल यादव", designation: "ब्लॉक मीडिया प्रभारी", mobile: "9838376193", roleType: "Member" },
+    { rowIndex: 7, order: 6, name: "हेमराज", designation: "ब्लॉक सचिव", mobile: "9838880255", roleType: "Member" },
+    { rowIndex: 8, order: 7, name: "ईश्वर चन्द यादव", designation: "ब्लॉक उपसचिव", mobile: "7800841125", roleType: "Member" }
+  ];
   var cachedAdminStats = null;
+  var customIdCardPhotoDataUrl = null;
   var loggedInPsUser = null;
   var loggedInPsCluster = null;
   var pendingPsLoginRes = null;
@@ -2886,8 +3271,95 @@ function openAdminLoginModal() {
     loadPublicHomeStats();
   }
 
+  function getDynamicPresidentObj() {
+    if (cachedUnionExecutives && cachedUnionExecutives.length > 0) {
+      for (var i = 0; i < cachedUnionExecutives.length; i++) {
+        if (cachedUnionExecutives[i].roleType === "President") return cachedUnionExecutives[i];
+      }
+      return cachedUnionExecutives[0];
+    }
+    return { name: "प्रमोद वर्मा", designation: "ब्लॉक अध्यक्ष", mobile: "9119323310", roleType: "President" };
+  }
+
+  function getDynamicPrintHeaderHTML() {
+    var pres = getDynamicPresidentObj();
+    return '<div style="text-align:center; border-bottom:3px double #2563eb; padding-bottom:10px; margin-bottom:15px;">' +
+      '<div style="font-size:11px; font-weight:bold; color:#1e3a8a;">REG.NO - LUC/08494/2024-2025</div>' +
+      '<h2 style="color:#2563eb; font-size:22px; margin-bottom:4px; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
+      '<h3 style="color:#000; font-size:16px; font-weight:bold; margin-bottom:4px;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
+      '<p style="color:#000; font-size:14px; font-weight:bold; margin:0;">' + escapeHtml(pres.designation) + ': ' + escapeHtml(pres.name) + ' (' + escapeHtml(pres.mobile) + ')</p>' +
+      '</div>';
+  }
+
+  function applyUnionExecutivesToUI(execList) {
+    if (execList && execList.length > 0) {
+      cachedUnionExecutives = execList;
+    }
+    var pres = getDynamicPresidentObj();
+    var pNameEl = document.getElementById('headerPresidentName');
+    var pRoleEl = document.getElementById('headerPresidentRole');
+    var pMobEl = document.getElementById('headerPresidentMobile');
+    if (pNameEl) pNameEl.innerText = pres.name;
+    if (pRoleEl) pRoleEl.innerText = "(" + pres.designation + ")";
+    if (pMobEl) pMobEl.innerText = pres.mobile;
+
+    var admPresEl = document.getElementById('adminHeaderPresidentInfo');
+    if (admPresEl) admPresEl.innerText = pres.designation + ": " + pres.name + " (" + pres.mobile + ")";
+
+    var modPresEl = document.getElementById('modalHeaderPresidentInfo');
+    if (modPresEl) modPresEl.innerText = pres.designation + ": " + pres.name + " (" + pres.mobile + ")";
+
+    var sigNameEl = document.getElementById('modalSigPresidentName');
+    var sigRoleEl = document.getElementById('modalSigPresidentRole');
+    if (sigNameEl) sigNameEl.innerText = pres.name;
+    if (sigRoleEl) sigRoleEl.innerHTML = escapeHtml(pres.designation) + " - उतरौला (बलरामपुर)<br>पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश";
+
+    var idSigEl = document.getElementById('idCardPresidentNameSig');
+    if (idSigEl) idSigEl.innerText = pres.name;
+
+    // किसी भी नए कार्यकारिणी पद को ID Card ड्रॉपडाउन में स्वतः जोड़ें
+    var roleSelect = document.getElementById('idCardDesignationSelect');
+    if (roleSelect && cachedUnionExecutives) {
+      var existingOpts = {};
+      for (var r = 0; r < roleSelect.options.length; r++) {
+        existingOpts[roleSelect.options[r].value] = true;
+      }
+      for (var eIdx = 0; eIdx < cachedUnionExecutives.length; eIdx++) {
+        var dName = cachedUnionExecutives[eIdx].designation;
+        if (dName && !existingOpts[dName]) {
+          var newOpt = document.createElement('option');
+          newOpt.value = dName;
+          newOpt.text = dName + " (उतरौला)";
+          roleSelect.appendChild(newOpt);
+          existingOpts[dName] = true;
+        }
+      }
+    }
+
+    var sideContainer = document.getElementById('executiveSidebarCardsContainer');
+    if (sideContainer && cachedUnionExecutives) {
+      sideContainer.innerHTML = "";
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < cachedUnionExecutives.length; i++) {
+        var ex = cachedUnionExecutives[i];
+        if (ex.roleType === "President") continue;
+        var card = document.createElement('div');
+        card.className = 'exec-card';
+        card.innerHTML = '<div><b>' + escapeHtml(ex.name) + '</b></div><div style="font-size:11px; opacity:0.8;">' + escapeHtml(ex.designation) + ' | ' + escapeHtml(ex.mobile) + '</div>';
+        frag.appendChild(card);
+      }
+      sideContainer.appendChild(frag);
+    }
+
+    var countBadge = document.getElementById('totalExecTabCount');
+    if (countBadge && cachedUnionExecutives) countBadge.innerText = cachedUnionExecutives.length;
+  }
+
   function applyHomeStatsToUI(res) {
     if (!res || !res.success) return;
+    if (res.executives && res.executives.length > 0) {
+      applyUnionExecutivesToUI(res.executives);
+    }
     document.getElementById('homeGpCount').innerText = res.stats.totalGramPanchayat;
     document.getElementById('homeAppointedPsCount').innerText = res.stats.totalAppointedPS;
     document.getElementById('homePortalRegisteredCount').innerText = res.stats.totalRegisteredPS;
@@ -2997,8 +3469,12 @@ function openAdminLoginModal() {
     document.getElementById('guardianName').value = loggedInPsUser.guardianName;
     document.getElementById('mobile').value = loggedInPsUser.mobile;
 
+    if (res.executives && res.executives.length > 0) {
+      applyUnionExecutivesToUI(res.executives);
+    }
     renderPsClusterCard(loggedInPsCluster, loggedInPsUser);
     renderNoticesHTML('psNoticesListContainer', res.notices);
+    initPsUnionIdCardDefaults();
 
     var psNotifs = [];
     if (res.canUpdate) {
@@ -3062,11 +3538,7 @@ function openAdminLoginModal() {
   }
 
   function printPsClusterPDF() {
-    var headerHTML = '<div style="text-align:center; border-bottom:3px double #2563eb; padding-bottom:10px; margin-bottom:15px;">' +
-      '<h2 style="color:#2563eb; font-size:22px; margin-bottom:4px; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
-      '<h3 style="color:#000; font-size:16px; font-weight:bold; margin-bottom:4px;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
-      '<p style="color:#000; font-size:14px; font-weight:bold; margin:0;">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>' +
-      '</div>';
+    var headerHTML = getDynamicPrintHeaderHTML();
     var content = document.getElementById('psClusterDetailsCard').innerHTML;
     var printArea = document.getElementById('printTemplateArea');
     printArea.innerHTML = '<div style="padding:20px; font-family:sans-serif; line-height:1.8;">' + headerHTML + '<h3 style="text-align:center; color:#2563eb; margin-bottom:12px;">ग्राम पंचायत एवं क्लस्टर विवरण</h3>' + content + '</div>';
@@ -3085,6 +3557,9 @@ function openAdminLoginModal() {
 
     document.getElementById('psHomeTabContent').style.display = (tab === 'psHome') ? 'block' : 'none';
     document.getElementById('psDetailsTabContent').style.display = (tab === 'psDetails') ? 'block' : 'none';
+    if (document.getElementById('psIdCardTabContent')) {
+      document.getElementById('psIdCardTabContent').style.display = (tab === 'psIdCard') ? 'block' : 'none';
+    }
     document.getElementById('psClusterTabContent').style.display = (tab === 'psCluster') ? 'block' : 'none';
     document.getElementById('psSurveyTabContent').style.display = (tab === 'psSurvey') ? 'block' : 'none';
     document.getElementById('psGrievanceTabContent').style.display = (tab === 'psGrievance') ? 'block' : 'none';
@@ -3100,6 +3575,9 @@ function openAdminLoginModal() {
 
     document.getElementById('psNavHomeBtn').classList.toggle('active', tab === 'psHome');
     document.getElementById('psNavDetailsBtn').classList.toggle('active', tab === 'psDetails');
+    if (document.getElementById('psNavIdCardBtn')) {
+      document.getElementById('psNavIdCardBtn').classList.toggle('active', tab === 'psIdCard');
+    }
     document.getElementById('psNavClusterBtn').classList.toggle('active', tab === 'psCluster');
     document.getElementById('psNavSurveyBtn').classList.toggle('active', tab === 'psSurvey');
     document.getElementById('psNavGrievanceBtn').classList.toggle('active', tab === 'psGrievance');
@@ -3113,10 +3591,19 @@ function openAdminLoginModal() {
       document.getElementById('psNavImageToolBtn').classList.toggle('active', tab === 'psImageTool');
     }
 
+    if (tab === 'psIdCard') {
+      renderUnionIdCardLive();
+    }
     if (tab === 'psQrScan') {
-      startInAppCameraScanner(); // टैब पर क्लिक करते ही कैमरा ऑटोमैटिक शुरू होगा
+      startInAppCameraScanner();
     }
     if (tab === 'psGrievance') loadMyTickets();
+
+    // मोबाइल पिल बार में एक्टिव बटन को स्मूद सेंटर स्क्रॉल करें
+    var activeBtn = document.querySelector('#psPillNavBar .admin-tab-btn.active');
+    if (activeBtn && activeBtn.scrollIntoView) {
+      try { activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); } catch (e) {}
+    }
   }
 
   // लिंक्स सर्च फ़िल्टर
@@ -3150,7 +3637,8 @@ function openAdminLoginModal() {
     if (!loggedInPsUser) { openPsLoginModal(); return; }
     if (loggedInPsUser.alreadySubmitted && !loggedInPsUser.canUpdate) {
       switchPsTab('psDetails');
-      showMsg("🌟 सर्वे फ़ॉर्म पूर्व में जमा है", "आप अपनी पंजीकृत ईमेल आईडी (" + loggedInPsUser.email + ") से अपना सर्वे फ़ॉर्म पहले ही सबमिट कर चुके हैं।\n\nसंशोधन हेतु ब्लॉक अध्यक्ष प्रमोद वर्मा जी (9119323310) से संपर्क कर 'Update Approval' प्राप्त करें।", false);
+      var presObj = getDynamicPresidentObj();
+      showMsg("🌟 सर्वे फ़ॉर्म पूर्व में जमा है", "आप अपनी पंजीकृत ईमेल आईडी (" + loggedInPsUser.email + ") से अपना सर्वे फ़ॉर्म पहले ही सबमिट कर चुके हैं।\n\nसंशोधन हेतु " + presObj.designation + " " + presObj.name + " जी (" + presObj.mobile + ") से संपर्क कर 'Update Approval' प्राप्त करें।", false);
     } else if (loggedInPsUser.canUpdate) {
       prefillSurveyForUpdate();
       switchPsTab('psSurvey');
@@ -3386,14 +3874,33 @@ function openAdminLoginModal() {
     return formatted.replace(/\//g, ".");
   }
 
-  function saveCurrentLeaveToSheetOnce() {
+  function saveCurrentLeaveToSheetOnce(showFeedback) {
     if (!currentLeaveDraftPayload) return;
     var sig = currentLeaveDraftPayload.email + "|" + currentLeaveDraftPayload.dateText + "|" + currentLeaveDraftPayload.reason + "|" + currentLeaveDraftPayload.recipient;
-    if (sig === lastSubmittedLeaveKey) return;
-    lastSubmittedLeaveKey = sig;
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-      google.script.run.submitLeaveApplication(currentLeaveDraftPayload);
+    var badge = document.getElementById('leaveSavedStatusBadge');
+    if (sig === lastSubmittedLeaveKey) {
+      if (badge) badge.style.display = 'inline-block';
+      if (showFeedback) showMsg("अवकाश दर्ज है", "आपका यह अवकाश आवेदन पोर्टल पर पहले ही सुरक्षित हो चुका है।", false);
+      return;
     }
+    lastSubmittedLeaveKey = sig;
+    if (badge) badge.style.display = 'inline-block';
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run.withSuccessHandler(function(res) {
+        if (showFeedback) {
+          showMsg("अवकाश दर्ज हुआ", (res && res.message) ? res.message : "आपका अवकाश रिकॉर्ड एडमिन पोर्टल पर सुरक्षित कर दिया गया है।", false);
+        }
+      }).submitLeaveApplication(currentLeaveDraftPayload);
+    }
+  }
+
+  function saveLeaveApplicationManual() {
+    autoGenerateLeaveLetter();
+    if (!currentLeaveDraftPayload) {
+      showMsg("ध्यान दें", "कृपया पहले अवकाश की तारीख और कारण चुनें।", false);
+      return;
+    }
+    saveCurrentLeaveToSheetOnce(true);
   }
 
   function autoGenerateLeaveLetter() {
@@ -3493,6 +4000,8 @@ function openAdminLoginModal() {
 
     document.getElementById('leaveLetterContent').innerHTML = letterHtml;
     letterCard.style.display = 'block';
+    var badge = document.getElementById('leaveSavedStatusBadge');
+    if (badge) badge.style.display = 'none';
 
     var waPlainMsg = "📋 *आकस्मिक अवकाश हेतु प्रार्थना पत्र*\n\n" +
       "सेवा में,\n" + (recipientRole === 'सचिव' ? "श्रीमान ग्राम विकास / पंचायत अधिकारी महोदय, ग्रा०पं० " + loggedInPsUser.gramPanchayat : "श्रीमान सहायक विकास अधिकारी (पं०), उतरौला") + "\n\n" +
@@ -3602,6 +4111,10 @@ function openAdminLoginModal() {
     cachedAdminAttendance = res.adminAttendanceRecords || [];
     cachedAdminLeaves = res.adminLeaveRecords || [];
     cachedAdminImageLogs = res.imageCompressionLogs || [];
+    if (res.unionExecutives && res.unionExecutives.length > 0) {
+      applyUnionExecutivesToUI(res.unionExecutives);
+    }
+    renderAdminExecutivesTable(cachedUnionExecutives);
 
     document.getElementById('totalLeaveCount').innerText = cachedAdminLeaves.length;
     
@@ -3705,9 +4218,11 @@ function openAdminLoginModal() {
     document.getElementById('qrAttendanceTabContent').style.display = (tab === 'qrAttendance') ? 'block' : 'none';
     document.getElementById('leaveTabContent').style.display = (tab === 'leave') ? 'block' : 'none';
 
-    // Photo Compress Logs tab ko display karna (ye pehle miss tha)
     if (document.getElementById('imageLogsTabContent')) {
       document.getElementById('imageLogsTabContent').style.display = (tab === 'imageLogs') ? 'block' : 'none';
+    }
+    if (document.getElementById('executivesTabContent')) {
+      document.getElementById('executivesTabContent').style.display = (tab === 'executives') ? 'block' : 'none';
     }
 
     // Sabhi buttons ka active color set karna
@@ -3721,14 +4236,22 @@ function openAdminLoginModal() {
     document.getElementById('tabQRAttendanceBtn').classList.toggle('active', tab === 'qrAttendance');
     document.getElementById('tabLeaveBtn').classList.toggle('active', tab === 'leave');
 
-    // Photo Compress button ko active neela karna
     if (document.getElementById('tabImageLogsBtn')) {
       document.getElementById('tabImageLogsBtn').classList.toggle('active', tab === 'imageLogs');
     }
+    if (document.getElementById('tabExecutivesBtn')) {
+      document.getElementById('tabExecutivesBtn').classList.toggle('active', tab === 'executives');
+    }
 
-    // Tab par click hote hi table render karna
     if (tab === 'imageLogs') {
       renderImageLogsTable(cachedAdminImageLogs);
+    }
+    if (tab === 'executives') {
+      renderAdminExecutivesTable(cachedUnionExecutives);
+    }
+    var activeAdmBtn = document.querySelector('#adminPillNavBar .admin-tab-btn.active');
+    if (activeAdmBtn && activeAdmBtn.scrollIntoView) {
+      try { activeAdmBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); } catch (e) {}
     }
   }
 
@@ -3916,6 +4439,7 @@ function openAdminLoginModal() {
         '<td>' +
           '<a href="' + waLink + '" target="_blank" class="btn-action-whatsapp" title="WhatsApp Chat"><i class="fa-brands fa-whatsapp"></i></a>' +
           '<button class="btn-action-allow" style="' + unlockBtnStyle + '" title="' + unlockBtnTitle + '" onclick="handleAdminUnlockAccount(' + r.rowIndex + ', \'' + escapeHtml(r.fullName).replace(/'/g, "\\'") + '\')"><i class="fa-solid fa-lock-open"></i></button>' +
+          '<button class="btn-action-allow" style="background:#7c3aed; color:#fff;" title="1-Click पासवर्ड व MPIN रीसेट करें" onclick="handleAdminQuickResetPassword(' + r.rowIndex + ', \'' + escapeHtml(r.fullName).replace(/'/g, "\\'") + '\')"><i class="fa-solid fa-key"></i></button>' +
           '<button class="btn-action-view" title="देखें (PDF)" onclick="viewRegisteredModal(' + r.rowIndex + ')"><i class="fa-solid fa-eye"></i></button>' +
           '<button class="btn-action-edit" title="संपादित करें" onclick="openEditRegisteredModal(' + r.rowIndex + ')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="confirmUniversalDelete(\'registered\', ' + r.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
@@ -4195,11 +4719,7 @@ function openAdminLoginModal() {
 
   // ================= 5. UNIVERSAL MODAL PRINT & DELETE =================
   function printUniversalModalPDF() {
-    var headerHTML = '<div style="text-align:center; border-bottom:3px double #2563eb; padding-bottom:10px; margin-bottom:15px;">' +
-      '<h2 style="color:#2563eb; font-size:22px; margin-bottom:4px; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
-      '<h3 style="color:#000; font-size:16px; font-weight:bold; margin-bottom:4px;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
-      '<p style="color:#000; font-size:14px; font-weight:bold; margin:0;">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>' +
-      '</div>';
+    var headerHTML = getDynamicPrintHeaderHTML();
     var content = document.getElementById('detailsCardContent').innerHTML;
     var printArea = document.getElementById('printTemplateArea');
     printArea.innerHTML = '<div style="padding:20px; font-family:sans-serif; line-height:1.8;">' + headerHTML + content + '</div>';
@@ -4228,6 +4748,12 @@ function openAdminLoginModal() {
       if (iconBox) { iconBox.style.color = "#10b981"; iconBox.innerHTML = '<i class="fa-solid fa-user-lock"></i>'; }
       if (btnElem) { btnElem.style.background = "#16a34a"; btnElem.innerText = "हाँ, अनलॉक करें"; }
       if (resetCredsBox) resetCredsBox.style.display = 'block';
+    } else if (type === 'resetPassOnly') {
+      document.getElementById('deleteModalTitle').innerText = "1-Click पासवर्ड व MPIN रीसेट";
+      if (msgElem) msgElem.innerText = "क्या आप " + (extraLabel || "इस पंचायत सहायक") + " का पासवर्ड व MPIN डिफ़ॉल्ट (उनके 10-अंकों के मोबाइल नंबर) पर रीसेट करना चाहते हैं?";
+      if (iconBox) { iconBox.style.color = "#7c3aed"; iconBox.innerHTML = '<i class="fa-solid fa-key"></i>'; }
+      if (btnElem) { btnElem.style.background = "#7c3aed"; btnElem.innerText = "हाँ, रीसेट करें"; }
+      if (resetCheck) resetCheck.checked = true;
     } else {
       var title = (type === 'survey') ? "सर्वे रिकॉर्ड हटाने की पुष्टि" : 
                   ((type === 'registered') ? "पंजीकरण हटाने की पुष्टि" : 
@@ -4261,20 +4787,39 @@ function openAdminLoginModal() {
       return;
     }
 
-    if (type === 'unlockAccount') {
-      showLoader("खाता अनलॉक किया जा रहा है...");
+    if (type === 'unlockAccount' || type === 'resetPassOnly') {
+      var doReset = (type === 'resetPassOnly') ? true : resetCredentials;
+      showLoader(doReset ? "पासवर्ड व MPIN रीसेट हो रहा है..." : "खाता अनलॉक किया जा रहा है...");
       google.script.run.withSuccessHandler(function(res) {
         hideLoader();
         if (res && res.success) {
           showMsg("सफलता", res.message, false);
           loadAdminDashboardData();
         } else {
-          showMsg("त्रुटि", (res ? res.message : "अनलॉक करने में विफल"), false);
+          showMsg("त्रुटि", (res ? res.message : "प्रक्रिया विफल"), false);
         }
       }).withFailureHandler(function(err) {
         hideLoader();
         showMsg("सर्वर त्रुटि", err.toString(), false);
-      }).unlockPsAccountSecure(adminSessionToken, rIdx, resetCredentials);
+      }).unlockPsAccountSecure(adminSessionToken, rIdx, doReset);
+      return;
+    }
+
+    if (type === 'executive') {
+      showLoader("पदाधिकारी का रिकॉर्ड हटाया जा रहा है...");
+      google.script.run.withSuccessHandler(function(res) {
+        hideLoader();
+        if (res && res.success) {
+          if (res.executives) applyUnionExecutivesToUI(res.executives);
+          renderAdminExecutivesTable(cachedUnionExecutives);
+          showMsg("सफलता", res.message, false);
+        } else {
+          showMsg("त्रुटि", (res ? res.message : "हटाने में विफल"), false);
+        }
+      }).withFailureHandler(function(err) {
+        hideLoader();
+        showMsg("त्रुटि", err.toString(), false);
+      }).deleteUnionExecutiveSecure(adminSessionToken, rIdx);
       return;
     }
 
@@ -4430,10 +4975,11 @@ function openAdminLoginModal() {
       var n = notices[i];
       var tr = document.createElement('tr');
       
+      var presInfo = getDynamicPresidentObj();
       var waShareText = "📢 *पंचायत सहायक कर्मचारी यूनियन - उतरौला (बलरामपुर)*\n\n" +
         "📌 *आवश्यक सूचना/आदेश:*\n" + n.noticeText + "\n\n" +
         "🗓 *दिनांक:* " + n.timestamp + "\n\n" +
-        "– *प्रमोद वर्मा (ब्लॉक अध्यक्ष)*";
+        "– *" + presInfo.name + " (" + presInfo.designation + ")*";
       var waLink = "https://api.whatsapp.com/send?text=" + encodeURIComponent(waShareText);
 
       tr.innerHTML = '<td style="text-align:center; font-weight:bold;">' + (i + 1) + '</td>' +
@@ -4762,11 +5308,7 @@ function viewAdminLeaveModal(rowOrIdx) {
   }
 
   function printLeaveRecordsPDF() {
-    var headerHTML = '<div style="text-align:center; border-bottom:3px double #2563eb; padding-bottom:10px; margin-bottom:15px;">' +
-      '<h2 style="color:#2563eb; font-size:22px; margin-bottom:4px; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
-      '<h3 style="color:#000; font-size:18px; font-weight:bold; margin-bottom:4px;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
-      '<p style="color:#000; font-size:15px; font-weight:bold; margin:0;">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>' +
-      '</div>';
+    var headerHTML = getDynamicPrintHeaderHTML();
     var tableHTML = '<h3 style="text-align:center; color:#2563eb; margin:15px 0;">पंचायत सहायक आकस्मिक अवकाश रिकॉर्ड्स रिपोर्ट</h3>' +
       '<table border="1" style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;" cellpadding="6">' +
       '<tr style="background:#0f172a; color:#fff;"><th>#</th><th>समय</th><th>क्लस्टर</th><th>ग्राम पंचायत</th><th>पंचायत सहायक</th><th>मोबाइल</th><th>अवधि</th><th>दिन</th><th>कारण</th><th>संबोधित</th></tr>';
@@ -4824,11 +5366,7 @@ function viewAdminLeaveModal(rowOrIdx) {
     var title = document.getElementById('displayQRTitle').innerText;
     var details = document.getElementById('displayQRDetails').innerText;
     var imgSrc = document.getElementById('displayQRImage').src;
-    var headerHTML = '<div style="text-align:center; border-bottom:3px double #2563eb; padding-bottom:10px; margin-bottom:20px;">' +
-      '<h2 style="color:#2563eb; font-size:24px; margin-bottom:4px; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
-      '<h3 style="color:#000; font-size:18px; font-weight:bold; margin-bottom:4px;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
-      '<p style="color:#000; font-size:15px; font-weight:bold; margin:0;">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>' +
-      '</div>';
+    var headerHTML = getDynamicPrintHeaderHTML();
     var qrContent = '<div style="text-align:center; padding:20px; border:2px solid #2563eb; border-radius:12px; margin-top:20px;">' +
       '<h2 style="color:#2563eb; font-size:22px; margin-bottom:8px;">' + escapeHtml(title) + '</h2>' +
       '<p style="font-size:15px; font-weight:bold; margin-bottom:15px;">' + escapeHtml(details) + '</p>' +
@@ -4888,11 +5426,7 @@ function viewAdminLeaveModal(rowOrIdx) {
   }
 
   function printAttendanceReportPDF() {
-    var headerHTML = '<div style="text-align:center; border-bottom:3px double #2563eb; padding-bottom:10px; margin-bottom:15px;">' +
-      '<h2 style="color:#2563eb; font-size:22px; margin-bottom:4px; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
-      '<h3 style="color:#000; font-size:18px; font-weight:bold; margin-bottom:4px;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
-      '<p style="color:#000; font-size:15px; font-weight:bold; margin:0;">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>' +
-      '</div>';
+    var headerHTML = getDynamicPrintHeaderHTML();
     var selectedEvt = document.getElementById('eventAttendanceFilter').value;
     var list = (selectedEvt === 'ALL') ? cachedAdminAttendance : cachedAdminAttendance.filter(function(a){ return a.eventId === selectedEvt; });
     var tableHTML = '<h3 style="text-align:center; color:#2563eb; margin:15px 0;">बैठक उपस्थिति रिपोर्ट</h3>' +
@@ -6013,6 +6547,580 @@ function exportImageLogsToExcel() {
       csv += [i + 1, csvCell(l.timestamp), csvCell(l.gramPanchayat), csvCell(l.fullName), csvCell(l.fileName), csvCell(l.originalSize), csvCell(l.compressedSize), csvCell(l.targetSize)].join(",") + "\n";
   }
   downloadCSVFile(csv, "Panchayat_Sahayak_Image_Compress_Logs_15_Days.csv");
+}
+
+// ================= NEW FEATURE 1: UNION EXECUTIVES (KARYAKARINI) MANAGER =================
+function renderAdminExecutivesTable(list) {
+  var tbody = document.getElementById('adminExecutivesTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  var arr = list || cachedUnionExecutives || [];
+  if (arr.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:15px;">कोई पदाधिकारी रिकॉर्ड उपलब्ध नहीं है।</td></tr>';
+    return;
+  }
+  var frag = document.createDocumentFragment();
+  for (var i = 0; i < arr.length; i++) {
+    var ex = arr[i];
+    var tr = document.createElement('tr');
+    var roleBadge = (ex.roleType === "President")
+      ? '<span class="badge-status badge-approved">👑 मुख्य ब्लॉक अध्यक्ष (Global)</span>'
+      : '<span class="badge-status badge-progress">👥 कार्यकारिणी पदाधिकारी (Sidebar)</span>';
+    tr.innerHTML = '<td><b>' + escapeHtml(ex.order || (i + 1)) + '</b></td>' +
+      '<td><b>' + escapeHtml(ex.name) + '</b></td>' +
+      '<td>' + escapeHtml(ex.designation) + '</td>' +
+      '<td>' + escapeHtml(ex.mobile) + '</td>' +
+      '<td>' + roleBadge + '</td>' +
+      '<td>' + escapeHtml(ex.updatedAt || "-") + '</td>' +
+      '<td>' +
+        '<button class="btn-action-edit" title="संपादित करें" onclick="openExecutiveModal(' + ex.rowIndex + ')"><i class="fa-solid fa-pen"></i></button>' +
+        '<button class="btn-action-delete" title="हटाएं" onclick="confirmUniversalDelete(\'executive\', ' + ex.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
+      '</td>';
+    frag.appendChild(tr);
+  }
+  tbody.appendChild(frag);
+}
+
+function openExecutiveModal(rowIndex) {
+  var ex = rowIndex ? findRecordByRowOrIdx(cachedUnionExecutives, rowIndex) : null;
+  document.getElementById('execRowIndexInput').value = ex ? ex.rowIndex : "";
+  document.getElementById('execOrderInput').value = ex ? ex.order : ((cachedUnionExecutives ? cachedUnionExecutives.length : 0) + 1);
+  document.getElementById('execNameInput').value = ex ? ex.name : "";
+  document.getElementById('execDesignationInput').value = ex ? ex.designation : "";
+  document.getElementById('execMobileInput').value = ex ? ex.mobile : "";
+  document.getElementById('execRoleTypeInput').value = ex ? ex.roleType : "Member";
+  document.getElementById('execModalHeading').innerHTML = ex
+    ? '<i class="fa-solid fa-user-pen"></i> पदाधिकारी विवरण संपादित करें'
+    : '<i class="fa-solid fa-user-plus"></i> नया कार्यकारिणी पदाधिकारी जोड़ें';
+  openModal('executiveModal');
+}
+
+function handleSaveExecutiveSubmit(e) {
+  e.preventDefault();
+  var payload = {
+    rowIndex: document.getElementById('execRowIndexInput').value,
+    order: document.getElementById('execOrderInput').value,
+    name: document.getElementById('execNameInput').value.trim(),
+    designation: document.getElementById('execDesignationInput').value.trim(),
+    mobile: document.getElementById('execMobileInput').value.trim(),
+    roleType: document.getElementById('execRoleTypeInput').value
+  };
+  showLoader("कार्यकारिणी विवरण सुरक्षित किया जा रहा है...");
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    closeModal('executiveModal');
+    if (res && res.success) {
+      if (res.executives) applyUnionExecutivesToUI(res.executives);
+      renderAdminExecutivesTable(cachedUnionExecutives);
+      safeRemoveStorage(sessionStorage, 'psk_home_stats_fast_cache');
+      showMsg("कार्यकारिणी अद्यतन", res.message, false);
+    } else {
+      showMsg("त्रुटि", (res ? res.message : "सुरक्षित करने में विफल"), false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("सर्वर त्रुटि", err.toString(), false);
+  }).saveUnionExecutiveSecure(adminSessionToken, payload);
+}
+
+// ================= NEW FEATURE 2: DIGITAL UNION ID CARD GENERATOR =================
+function initPsUnionIdCardDefaults() {
+  if (!loggedInPsUser) return;
+  var roleSelect = document.getElementById('idCardDesignationSelect');
+  if (roleSelect && cachedUnionExecutives) {
+    var userMob = String(loggedInPsUser.mobile || "").replace(/\D/g, "").slice(-10);
+    var matchedRole = "पंचायत सहायक / सक्रिय सदस्य";
+    for (var i = 0; i < cachedUnionExecutives.length; i++) {
+      var exMob = String(cachedUnionExecutives[i].mobile || "").replace(/\D/g, "").slice(-10);
+      if ((userMob && exMob && userMob === exMob) || cachedUnionExecutives[i].name === loggedInPsUser.fullName) {
+        matchedRole = cachedUnionExecutives[i].designation;
+        break;
+      }
+    }
+    roleSelect.value = matchedRole;
+    if (!roleSelect.value) roleSelect.value = "पंचायत सहायक / सक्रिय सदस्य";
+  }
+  renderUnionIdCardLive();
+}
+
+function handleIdCardPhotoUpload(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      customIdCardPhotoDataUrl = e.target.result;
+      var imgEl = document.getElementById('idCardPhotoPreview');
+      if (imgEl) imgEl.src = customIdCardPhotoDataUrl;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function renderUnionIdCardLive() {
+  if (!loggedInPsUser) return;
+  var pres = getDynamicPresidentObj();
+  var roleVal = document.getElementById('idCardDesignationSelect') ? document.getElementById('idCardDesignationSelect').value : "पंचायत सहायक / सक्रिय सदस्य";
+  var bloodVal = document.getElementById('idCardBloodGroup') ? document.getElementById('idCardBloodGroup').value : "B+";
+  var mobLast4 = String(loggedInPsUser.mobile || "0000").replace(/\D/g, "").slice(-4) || "0101";
+  var uidStr = "PSKU-UTR-" + mobLast4;
+
+  document.getElementById('idCardUidText').innerText = "ID NO: " + uidStr;
+  document.getElementById('idCardNameVal').innerText = loggedInPsUser.fullName || "-";
+  document.getElementById('idCardRoleVal').innerText = roleVal;
+  document.getElementById('idCardGuardianVal').innerText = loggedInPsUser.guardianName || "-";
+  document.getElementById('idCardGpVal').innerText = loggedInPsUser.gramPanchayat || "-";
+  document.getElementById('idCardMobileVal').innerText = loggedInPsUser.mobile || "-";
+  document.getElementById('idCardBloodVal').innerText = bloodVal;
+  document.getElementById('idCardPresidentNameSig').innerText = pres.name;
+
+  var qrVerifyText = "VERIFIED UNION ID\nID: " + uidStr +
+    "\nName: " + (loggedInPsUser.fullName || "") +
+    "\nRole: " + roleVal +
+    "\nGP: " + (loggedInPsUser.gramPanchayat || "") +
+    "\nBlock: Utraula, Balrampur" +
+    "\nMobile: " + (loggedInPsUser.mobile || "");
+  var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=4&data=" + encodeURIComponent(qrVerifyText);
+  var qrImg = document.getElementById('idCardQrImg');
+  if (qrImg && qrImg.src !== qrUrl) {
+    qrImg.src = qrUrl;
+  }
+}
+
+function downloadUnionIdCardImage() {
+  if (!loggedInPsUser) return;
+  showLoader("HD यूनियन ID कार्ड इमेज तैयार हो रही है...");
+  var pres = getDynamicPresidentObj();
+  var roleVal = document.getElementById('idCardDesignationSelect').value || "पंचायत सहायक / सक्रिय सदस्य";
+  var bloodVal = document.getElementById('idCardBloodGroup').value || "B+";
+  var mobLast4 = String(loggedInPsUser.mobile || "0000").replace(/\D/g, "").slice(-4) || "0101";
+  var uidStr = "PSKU-UTR-" + mobLast4;
+
+  var canvas = document.createElement('canvas');
+  canvas.width = 760;
+  canvas.height = 1080;
+  var ctx = canvas.getContext('2d');
+
+  // Card Background
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, 760, 1080);
+
+  // Tricolor Top Bar
+  ctx.fillStyle = "#f97316"; ctx.fillRect(0, 0, 253, 14);
+  ctx.fillStyle = "#ffffff"; ctx.fillRect(253, 0, 254, 14);
+  ctx.fillStyle = "#16a34a"; ctx.fillRect(507, 0, 253, 14);
+
+  // Header Banner
+  var grad = ctx.createLinearGradient(0, 14, 760, 190);
+  grad.addColorStop(0, "#1e3a8a");
+  grad.addColorStop(1, "#0f172a");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 14, 760, 170);
+
+  ctx.fillStyle = "#dc2626";
+  ctx.fillRect(0, 184, 760, 8);
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#facc15";
+  ctx.font = "bold 20px sans-serif";
+  ctx.fillText("REG.NO - LUC/08494/2024-2025", 380, 52);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 36px serif";
+  ctx.fillText("पंचायत सहायक कर्मचारी यूनियन", 380, 105);
+
+  ctx.fillStyle = "#38bdf8";
+  ctx.font = "bold 24px sans-serif";
+  ctx.fillText("विकास खण्ड- उतरौला, जनपद- बलरामपुर (उ०प्र०)", 380, 150);
+
+  // ID Pill
+  ctx.fillStyle = "#eff6ff";
+  ctx.fillRect(220, 212, 320, 42);
+  ctx.strokeStyle = "#2563eb";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(220, 212, 320, 42);
+  ctx.fillStyle = "#1e3a8a";
+  ctx.font = "bold 22px sans-serif";
+  ctx.fillText("ID NO: " + uidStr, 380, 240);
+
+  var photoImg = document.getElementById('idCardPhotoPreview');
+  var qrImg = document.getElementById('idCardQrImg');
+
+  function finishCanvasDraw() {
+    // Photo Box Frame
+    ctx.strokeStyle = "#1e3a8a";
+    ctx.lineWidth = 5;
+    ctx.strokeRect(140, 275, 200, 230);
+    try {
+      if (photoImg && photoImg.complete) {
+        ctx.drawImage(photoImg, 143, 278, 194, 224);
+      }
+    } catch (e) {}
+
+    // QR Frame
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(420, 285, 190, 190);
+    try {
+      if (qrImg && qrImg.complete && qrImg.naturalWidth > 0) {
+        var testC = document.createElement('canvas');
+        testC.width = 10; testC.height = 10;
+        testC.getContext('2d').drawImage(qrImg, 0, 0, 10, 10);
+        testC.toDataURL('image/png');
+        ctx.drawImage(qrImg, 428, 293, 174, 174);
+      }
+    } catch (e) {}
+    ctx.fillStyle = "#16a34a";
+    ctx.font = "bold 18px sans-serif";
+    ctx.fillText("✓ सत्यापित QR कोड", 515, 500);
+
+    // Member Name & Role
+    ctx.fillStyle = "#1e3a8a";
+    ctx.font = "bold 36px sans-serif";
+    ctx.fillText(loggedInPsUser.fullName || "-", 380, 560);
+
+    ctx.fillStyle = "#dc2626";
+    ctx.fillRect(170, 580, 420, 46);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 23px sans-serif";
+    ctx.fillText(roleVal, 380, 611);
+
+    // Details Box
+    ctx.fillStyle = "#f8fafc";
+    ctx.fillRect(50, 650, 660, 245);
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(50, 650, 660, 245);
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "bold 24px sans-serif";
+    ctx.fillText("पिता/पति का नाम :  " + (loggedInPsUser.guardianName || "-"), 80, 698);
+    ctx.fillStyle = "#1e3a8a";
+    ctx.fillText("ग्राम पंचायत         :  " + (loggedInPsUser.gramPanchayat || "-"), 80, 746);
+    ctx.fillStyle = "#0f172a";
+    ctx.fillText("विकास खण्ड / जिला :  उतरौला, बलरामपुर (उ०प्र०)", 80, 794);
+    ctx.fillText("मोबाइल नंबर         :  " + (loggedInPsUser.mobile || "-"), 80, 842);
+    ctx.fillStyle = "#dc2626";
+    ctx.fillText("ब्लड ग्रुप: " + bloodVal, 510, 842);
+
+    // Signatory Footer
+    ctx.fillStyle = "#16a34a";
+    ctx.font = "bold 20px sans-serif";
+    ctx.fillText("● आधिकारिक यूनियन परिचय पत्र", 60, 945);
+    ctx.fillStyle = "#475569";
+    ctx.font = "18px sans-serif";
+    ctx.fillText("अधिकार • सम्मान • सेवा सुरक्षा", 60, 975);
+
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#1e3a8a";
+    ctx.font = "bold 23px sans-serif";
+    ctx.fillText(pres.name, 700, 945);
+    ctx.fillStyle = "#475569";
+    ctx.font = "bold 18px sans-serif";
+    ctx.fillText(pres.designation + " - उतरौला (बलरामपुर)", 700, 975);
+
+    // Bottom Strip
+    ctx.fillStyle = "#0f172a";
+    ctx.fillRect(0, 1015, 760, 65);
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 20px sans-serif";
+    ctx.fillText("कार्यालय: विकास खण्ड उतरौला, जनपद बलरामपुर (उ०प्र०) - 271604", 380, 1055);
+
+    // Outer Border
+    ctx.strokeStyle = "#1e3a8a";
+    ctx.lineWidth = 8;
+    ctx.strokeRect(4, 4, 752, 1072);
+
+    hideLoader();
+    try {
+      var dataUrl = canvas.toDataURL("image/png");
+      var a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "Union_ID_Card_" + (loggedInPsUser.gramPanchayat || "PS") + ".png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (err) {
+      printUnionIdCardPDF();
+    }
+  }
+
+  setTimeout(finishCanvasDraw, 150);
+}
+
+function printUnionIdCardPDF() {
+  var cardHtml = document.getElementById('unionIdCardVisual').outerHTML;
+  var printArea = document.getElementById('printTemplateArea');
+  printArea.innerHTML = '<div style="padding:25px; display:flex; justify-content:center; align-items:center;">' + cardHtml + '</div>';
+  window.print();
+}
+
+// ================= NEW FEATURE 3: FORGOT PASSWORD & 1-CLICK ADMIN RESET =================
+function openForgotPasswordModal() {
+  document.getElementById('forgotEmail').value = document.getElementById('psLoginEmail') ? document.getElementById('psLoginEmail').value.trim() : "";
+  document.getElementById('forgotMobile').value = "";
+  document.getElementById('forgotAadhaar').value = "";
+  document.getElementById('forgotNewPass').value = "";
+  document.getElementById('forgotNewMpin').value = "";
+  openModal('forgotPasswordModal');
+}
+
+function handleForgotPasswordSubmit(e) {
+  e.preventDefault();
+  var email = document.getElementById('forgotEmail').value.trim();
+  var mobile = document.getElementById('forgotMobile').value.trim();
+  var aadhaar = document.getElementById('forgotAadhaar').value.trim();
+  var newPass = document.getElementById('forgotNewPass').value.trim();
+  var newMpin = document.getElementById('forgotNewMpin').value.trim();
+
+  if (newPass.length < 4) {
+    showMsg("ध्यान दें", "नया पासवर्ड कम से कम 4 अक्षरों का होना चाहिए।", false);
+    return;
+  }
+  if (newMpin.length !== 4 || isNaN(newMpin)) {
+    showMsg("ध्यान दें", "MPIN केवल 4 अंकों की संख्या होनी चाहिए।", false);
+    return;
+  }
+
+  showLoader("आपका विवरण सत्यापित कर पासवर्ड रीसेट किया जा रहा है...");
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    if (res && res.success) {
+      closeModal('forgotPasswordModal');
+      showMsg("पासवर्ड रीसेट सफल!", res.message, false);
+    } else {
+      showMsg("सत्यापन विफल", (res ? res.message : "रीसेट नहीं हो सका"), false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("त्रुटि", err.toString(), false);
+  }).resetForgottenPsCredentials(email, mobile, aadhaar, newPass, newMpin);
+}
+
+function handleAdminQuickResetPassword(rowIndex, userName) {
+  if (!adminSessionToken) {
+    showMsg("त्रुटि", "कृपया पहले एडमिन लॉगिन करें!", false);
+    return;
+  }
+  confirmUniversalDelete('resetPassOnly', rowIndex, userName);
+}
+
+// ================= NEW FEATURE 5: OFFICIAL MEMORANDUM / PROBLEM REPORT GENERATOR =================
+function openMemorandumModal() {
+  generateOfficialMemorandumPreview();
+  openModal('officialMemorandumModal');
+}
+
+function generateOfficialMemorandumPreview() {
+  var recipientCode = document.getElementById('memoRecipientSelect').value;
+  var categoryCode = document.getElementById('memoCategorySelect').value;
+  var refNo = document.getElementById('memoRefNoInput').value.trim() || "PSKU/UTR/2026/01";
+  var pres = getDynamicPresidentObj();
+  var now = new Date();
+  var todayStr = ("0" + now.getDate()).slice(-2) + "/" + ("0" + (now.getMonth() + 1)).slice(-2) + "/" + now.getFullYear();
+
+  var recipientHtml = "";
+  if (recipientCode === "BDO") {
+    recipientHtml = "श्रीमान खंड विकास अधिकारी (BDO) महोदय,<br>विकास खण्ड- उतरौला, जनपद- बलरामपुर (उ०प्र०)।";
+  } else if (recipientCode === "DPRO") {
+    recipientHtml = "श्रीमान जिला पंचायत राज अधिकारी (DPRO) महोदय,<br>जनपद- बलरामपुर (उ०प्र०)।";
+  } else {
+    recipientHtml = "श्रीमान मुख्य विकास अधिकारी (CDO) / जिलाधिकारी महोदय,<br>जनपद- बलरामपुर (उ०प्र०)।";
+  }
+
+  var subjectText = "";
+  var introPara = "";
+  var colHeader = "समस्या / वर्तमान स्थिति";
+  var filteredRows = [];
+
+  for (var i = 0; i < cachedSurveyRecords.length; i++) {
+    var r = cachedSurveyRecords[i];
+    if (categoryCode === "PENDING_SALARY") {
+      var m = parseInt(r.pendingSalaryMonths, 10) || 0;
+      if (m > 0) {
+        filteredRows.push({ gp: r.gramPanchayat, name: r.fullName, mobile: r.mobile, detail: m + " माह का मानदेय लंबित" });
+      }
+    } else if (categoryCode === "NO_WIFI") {
+      if (String(r.wifiStatus).indexOf("नहीं") !== -1) {
+        filteredRows.push({ gp: r.gramPanchayat, name: r.fullName, mobile: r.mobile, detail: "वाई-फ़ाई: " + r.wifiStatus });
+      }
+    } else if (categoryCode === "BAD_PRINTER") {
+      if (String(r.printerStatus).indexOf("नहीं") !== -1 || String(r.printerStatus).indexOf("ख़राब") !== -1) {
+        filteredRows.push({ gp: r.gramPanchayat, name: r.fullName, mobile: r.mobile, detail: "प्रिंटर: " + r.printerStatus });
+      }
+    } else if (categoryCode === "NO_INFRA") {
+      var issues = [];
+      if (String(r.electricity).indexOf("नहीं") !== -1) issues.push("बिजली नहीं");
+      if (String(r.drinkingWater).indexOf("नहीं") !== -1) issues.push("पेयजल नहीं");
+      if (String(r.toiletStatus).indexOf("नहीं") !== -1) issues.push("शौचालय समस्या");
+      if (issues.length > 0) {
+        filteredRows.push({ gp: r.gramPanchayat, name: r.fullName, mobile: r.mobile, detail: issues.join(", ") });
+      }
+    } else if (categoryCode === "NO_STATIONERY") {
+      var stIssues = [];
+      if (String(r.stationery).indexOf("नहीं") !== -1) stIssues.push("स्टेशनरी अनुपलब्ध");
+      if (String(r.gramNidhiRecharge).indexOf("नहीं") !== -1) stIssues.push("मोबाइल रिचार्ज लंबित");
+      if (stIssues.length > 0) {
+        filteredRows.push({ gp: r.gramPanchayat, name: r.fullName, mobile: r.mobile, detail: stIssues.join(", ") });
+      }
+    } else {
+      filteredRows.push({
+        gp: r.gramPanchayat,
+        name: r.fullName,
+        mobile: r.mobile,
+        detail: "बकाया मानदेय: " + (r.pendingSalaryMonths || "0") + " माह | वाई-फ़ाई: " + r.wifiStatus + " | प्रिंटर: " + r.printerStatus
+      });
+    }
+  }
+
+  if (categoryCode === "PENDING_SALARY") {
+    subjectText = "विकास खण्ड उतरौला की ग्राम पंचायतों में कार्यरत पंचायत सहायकों के लंबित मानदेय भुगतान कराए जाने के संबंध में ज्ञापन।";
+    introPara = "सविनय अवगत कराना है कि विकास खण्ड उतरौला (जनपद बलरामपुर) की निम्नलिखित ग्राम पंचायतों में कार्यरत पंचायत सहायकों का कई माह से मानदेय भुगतान लंबित है, जिसके कारण अल्प मानदेय में कार्य कर रहे पंचायत सहायकों के समक्ष गंभीर आर्थिक संकट उत्पन्न हो गया है।";
+    colHeader = "लंबित मानदेय (माह)";
+  } else if (categoryCode === "NO_WIFI") {
+    subjectText = "ग्राम सचिवालयों में वाई-फ़ाई (Wi-Fi) कनेक्शन एवं रिचार्ज व्यवस्था सुचारू कराए जाने के संबंध में ज्ञापन।";
+    introPara = "सविनय अवगत कराना है कि निम्नलिखित ग्राम पंचायतों के सचिवालयों में वाई-फ़ाई सुविधा उपलब्ध नहीं है अथवा रिचार्ज लंबित है, जिससे ई-डिस्ट्रिक्ट व शासकीय ऑनलाइन कार्यों के संपादन में भारी कठिनाई हो रही है।";
+    colHeader = "वाई-फ़ाई की स्थिति";
+  } else if (categoryCode === "BAD_PRINTER") {
+    subjectText = "ग्राम पंचायत सचिवालयों में खराब / अनुपलब्ध प्रिंटर को ठीक कराए जाने के संबंध में ज्ञापन।";
+    introPara = "सविनय अवगत कराना है कि निम्नलिखित ग्राम पंचायतों के पंचायत भवनों में प्रिंटर खराब है अथवा उपलब्ध नहीं है, जिससे ग्रामीणों को प्रमाण-पत्र व शासकीय प्रिंट निकालने में समस्या हो रही है।";
+    colHeader = "प्रिंटर की स्थिति";
+  } else if (categoryCode === "NO_INFRA") {
+    subjectText = "ग्राम पंचायत भवनों में मूलभूत सुविधाओं (बिजली, पेयजल एवं शौचालय स्वच्छता) की व्यवस्था कराए जाने के संबंध में।";
+    introPara = "सविनय अवगत कराना है कि निम्नलिखित ग्राम पंचायत भवनों में बिजली, पेयजल अथवा शौचालय की समुचित व्यवस्था न होने से पंचायत सहायकों एवं ग्रामीणों को अत्यंत असुविधा का सामना करना पड़ रहा है।";
+    colHeader = "मूलभूत समस्या विवरण";
+  } else if (categoryCode === "NO_STATIONERY") {
+    subjectText = "ग्राम सचिवालयों में स्टेशनरी सामग्री एवं ग्राम निधि से मोबाइल रिचार्ज उपलब्ध कराए जाने के संबंध में।";
+    introPara = "सविनय अवगत कराना है कि निम्नलिखित ग्राम पंचायतों में दैनिक शासकीय कार्य हेतु स्टेशनरी सामग्री एवं मोबाइल रिचार्ज की सुविधा लंबित है।";
+    colHeader = "लंबित सुविधा";
+  } else {
+    subjectText = "विकास खण्ड उतरौला के ग्राम पंचायत सचिवालयों की भौतिक स्थिति एवं समस्याओं के निराकरण हेतु समेकित ज्ञापन।";
+    introPara = "सविनय अवगत कराना है कि पंचायत सहायक कर्मचारी यूनियन उतरौला द्वारा किए गए ऑनलाइन सर्वेक्षण में ग्राम पंचायत भवनों की वर्तमान स्थिति निम्नवत पाई गई है, जिनका त्वरित संज्ञान लेकर निराकरण कराया जाना अत्यंत आवश्यक है।";
+    colHeader = "सर्वे स्थिति सारांश";
+  }
+
+  var tableHtml = '<table border="1" style="width:100%; border-collapse:collapse; font-size:12.5px; margin:12px 0; text-align:left;" cellpadding="6">' +
+    '<tr style="background:#1e3a8a; color:#ffffff;"><th>क्र०सं०</th><th>ग्राम पंचायत का नाम</th><th>पंचायत सहायक का नाम</th><th>मोबाइल नंबर</th><th>' + escapeHtml(colHeader) + '</th></tr>';
+
+  if (filteredRows.length === 0) {
+    tableHtml += '<tr><td colspan="5" style="text-align:center; padding:12px;">इस श्रेणी में कोई लंबित रिकॉर्ड नहीं मिला।</td></tr>';
+  } else {
+    for (var j = 0; j < filteredRows.length; j++) {
+      var item = filteredRows[j];
+      tableHtml += '<tr>' +
+        '<td style="text-align:center;">' + (j + 1) + '</td>' +
+        '<td><b>' + escapeHtml(item.gp) + '</b></td>' +
+        '<td>' + escapeHtml(item.name) + '</td>' +
+        '<td>' + escapeHtml(item.mobile) + '</td>' +
+        '<td style="color:#dc2626; font-weight:bold;">' + escapeHtml(item.detail) + '</td>' +
+      '</tr>';
+    }
+  }
+  tableHtml += '</table>';
+
+  // कार्यकारिणी हस्ताक्षर ब्लॉक
+  var execSigsHtml = '<div style="margin-top:28px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:15px;">' +
+    '<div style="font-size:12px; text-align:left;">' +
+      '<b>प्रतिलिपि सूचनार्थ एवं आवश्यक कार्यवाही हेतु:</b><br>' +
+      '1. श्रीमान जिलाधिकारी महोदय, बलरामपुर।<br>' +
+      '2. श्रीमान मुख्य विकास अधिकारी महोदय, बलरामपुर।<br>' +
+      '3. जिला/प्रदेश कार्यकारिणी, पंचायत सहायक कर्मचारी यूनियन उ०प्र०।' +
+    '</div>' +
+    '<div style="text-align:center; min-width:220px;">' +
+      '<b>भवदीय / निवेदक</b><br><br>' +
+      '<b style="font-size:15px; color:#1e3a8a;">(' + escapeHtml(pres.name) + ')</b><br>' +
+      '<b>' + escapeHtml(pres.designation) + ' - विकास खण्ड उतरौला</b><br>' +
+      'मो०: ' + escapeHtml(pres.mobile) + '<br>' +
+      'पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश' +
+    '</div>' +
+  '</div>';
+
+  var fullMemoHtml = getDynamicPrintHeaderHTML() +
+    '<div style="display:flex; justify-content:space-between; font-size:13px; font-weight:bold; margin-bottom:12px;">' +
+      '<span>पत्रांक: ' + escapeHtml(refNo) + '</span>' +
+      '<span>दिनांक: ' + todayStr + '</span>' +
+    '</div>' +
+    '<div><b>सेवा में,</b></div>' +
+    '<div style="margin-left:40px; font-weight:bold; margin-bottom:12px;">' + recipientHtml + '</div>' +
+    '<div style="font-weight:bold; text-decoration:underline; margin-bottom:10px;">विषय: ' + escapeHtml(subjectText) + '</div>' +
+    '<div><b>महोदय,</b></div>' +
+    '<p style="text-indent:30px; text-align:justify; margin:6px 0;">' + introPara + ' संबंधित ग्राम पंचायतों का विवरण निम्नवत है (कुल ग्राम पंचायतें: <b>' + filteredRows.length + '</b>):</p>' +
+    tableHtml +
+    '<p style="text-indent:30px; text-align:justify; margin:10px 0;">अतः श्रीमान जी से विनम्र अनुरोध है कि उपरोक्त सूची का संज्ञान लेते हुए संबंधित ग्राम पंचायतों की समस्याओं का त्वरित निस्तारण करने हेतु संबंधित को निर्देशित करने की कृपा करें। यूनियन आपका सदैव आभारी रहेगा।</p>' +
+    execSigsHtml;
+
+  document.getElementById('memoPreviewContainer').innerHTML = fullMemoHtml;
+}
+
+function printOfficialMemorandumPDF() {
+  var content = document.getElementById('memoPreviewContainer').innerHTML;
+  var printArea = document.getElementById('printTemplateArea');
+  printArea.innerHTML = '<div style="padding:15px; font-family:\'Tiro Devanagari Hindi\', serif; color:#000000; line-height:1.65;">' + content + '</div>';
+  window.print();
+}
+
+function downloadOfficialMemorandumWord() {
+  var content = document.getElementById('memoPreviewContainer').innerHTML;
+  var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>" +
+    "<head><meta charset='utf-8'><title>Union Memorandum</title><style>body{font-family:'Arial', sans-serif; line-height:1.6;} table{border-collapse:collapse; width:100%;} td,th{border:1px solid #000; padding:6px;}</style></head><body>";
+  var blob = new Blob(['\ufeff' + header + content + "</body></html>"], { type: 'application/msword' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = "Union_Memorandum_Utraula.doc";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// ================= NEW FEATURE 6: ADD NEW CLUSTER MODAL (+ Add Cluster) =================
+function openAddClusterModal() {
+  document.getElementById('addClusterName').value = "";
+  document.getElementById('addClusterHq').value = "";
+  document.getElementById('addClusterGp').value = "";
+  document.getElementById('addClusterLgd').value = "";
+  document.getElementById('addClusterAdoName').value = "";
+  document.getElementById('addClusterAdoMobile').value = "";
+  document.getElementById('addClusterSecName').value = "";
+  document.getElementById('addClusterSecMobile').value = "";
+  document.getElementById('addClusterPsName').value = "";
+  document.getElementById('addClusterGuardian').value = "";
+  document.getElementById('addClusterMobile').value = "";
+  document.getElementById('addClusterEmail').value = "";
+  openModal('addClusterModal');
+}
+
+function handleAddClusterSubmit(e) {
+  e.preventDefault();
+  var payload = {
+    clusterName: document.getElementById('addClusterName').value.trim(),
+    clusterHq: document.getElementById('addClusterHq').value.trim(),
+    gramPanchayat: document.getElementById('addClusterGp').value.trim(),
+    lgdCode: document.getElementById('addClusterLgd').value.trim(),
+    bdoName: document.getElementById('addClusterBdoName').value.trim(),
+    bdoMobile: document.getElementById('addClusterBdoMobile').value.trim(),
+    adoName: document.getElementById('addClusterAdoName').value.trim(),
+    adoMobile: document.getElementById('addClusterAdoMobile').value.trim(),
+    secretaryName: document.getElementById('addClusterSecName').value.trim(),
+    secretaryMobile: document.getElementById('addClusterSecMobile').value.trim(),
+    psName: document.getElementById('addClusterPsName').value.trim(),
+    guardianName: document.getElementById('addClusterGuardian').value.trim(),
+    mobile: document.getElementById('addClusterMobile').value.trim(),
+    email: document.getElementById('addClusterEmail').value.trim()
+  };
+
+  showLoader("नया क्लस्टर व ग्राम पंचायत रिकॉर्ड जोड़ा जा रहा है...");
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    closeModal('addClusterModal');
+    showMsg("क्लस्टर स्थिति", res.message, res.success);
+    if (res && res.success) {
+      safeRemoveStorage(sessionStorage, 'psk_home_stats_fast_cache');
+      loadAdminDashboardData();
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("त्रुटि", err.toString(), false);
+  }).addClusterRecordSecure(adminSessionToken, payload);
 }
 </script>
 </body>
