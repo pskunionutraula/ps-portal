@@ -784,6 +784,141 @@ body.modal-open {
   font-size: 22px;
 }
   
+  
+  /* ================= UNION INCOME PORTAL STYLES ================= */
+  .income-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .income-kpi-card {
+    background: var(--input-bg);
+    border: 1.5px solid var(--input-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  }
+  .income-kpi-card .kpi-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 4px;
+  }
+  .income-kpi-card .kpi-val {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .income-kpi-card .kpi-sub {
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .btn-income-oneclick {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.28);
+    transition: transform 0.12s ease, background 0.15s ease;
+    white-space: nowrap;
+  }
+  .btn-income-oneclick:hover {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    transform: translateY(-1px);
+  }
+  .badge-income-paid {
+    background: rgba(22, 163, 74, 0.14);
+    color: #16a34a;
+    border: 1.5px solid #16a34a;
+    padding: 4px 10px;
+    border-radius: 18px;
+    font-size: 12px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .badge-income-partial {
+    background: rgba(245, 158, 11, 0.15);
+    color: #d97706;
+    border: 1.5px solid #f59e0b;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 11.5px;
+    font-weight: 800;
+    display: inline-block;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .income-filter-pill {
+    padding: 6px 13px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1.5px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .income-filter-pill.active {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
+  }
+  .income-col-header-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 135px;
+    line-height: 1.3;
+  }
+  .income-col-header-title {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .income-col-header-date {
+    font-size: 10.5px;
+    color: #cbd5e1;
+    font-weight: 600;
+  }
+  .income-col-header-amt {
+    background: #facc15;
+    color: #0f172a;
+    padding: 1px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    margin-top: 2px;
+  }
+  .cluster-prog-chip {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    min-width: 175px;
+    flex: 1 1 175px;
+  }
+
   </style>
 
   <!-- तारीख को हमेशा 31/08/2026 (DD/MM/YYYY) फ़ॉर्मेट में दिखाने के लिए -->
@@ -2004,9 +2139,11 @@ body.modal-open {
 <div class="admin-dashboard-container" id="adminDashboardView">
   <div class="admin-header-bar">
     <h2 style="font-size:18px;"><i class="fa-solid fa-chart-line"></i> उतरौला ब्लॉक - सर्वे एनालिटिक्स व अप्रूवल पोर्टल</h2>
-    <div>
-      <span style="margin-right:10px; font-weight:bold; font-size:13px;" id="adminHeaderPresidentInfo">अध्यक्ष: प्रमोद वर्मा (9119323310)</span>
-      <button class="submit-btn" style="background:#dc2626; padding:5px 12px; font-size:12px; width:auto; display:inline-block;" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> लॉगआउट</button>
+    <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
+      <span style="margin-right:4px; font-weight:bold; font-size:13px;" id="adminHeaderPresidentInfo">अध्यक्ष: प्रमोद वर्मा (9119323310)</span>
+      <button class="submit-btn" style="background:linear-gradient(135deg, #059669, #15803d); padding:5px 12px; font-size:12px; width:auto; display:inline-block; margin:0;" onclick="switchAdminTab('unionIncome')"><i class="fa-solid fa-indian-rupee-sign"></i> 💰 यूनियन आय</button>
+      <button class="submit-btn" style="background:linear-gradient(135deg, #2563eb, #4f46e5); padding:5px 12px; font-size:12px; width:auto; display:inline-block; margin:0;" onclick="switchAdminTab('psPortalControl')"><i class="fa-solid fa-sliders"></i> 🎛️ PS पोर्टल कंट्रोल</button>
+      <button class="submit-btn" style="background:#dc2626; padding:5px 12px; font-size:12px; width:auto; display:inline-block; margin:0;" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> लॉगआउट</button>
     </div>
   </div>
 
@@ -2016,6 +2153,8 @@ body.modal-open {
     <button class="admin-tab-btn" id="tabRegisteredBtn" onclick="switchAdminTab('registered')"><i class="fa-solid fa-address-book"></i> पंजीकृत PS (<span id="totalRegTabCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabClusterBtn" onclick="switchAdminTab('cluster')"><i class="fa-solid fa-sitemap"></i> क्लस्टर विवरण (<span id="totalClusterTabCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabExecutivesBtn" onclick="switchAdminTab('executives')"><i class="fa-solid fa-users-gear"></i> 🏛️ कार्यकारिणी प्रबंधन (<span id="totalExecTabCount">7</span>)</button>
+    <button class="admin-tab-btn" id="tabUnionIncomeBtn" onclick="switchAdminTab('unionIncome')"><i class="fa-solid fa-indian-rupee-sign"></i> 💰 यूनियन आय (<span id="totalUnionIncomeBadge">₹0</span>)</button>
+    <button class="admin-tab-btn" id="tabPsPortalControlBtn" onclick="switchAdminTab('psPortalControl')"><i class="fa-solid fa-sliders"></i> 🎛️ PS पोर्टल कंट्रोल (<span id="totalPsPortalBtnCount">10/10</span>)</button>
     <button class="admin-tab-btn" id="tabLoginLogsBtn" onclick="switchAdminTab('loginLogs')"><i class="fa-solid fa-clock-rotate-left"></i> PS लॉगिन ट्रैकर (<span id="totalLoginLogsCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabApprovalBtn" onclick="switchAdminTab('approval')"><i class="fa-solid fa-user-check"></i> नया पंजीकरण अप्रूवल (<span id="pendingCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabNoticesBtn" onclick="switchAdminTab('notices')"><i class="fa-solid fa-bullhorn"></i> नोटिस बोर्ड प्रबंधक</button>
@@ -2363,10 +2502,357 @@ body.modal-open {
       </table>
     </div>
   </div>
+
+  <!-- TAB 12: PS PORTAL BUTTON & SERIAL ORDER CONTROLLER (PS पोर्टल कंट्रोल पैनल) -->
+  <div id="psPortalControlTabContent" style="display:none;">
+    <div style="background:linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color:#ffffff; border-radius:12px; padding:16px 20px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border:1px solid #3b82f6;">
+      <div>
+        <h3 style="font-family:'Rozha One', serif; font-size:20px; color:#38bdf8; margin-bottom:4px;"><i class="fa-solid fa-sliders"></i> पंचायत सहायक (PS) पोर्टल बटन एवं क्रम संख्या नियंत्रक</h3>
+        <p style="font-size:12.5px; color:#cbd5e1; margin:0;">यहाँ से नियंत्रित करें कि PS पोर्टल पर कौन-कौन से बटन दिखाई देंगे (Show/Hide), किस क्रम संख्या (Serial Order 1, 2, 3...) में लगेंगे, और लॉगिन पर सबसे पहले कौन-सा टैब खुलेगा।</p>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <button type="button" class="submit-btn" style="background:#0284c7; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="setAllPsPortalButtonsVisibility(true)">
+          <i class="fa-solid fa-eye"></i> सभी बटन चालू करें
+        </button>
+        <button type="button" class="submit-btn" style="background:#64748b; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="resetPsPortalConfigToDefault()">
+          <i class="fa-solid fa-rotate-left"></i> डिफ़ॉल्ट क्रम रीसेट
+        </button>
+        <button type="button" class="submit-btn" style="background:#16a34a; width:auto; font-size:13px; padding:8px 18px; margin:0; box-shadow:0 4px 12px rgba(22,163,74,0.35);" onclick="savePsPortalConfigFromAdmin()">
+          <i class="fa-solid fa-floppy-disk"></i> सेव व लागू करें (Save)
+        </button>
+      </div>
+    </div>
+
+    <!-- Live PS Portal Navigation Preview Box -->
+    <div style="background:var(--sub-box-bg); border:2px dashed #2563eb; border-radius:12px; padding:14px 16px; margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+        <span style="font-size:13.5px; font-weight:800; color:#2563eb;"><i class="fa-solid fa-wand-magic-sparkles"></i> लाइव PS पोर्टल बटन प्रीव्यू (जैसा पंचायत सहायक को दिखेगा):</span>
+        <span id="adminPsPortalPreviewSummary" style="font-size:12px; font-weight:700; color:#16a34a; background:rgba(22,163,74,0.12); padding:4px 10px; border-radius:20px;">सक्रिय बटन: 10/10</span>
+      </div>
+      <div class="modern-pill-nav" id="adminPsPortalLivePreviewBar" style="margin-bottom:0; pointer-events:none;"></div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:110px; text-align:center;">क्रम संख्या (Serial #)</th>
+            <th style="width:140px; text-align:center;">क्रम बदलें (Up / Down)</th>
+            <th>PS पोर्टल बटन का नाम (Label) व कार्य</th>
+            <th style="width:170px; text-align:center;">दृश्यता (Show / Hide)</th>
+            <th style="width:150px; text-align:center;">लॉगिन डिफ़ॉल्ट टैब</th>
+          </tr>
+        </thead>
+        <tbody id="adminPsPortalControlTableBody"></tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:16px; display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
+      <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #16a34a, #15803d); width:auto; font-size:14px; padding:10px 26px; margin:0;" onclick="savePsPortalConfigFromAdmin()">
+        <i class="fa-solid fa-circle-check"></i> PS पोर्टल सेटिंग्स सुरक्षित व लागू करें
+      </button>
+    </div>
+  </div>
+
+  <!-- TAB 13: UNION INCOME / COLLECTION MATRIX PORTAL (💰 यूनियन आय एवं सहयोग राशि पोर्टल) -->
+  <div id="unionIncomeTabContent" style="display:none;">
+    <!-- Top Executive Command Banner -->
+    <div style="background:linear-gradient(135deg, #064e3b 0%, #0f172a 100%); color:#ffffff; border-radius:12px; padding:16px 20px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border:1px solid #10b981;">
+      <div>
+        <h3 style="font-family:'Rozha One', serif; font-size:21px; color:#34d399; margin-bottom:4px;"><i class="fa-solid fa-indian-rupee-sign"></i> पंचायत सहायक कर्मचारी यूनियन (उतरौला) - यूनियन आय व सहयोग राशि पोर्टल</h3>
+        <p style="font-size:12.5px; color:#cbd5e1; margin:0;">क्लस्टर-वार ऑटोमेटिक ग्राम पंचायत रजिस्टर, अनगिनत पेमेंट कॉलम (मद), 1-Click ऑटो राशि प्रविष्टि, बकाया/जमा PDF और बल्क WhatsApp रिमाइंडर।</p>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; width:auto; font-size:13px; padding:9px 16px; margin:0; box-shadow:0 4px 12px rgba(245,158,11,0.35);" onclick="openAddIncomeColumnModal()">
+          <i class="fa-solid fa-plus-circle"></i> + नया पेमेंट कॉलम (मद) जोड़ें
+        </button>
+        <button type="button" class="submit-btn" style="background:#0284c7; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="openClusterPrabhariModal()">
+          <i class="fa-solid fa-user-tie"></i> 👥 क्लस्टर प्रभारी सेट करें
+        </button>
+        <button type="button" class="submit-btn" style="background:#dc2626; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="printUnionIncomeReportPDF('PENDING')">
+          <i class="fa-solid fa-file-pdf"></i> 🔴 बकाया सूची PDF
+        </button>
+        <button type="button" class="submit-btn" style="background:#16a34a; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="printUnionIncomeReportPDF('PAID')">
+          <i class="fa-solid fa-file-circle-check"></i> 🟢 जमा सूची PDF
+        </button>
+        <button type="button" class="submit-btn" style="background:#25d366; color:#0f172a; font-weight:800; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="openBulkPendingWhatsAppModal()">
+          <i class="fa-brands fa-whatsapp"></i> 📲 पेंडिंग बल्क WhatsApp
+        </button>
+        <button type="button" class="submit-btn" style="background:#4f46e5; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="exportUnionIncomeToCSV()">
+          <i class="fa-solid fa-file-excel"></i> Excel / CSV
+        </button>
+      </div>
+    </div>
+
+    <!-- 4 Financial KPI Cards -->
+    <div class="income-kpi-grid">
+      <div class="income-kpi-card" style="border-left:4px solid #3b82f6;">
+        <div class="kpi-label"><i class="fa-solid fa-landmark" style="color:#3b82f6;"></i> कुल ग्राम पंचायतें व सक्रिय मद</div>
+        <div class="kpi-val" style="color:#2563eb;" id="incStatTotalGps">0 GP</div>
+        <div class="kpi-sub" style="color:#64748b;" id="incStatTotalCols">सक्रिय पेमेंट कॉलम: 0</div>
+      </div>
+      <div class="income-kpi-card" style="border-left:4px solid #8b5cf6;">
+        <div class="kpi-label"><i class="fa-solid fa-bullseye" style="color:#8b5cf6;"></i> कुल निर्धारित लक्ष्य (Expected)</div>
+        <div class="kpi-val" style="color:#7c3aed;" id="incStatExpectedAmt">₹0</div>
+        <div class="kpi-sub" style="color:#64748b;" id="incStatSelectedColLabel">सभी पेमेंट कॉलम का योग</div>
+      </div>
+      <div class="income-kpi-card" style="border-left:4px solid #16a34a;">
+        <div class="kpi-label"><i class="fa-solid fa-vault" style="color:#16a34a;"></i> कुल प्राप्त सहयोग राशि (Collected)</div>
+        <div class="kpi-val" style="color:#16a34a;" id="incStatCollectedAmt">₹0</div>
+        <div class="kpi-sub" style="color:#15803d;" id="incStatPaidCountSub">0 पंचायत सहायकों द्वारा जमा (0%)</div>
+      </div>
+      <div class="income-kpi-card" style="border-left:4px solid #dc2626;">
+        <div class="kpi-label"><i class="fa-solid fa-clock-rotate-left" style="color:#dc2626;"></i> कुल बकाया राशि (Pending)</div>
+        <div class="kpi-val" style="color:#dc2626;" id="incStatPendingAmt">₹0</div>
+        <div class="kpi-sub" style="color:#dc2626;" id="incStatPendingCountSub">0 पंचायत सहायकों का शुल्क लंबित</div>
+      </div>
+    </div>
+
+    <!-- Cluster-Wise Collection Progress Strip -->
+    <div style="background:var(--sub-box-bg); border:1.5px solid var(--input-border); border-radius:10px; padding:12px 14px; margin-bottom:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+        <span style="font-size:13px; font-weight:800; color:#2563eb;"><i class="fa-solid fa-chart-pie"></i> क्लस्टर-वार सहयोग राशि वसूली प्रगति (Cluster Collection Leaderboard):</span>
+        <span style="font-size:11.5px; color:#64748b;">(किसी भी क्लस्टर कार्ड पर क्लिक करके उसे फ़िल्टर करें)</span>
+      </div>
+      <div id="unionIncomeClusterProgressContainer" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+    </div>
+
+    <!-- Smart Filter, Search & Column Selector Bar -->
+    <div style="background:var(--input-bg); border:1.5px solid var(--input-border); border-radius:10px; padding:12px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; flex:1 1 520px;">
+        <input type="text" id="unionIncomeSearchInput" oninput="debounceTableSearch(renderUnionIncomeMasterView, 100)" onkeyup="debounceTableSearch(renderUnionIncomeMasterView, 100)" class="field-input" placeholder="🔍 ग्राम पंचायत, पंचायत सहायक, मोबाइल या प्रभारी खोजें..." style="max-width:270px; margin:0;">
+        <select id="unionIncomeClusterFilter" class="field-input" style="max-width:190px; margin:0;" onchange="renderUnionIncomeMasterView()">
+          <option value="ALL">-- सभी क्लस्टर (All) --</option>
+        </select>
+        <select id="unionIncomeColFocusSelect" class="field-input" style="max-width:240px; margin:0; font-weight:700; border-color:#3b82f6;" onchange="renderUnionIncomeMasterView()">
+          <option value="ALL">-- सभी पेमेंट मद (All Columns) --</option>
+        </select>
+      </div>
+
+      <div style="display:flex; align-items:center; flex-wrap:wrap; gap:6px;">
+        <button type="button" class="income-filter-pill active" id="incFilterBtn_ALL" onclick="setUnionIncomeStatusFilter('ALL')">📋 सभी (<span id="incCntAll">0</span>)</button>
+        <button type="button" class="income-filter-pill" id="incFilterBtn_PAID" onclick="setUnionIncomeStatusFilter('PAID')">✅ जमा (<span id="incCntPaid">0</span>)</button>
+        <button type="button" class="income-filter-pill" id="incFilterBtn_PENDING" onclick="setUnionIncomeStatusFilter('PENDING')">⏳ बाकी (<span id="incCntPending">0</span>)</button>
+        <button type="button" class="income-filter-pill" id="incFilterBtn_PARTIAL" onclick="setUnionIncomeStatusFilter('PARTIAL')">⚠️ आंशिक (<span id="incCntPartial">0</span>)</button>
+      </div>
+    </div>
+
+    <!-- Master Cluster-Wise Gram Panchayat Collection Matrix Table -->
+    <div class="table-responsive" style="max-height:680px; overflow:auto;">
+      <table class="data-table" id="unionIncomeMasterTable">
+        <thead id="unionIncomeTableHead"></thead>
+        <tbody id="unionIncomeTableBody"></tbody>
+        <tfoot id="unionIncomeTableFoot"></tfoot>
+      </table>
+    </div>
+  </div>
   
 </div>
 
 <!-- ==================== MODALS ==================== -->
+
+<!-- ==================== UNION INCOME PORTAL MODALS ==================== -->
+
+<!-- A. ADD / EDIT UNION INCOME PAYMENT COLUMN MODAL (नया पेमेंट कॉलम / मद जोड़ें पॉपअप) -->
+<div class="modal-backdrop" id="addIncomeColumnModal">
+  <div class="modal-box" style="max-width:460px; text-align:left;">
+    <div style="background:linear-gradient(135deg, #064e3b, #0f172a); color:#fff; padding:14px 16px; border-radius:10px; margin-bottom:14px;">
+      <h3 style="color:#34d399; font-family:'Rozha One', serif; font-size:18px; margin:0;" id="incomeColModalHeading"><i class="fa-solid fa-plus-circle"></i> नया पेमेंट कॉलम (मद) बनाएं</h3>
+      <p style="font-size:11.5px; color:#cbd5e1; margin:4px 0 0 0;">यहाँ निर्धारित की गई राशि टेबल के हर पंचायत सहायक के सामने 1-Click <b>+ Add</b> बटन पर स्वतः सेट हो जाएगी।</p>
+    </div>
+
+    <form onsubmit="handleSaveIncomeColumnSubmit(event)">
+      <input type="hidden" id="editIncomeColId" value="">
+      <div class="field-group">
+        <label><i class="fa-solid fa-calendar-day"></i> 1. तारीख (Date) <span class="req">*</span></label>
+        <input type="text" id="incomeColDateInput" class="field-input" placeholder="DD/MM/YYYY (उदा. 07/11/2026)" required>
+      </div>
+      <div class="field-group">
+        <label><i class="fa-solid fa-file-invoice"></i> 2. किस बारे में पेमेंट लिया जा रहा है (Purpose / Heading) <span class="req">*</span></label>
+        <input type="text" id="incomeColTitleInput" class="field-input" placeholder="उदा. वार्षिक सदस्यता शुल्क / लखनऊ कार्यक्रम सहयोग" required>
+      </div>
+      <div class="field-group">
+        <label><i class="fa-solid fa-indian-rupee-sign"></i> 3. कितना लिया जा रहा है (निर्धारित राशि ₹) <span class="req">*</span></label>
+        <input type="number" id="incomeColAmountInput" class="field-input" min="1" step="1" placeholder="उदा. 500 या 800" required>
+        <small style="font-size:11px; color:#16a34a; font-weight:700; display:block; margin-top:4px;">* टेबल में <b>+ Add</b> बटन दबाते ही यही राशि (जैसे ₹500 या ₹800) अपने-आप भर जाएगी।</small>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+        <button type="submit" class="submit-btn" style="background:linear-gradient(135deg, #16a34a, #15803d); flex:1; margin:0;" id="incomeColSubmitBtn">
+          <i class="fa-solid fa-check-circle"></i> Create (कॉलम बनाएं)
+        </button>
+        <button type="button" class="submit-btn" id="incomeColDeleteBtn" style="background:#dc2626; width:auto; padding:10px 14px; margin:0; display:none;" onclick="handleDeleteIncomeColumn()">
+          <i class="fa-solid fa-trash"></i> कॉलम हटाएं
+        </button>
+        <button type="button" class="submit-btn" style="background:#64748b; width:auto; padding:10px 16px; margin:0;" onclick="closeModal('addIncomeColumnModal')">
+          रद्द करें
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- B. EDIT ROW INCOME & PRABHARI DETAILS MODAL (✏️ पंक्ति व राशि संशोधन पॉपअप) -->
+<div class="modal-backdrop" id="editIncomeRowModal">
+  <div class="modal-box" style="max-width:520px; text-align:left; max-height:90vh; overflow-y:auto;">
+    <div style="background:linear-gradient(135deg, #1e3a8a, #0f172a); color:#fff; padding:14px 16px; border-radius:10px; margin-bottom:14px;">
+      <h3 style="color:#38bdf8; font-family:'Rozha One', serif; font-size:18px; margin:0;"><i class="fa-solid fa-pen-to-square"></i> ग्राम पंचायत आय व प्रभारी विवरण संपादित करें</h3>
+      <p style="font-size:11.5px; color:#cbd5e1; margin:4px 0 0 0;" id="editIncomeRowSubTitle">ग्राम पंचायत: -</p>
+    </div>
+
+    <form onsubmit="handleSaveEditedIncomeRow(event)">
+      <input type="hidden" id="editIncRowGpKey">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+        <div class="field-group">
+          <label>क्लस्टर का नाम</label>
+          <input type="text" id="editIncRowCluster" class="field-input">
+        </div>
+        <div class="field-group">
+          <label>ग्राम पंचायत</label>
+          <input type="text" id="editIncRowGpDisplay" class="field-input field-readonly" readonly>
+        </div>
+        <div class="field-group">
+          <label>क्लस्टर प्रभारी का नाम</label>
+          <input type="text" id="editIncRowPrabhariName" class="field-input" placeholder="प्रभारी का नाम">
+        </div>
+        <div class="field-group">
+          <label>क्लस्टर प्रभारी का मोबाइल</label>
+          <input type="tel" id="editIncRowPrabhariMobile" class="field-input" maxlength="10" placeholder="10-अंकों का मोबाइल">
+        </div>
+        <div class="field-group">
+          <label>पंचायत सहायक का नाम</label>
+          <input type="text" id="editIncRowPsName" class="field-input">
+        </div>
+        <div class="field-group">
+          <label>पंचायत सहायक का मोबाइल</label>
+          <input type="tel" id="editIncRowPsMobile" class="field-input" maxlength="10">
+        </div>
+      </div>
+
+      <div style="margin-top:10px; padding-top:10px; border-top:1.5px dashed var(--input-border);">
+        <h4 style="font-size:14px; color:#2563eb; margin-bottom:8px;"><i class="fa-solid fa-coins"></i> पेमेंट कॉलम्स (मद) की जमा राशि (₹0 करने पर बकाया माना जाएगा):</h4>
+        <div id="editIncomeRowDynamicColsContainer"></div>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:14px;">
+        <button type="submit" class="submit-btn" style="background:#16a34a; flex:1; margin:0;">
+          <i class="fa-solid fa-floppy-disk"></i> बदलाव सुरक्षित करें
+        </button>
+        <button type="button" class="submit-btn" style="background:#64748b; width:auto; padding:10px 18px; margin:0;" onclick="closeModal('editIncomeRowModal')">
+          रद्द करें
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- C. CLUSTER PRABHARI BULK MAPPER MODAL (👥 क्लस्टर प्रभारी बल्क सेटअप) -->
+<div class="modal-backdrop" id="clusterPrabhariModal">
+  <div class="modal-box" style="max-width:460px; text-align:left;">
+    <div style="background:linear-gradient(135deg, #0284c7, #0f172a); color:#fff; padding:14px 16px; border-radius:10px; margin-bottom:14px;">
+      <h3 style="color:#38bdf8; font-family:'Rozha One', serif; font-size:18px; margin:0;"><i class="fa-solid fa-user-tie"></i> क्लस्टर-वार प्रभारी (Prabhari) बल्क सेटअप</h3>
+      <p style="font-size:11.5px; color:#cbd5e1; margin:4px 0 0 0;">एक बार क्लस्टर चुनकर प्रभारी का नाम व नंबर सेव करने पर उस क्लस्टर की सभी ग्राम पंचायतों में प्रभारी अपने-आप जुड़ जाएंगे।</p>
+    </div>
+
+    <form onsubmit="handleSaveClusterPrabhariBulk(event)">
+      <div class="field-group">
+        <label>1. क्लस्टर चुनें <span class="req">*</span></label>
+        <select id="bulkPrabhariClusterSelect" class="field-input" onchange="prefillClusterPrabhariModal()" required></select>
+      </div>
+      <div class="field-group">
+        <label>2. क्लस्टर प्रभारी का नाम <span class="req">*</span></label>
+        <input type="text" id="bulkPrabhariNameInput" class="field-input" placeholder="उदा. श्री सुरजीत वर्मा" required>
+      </div>
+      <div class="field-group">
+        <label>3. क्लस्टर प्रभारी का मोबाइल नंबर <span class="req">*</span></label>
+        <input type="tel" id="bulkPrabhariMobileInput" class="field-input" maxlength="10" pattern="\d{10}" placeholder="10-अंकों का मोबाइल नंबर" required>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:14px;">
+        <button type="submit" class="submit-btn" style="background:#16a34a; flex:1; margin:0;">
+          <i class="fa-solid fa-check-double"></i> पूरे क्लस्टर में लागू करें
+        </button>
+        <button type="button" class="submit-btn" style="background:#64748b; width:auto; padding:10px 18px; margin:0;" onclick="closeModal('clusterPrabhariModal')">
+          बंद करें
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- D. BULK PENDING WHATSAPP BROADCAST & REMINDER QUEUE MODAL (📲 पेंडिंग बल्क WhatsApp) -->
+<div class="modal-backdrop" id="bulkPendingWhatsAppModal">
+  <div class="modal-box" style="max-width:680px; text-align:left; max-height:90vh; overflow-y:auto;">
+    <div style="background:linear-gradient(135deg, #15803d, #0f172a); color:#fff; padding:14px 16px; border-radius:10px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <div>
+        <h3 style="color:#4ade80; font-family:'Rozha One', serif; font-size:18px; margin:0;"><i class="fa-brands fa-whatsapp"></i> बकाया सहयोग राशि (Pending) बल्क WhatsApp केंद्र</h3>
+        <p style="font-size:11.5px; color:#cbd5e1; margin:3px 0 0 0;">यूनियन ग्रुप के लिए पूरी बकाया/जमा लिस्ट 1 क्लिक में शेयर करें या प्रत्येक बकायादार को कतार से रिमाइंडर भेजें।</p>
+      </div>
+      <button type="button" class="submit-btn" style="background:#dc2626; width:auto; padding:6px 12px; font-size:12px; margin:0;" onclick="closeModal('bulkPendingWhatsAppModal')">✕ बंद करें</button>
+    </div>
+
+    <div class="field-group">
+      <label>रिमाइंडर के लिए पेमेंट मद (Column) चुनें:</label>
+      <select id="bulkWaColumnSelect" class="field-input" onchange="refreshBulkPendingWhatsAppModal()" style="font-weight:700;"></select>
+    </div>
+
+    <!-- Box 1: Group Broadcast Message -->
+    <div style="background:var(--sub-box-bg); border:1.5px solid #16a34a; border-radius:10px; padding:12px; margin-bottom:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+        <span style="font-size:13px; font-weight:800; color:#16a34a;"><i class="fa-solid fa-users"></i> 1. यूनियन WhatsApp ग्रुप ब्रॉडकास्ट सारांश (Paid & Pending List):</span>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="submit-btn" style="background:#0284c7; width:auto; padding:5px 12px; font-size:12px; margin:0;" onclick="copyUnionIncomeGroupBroadcast()">
+            <i class="fa-solid fa-copy"></i> मैसेज कॉपी करें
+          </button>
+          <a id="btnShareIncomeGroupWa" href="#" target="_blank" class="submit-btn" style="background:#16a34a; width:auto; padding:5px 12px; font-size:12px; margin:0; text-decoration:none; display:inline-flex; align-items:center; gap:5px;">
+            <i class="fa-brands fa-whatsapp"></i> ग्रुप में शेयर करें
+          </a>
+        </div>
+      </div>
+      <textarea id="bulkWaGroupBroadcastText" class="field-input" rows="6" style="font-size:12px; line-height:1.5;" readonly></textarea>
+    </div>
+
+    <!-- Box 2: Individual Pending Queue -->
+    <div>
+      <div style="font-size:13.5px; font-weight:800; color:#dc2626; margin-bottom:8px;" id="bulkWaPendingQueueTitle">
+        <i class="fa-solid fa-bell"></i> 2. व्यक्तिगत बकायादार रिमाइंडर कतार (Pending List):
+      </div>
+      <div class="table-responsive" style="max-height:290px; overflow-y:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ग्राम पंचायत</th>
+              <th>पंचायत सहायक</th>
+              <th>मोबाइल</th>
+              <th>बकाया राशि</th>
+              <th>1-Click रिमाइंडर</th>
+            </tr>
+          </thead>
+          <tbody id="bulkWaPendingQueueBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- E. OFFICIAL UNION CONTRIBUTION RECEIPT MODAL (🧾 आधिकारिक यूनियन रसीद) -->
+<div class="modal-backdrop" id="unionIncomeReceiptModal">
+  <div class="modal-box" style="max-width:540px; text-align:left;">
+    <div id="unionReceiptPrintContent" style="background:#ffffff; color:#0f172a; border:3px double #1e3a8a; border-radius:10px; padding:18px;"></div>
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:14px; flex-wrap:wrap;">
+      <button type="button" class="submit-btn" style="background:#2563eb; width:auto; padding:9px 18px; font-size:13px; margin:0;" onclick="printSingleUnionReceiptPDF()">
+        <i class="fa-solid fa-print"></i> रसीद PDF प्रिंट करें
+      </button>
+      <a id="btnShareSingleReceiptWa" href="#" target="_blank" class="submit-btn" style="background:#16a34a; width:auto; padding:9px 18px; font-size:13px; margin:0; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+        <i class="fa-brands fa-whatsapp"></i> WhatsApp पर रसीद भेजें
+      </a>
+      <button type="button" class="submit-btn" style="background:#64748b; width:auto; padding:9px 18px; font-size:13px; margin:0;" onclick="closeModal('unionIncomeReceiptModal')">
+        बंद करें
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- 1. EDIT GRIEVANCE STATUS MODAL -->
 <div class="modal-backdrop" id="editGrievanceModal">
@@ -3006,6 +3492,21 @@ function formatDateToIndian(dateVal) {
         },
         resetForgottenPsCredentials: function(email, mobile, aadhaar, newPass, newMpin) {
           this._callApi('resetForgottenPsCredentials', { email: email, mobile: mobile, aadhaar: aadhaar, newPass: newPass, newMpin: newMpin }, [email, mobile, aadhaar, newPass, newMpin]);
+        },
+        savePsPortalConfigSecure: function(token, configList) {
+          this._callApi('savePsPortalConfigSecure', { token: token, configList: configList }, [token, configList]);
+        },
+        addUnionIncomeColumnSecure: function(token, colData) {
+          this._callApi('addUnionIncomeColumnSecure', { token: token, colData: colData }, [token, colData]);
+        },
+        editDeleteUnionIncomeColumnSecure: function(token, colId, actionType, colData) {
+          this._callApi('editDeleteUnionIncomeColumnSecure', { token: token, colId: colId, actionType: actionType, colData: colData }, [token, colId, actionType, colData]);
+        },
+        recordUnionIncomePaymentSecure: function(token, payload) {
+          this._callApi('recordUnionIncomePaymentSecure', { token: token, payload: payload }, [token, payload]);
+        },
+        saveClusterPrabhariBulkSecure: function(token, clusterName, prabhariName, prabhariMobile, gpList) {
+          this._callApi('saveClusterPrabhariBulkSecure', { token: token, clusterName: clusterName, prabhariName: prabhariName, prabhariMobile: prabhariMobile, gpList: gpList }, [token, clusterName, prabhariName, prabhariMobile, gpList]);
         }
       }
     }
@@ -3033,6 +3534,25 @@ function formatDateToIndian(dateVal) {
     { rowIndex: 7, order: 6, name: "हेमराज", designation: "ब्लॉक सचिव", mobile: "9838880255", roleType: "Member" },
     { rowIndex: 8, order: 7, name: "ईश्वर चन्द यादव", designation: "ब्लॉक उपसचिव", mobile: "7800841125", roleType: "Member" }
   ];
+  function getDefaultPsPortalConfigClient() {
+    return [
+      { order: 1, tabKey: "psHome", domId: "psNavHomeBtn", label: "PS होम", icon: "fa-solid fa-house", desc: "नोटिस बोर्ड व मुख्य स्वागत पृष्ठ", enabled: true, isDefault: true },
+      { order: 2, tabKey: "psDetails", domId: "psNavDetailsBtn", label: "PS विवरण (मेरी जानकारी)", icon: "fa-solid fa-id-card", desc: "पंजीकृत प्रोफ़ाइल व खाता विवरण", enabled: true, isDefault: false },
+      { order: 3, tabKey: "psIdCard", domId: "psNavIdCardBtn", label: "🪪 यूनियन ID कार्ड", icon: "fa-solid fa-id-badge", desc: "आधिकारिक रंगीन परिचय पत्र व QR डाउनलोड", enabled: true, isDefault: false },
+      { order: 4, tabKey: "psCluster", domId: "psNavClusterBtn", label: "क्लस्टर विवरण", icon: "fa-solid fa-sitemap", desc: "क्लस्टर, BDO, ADO व सचिव संपर्क विवरण", enabled: true, isDefault: false },
+      { order: 5, tabKey: "psSurvey", domId: "psNavSurveyBtn", label: "नया सर्वे फ़ॉर्म", icon: "fa-solid fa-file-pen", desc: "पंचायत भवन भौतिक सुविधा व मानदेय सर्वे", enabled: true, isDefault: false },
+      { order: 6, tabKey: "psGrievance", domId: "psNavGrievanceBtn", label: "🚨 शिकायत व सहायता", icon: "fa-solid fa-headset", desc: "यूनियन हेल्पडेस्क व समस्या टिकट", enabled: true, isDefault: false },
+      { order: 7, tabKey: "psLeave", domId: "psNavLeaveBtn", label: "📝 अवकाश आवेदन", icon: "fa-solid fa-calendar-minus", desc: "ऑनलाइन अवकाश पत्र जनरेटर (PDF/Word/WhatsApp)", enabled: true, isDefault: false },
+      { order: 8, tabKey: "psLinks", domId: "psNavLinksBtn", label: "🌐 उपयोगी पोर्टल्स (Links)", icon: "fa-solid fa-globe", desc: "ई-ग्राम स्वराज, PFMS, पंचायती राज व अन्य वेब लिंक्स", enabled: true, isDefault: false },
+      { order: 9, tabKey: "psQrScan", domId: "psNavQrScanBtn", label: "📸 QR स्कैन", icon: "fa-solid fa-qrcode", desc: "बैठक / कार्यक्रम उपस्थिति QR स्कैनर", enabled: true, isDefault: false },
+      { order: 10, tabKey: "psImageTool", domId: "psNavImageToolBtn", label: "🖼️ फोटो कंप्रेस व रीसाइज़", icon: "fa-solid fa-file-image", desc: "फोटो साइज कम करने व क्रॉप करने का टूल", enabled: true, isDefault: false }
+    ];
+  }
+  var cachedPsPortalConfig = getDefaultPsPortalConfigClient();
+  var adminDraftPsPortalConfig = JSON.parse(JSON.stringify(cachedPsPortalConfig));
+  var cachedUnionIncomeData = { columns: [], recordsMap: {}, clusterPrabhariMap: {} };
+  var currentUnionIncomeStatusFilter = "ALL";
+  var sentBulkWaTracker = {};
   var cachedAdminStats = null;
   var customIdCardPhotoDataUrl = null;
   var loggedInPsUser = null;
@@ -3151,7 +3671,7 @@ function hideLoader() {
             safeRemoveStorage(sessionStorage, 'psk_ps_mobile');
           }
           restorePsPortal(res);
-          var lastPsTab = safeGetStorage(sessionStorage, 'psk_ps_tab') || 'psHome';
+          var lastPsTab = safeGetStorage(sessionStorage, 'psk_ps_tab') || getDefaultEnabledPsTab();
           switchPsTab(lastPsTab);
         } else {
           logoutPS();
@@ -3385,6 +3905,14 @@ function openAdminLoginModal() {
     if (res.executives && res.executives.length > 0) {
       applyUnionExecutivesToUI(res.executives);
     }
+    if (res.psPortalConfig && res.psPortalConfig.length > 0) {
+      applyPsPortalConfigToUI(res.psPortalConfig);
+    } else {
+      applyPsPortalConfigToUI(cachedPsPortalConfig);
+    }
+    if (res.psPortalConfig && res.psPortalConfig.length > 0) {
+      applyPsPortalConfigToUI(res.psPortalConfig);
+    }
     document.getElementById('homeGpCount').innerText = res.stats.totalGramPanchayat;
     document.getElementById('homeAppointedPsCount').innerText = res.stats.totalAppointedPS;
     document.getElementById('homePortalRegisteredCount').innerText = res.stats.totalRegisteredPS;
@@ -3573,6 +4101,16 @@ function openAdminLoginModal() {
   // ================= PS TAB SWITCHER =================
 // ================= PS TAB SWITCHER =================
   function switchPsTab(tab) {
+    if (!isPsTabEnabled(tab)) {
+      tab = getDefaultEnabledPsTab();
+    }
+    if (tab === 'psSurvey' && loggedInPsUser) {
+      if (loggedInPsUser.alreadySubmitted && !loggedInPsUser.canUpdate) {
+        tab = isPsTabEnabled('psDetails') ? 'psDetails' : (isPsTabEnabled('psHome') ? 'psHome' : getDefaultEnabledPsTab());
+      } else if (loggedInPsUser.canUpdate) {
+        prefillSurveyForUpdate();
+      }
+    }
     safeSetStorage(sessionStorage, 'psk_ps_tab', tab);
 
     // यदि यूजर किसी दूसरे टैब पर जाए तो कैमरा तुरंत बंद करें
@@ -3660,6 +4198,10 @@ function openAdminLoginModal() {
 
   function handlePsSurveyClick() {
     if (!loggedInPsUser) { openPsLoginModal(); return; }
+    if (!isPsTabEnabled('psSurvey')) {
+      showMsg("सूचना", "सर्वे फ़ॉर्म सेक्शन वर्तमान में एडमिन द्वारा बंद किया गया है।", false);
+      return;
+    }
     if (loggedInPsUser.alreadySubmitted && !loggedInPsUser.canUpdate) {
       switchPsTab('psDetails');
       var presObj = getDynamicPresidentObj();
@@ -4163,6 +4705,18 @@ function openAdminLoginModal() {
       applyUnionExecutivesToUI(res.unionExecutives);
     }
     renderAdminExecutivesTable(cachedUnionExecutives);
+    if (res.psPortalConfig && res.psPortalConfig.length > 0) {
+      applyPsPortalConfigToUI(res.psPortalConfig);
+    } else {
+      applyPsPortalConfigToUI(cachedPsPortalConfig);
+    }
+    adminDraftPsPortalConfig = JSON.parse(JSON.stringify(cachedPsPortalConfig));
+    renderAdminPsPortalControlTable();
+    if (res.unionIncomeData) {
+      cachedUnionIncomeData = res.unionIncomeData;
+    }
+    populateUnionIncomeFilters();
+    renderUnionIncomeMasterView();
 
     document.getElementById('totalLeaveCount').innerText = cachedAdminLeaves.length;
     
@@ -4273,6 +4827,12 @@ function openAdminLoginModal() {
     if (document.getElementById('executivesTabContent')) {
       document.getElementById('executivesTabContent').style.display = (tab === 'executives') ? 'block' : 'none';
     }
+    if (document.getElementById('psPortalControlTabContent')) {
+      document.getElementById('psPortalControlTabContent').style.display = (tab === 'psPortalControl') ? 'block' : 'none';
+    }
+    if (document.getElementById('unionIncomeTabContent')) {
+      document.getElementById('unionIncomeTabContent').style.display = (tab === 'unionIncome') ? 'block' : 'none';
+    }
 
     // Sabhi buttons ka active color set karna
     document.getElementById('tabSurveyBtn').classList.toggle('active', tab === 'survey');
@@ -4291,12 +4851,25 @@ function openAdminLoginModal() {
     if (document.getElementById('tabExecutivesBtn')) {
       document.getElementById('tabExecutivesBtn').classList.toggle('active', tab === 'executives');
     }
+    if (document.getElementById('tabPsPortalControlBtn')) {
+      document.getElementById('tabPsPortalControlBtn').classList.toggle('active', tab === 'psPortalControl');
+    }
+    if (document.getElementById('tabUnionIncomeBtn')) {
+      document.getElementById('tabUnionIncomeBtn').classList.toggle('active', tab === 'unionIncome');
+    }
 
     if (tab === 'imageLogs') {
       renderImageLogsTable(cachedAdminImageLogs);
     }
     if (tab === 'executives') {
       renderAdminExecutivesTable(cachedUnionExecutives);
+    }
+    if (tab === 'psPortalControl') {
+      renderAdminPsPortalControlTable();
+    }
+    if (tab === 'unionIncome') {
+      populateUnionIncomeFilters();
+      renderUnionIncomeMasterView();
     }
     var activeAdmBtn = document.querySelector('#adminPillNavBar .admin-tab-btn.active');
     if (activeAdmBtn && activeAdmBtn.scrollIntoView) {
@@ -5760,7 +6333,7 @@ window.addEventListener('DOMContentLoaded', function() {
             document.getElementById('firstTimeSetupModal').style.display = 'flex';
           } else {
             restorePsPortal(res);
-            switchPsTab('psHome');
+            switchPsTab(getDefaultEnabledPsTab());
             loadMyTickets();
           }
         } else {
@@ -5841,7 +6414,7 @@ function submitCredentialsSetup() {
             if (typeof restorePsPortal === "function") {
               restorePsPortal(fullRes);
             }
-            switchPsTab('psHome');
+            switchPsTab(getDefaultEnabledPsTab());
             if (typeof loadMyTickets === "function") {
               loadMyTickets();
             }
@@ -7455,6 +8028,1533 @@ function handleAddClusterSubmit(e) {
     showMsg("त्रुटि", err.toString(), false);
   }).addClusterRecordSecure(adminSessionToken, payload);
 }
+
+// ================= NEW FEATURE 8: ADMIN PS PORTAL BUTTON & SERIAL CONTROLLER =================
+function isPsTabEnabled(tabKey) {
+  if (!cachedPsPortalConfig || !cachedPsPortalConfig.length) return true;
+  for (var i = 0; i < cachedPsPortalConfig.length; i++) {
+    if (cachedPsPortalConfig[i].tabKey === tabKey) {
+      return cachedPsPortalConfig[i].enabled !== false;
+    }
+  }
+  return true;
+}
+
+function getDefaultEnabledPsTab() {
+  if (cachedPsPortalConfig && cachedPsPortalConfig.length > 0) {
+    for (var i = 0; i < cachedPsPortalConfig.length; i++) {
+      if (cachedPsPortalConfig[i].enabled !== false && cachedPsPortalConfig[i].isDefault) {
+        return cachedPsPortalConfig[i].tabKey;
+      }
+    }
+    for (var j = 0; j < cachedPsPortalConfig.length; j++) {
+      if (cachedPsPortalConfig[j].enabled !== false) {
+        return cachedPsPortalConfig[j].tabKey;
+      }
+    }
+  }
+  return "psHome";
+}
+
+function applyPsPortalConfigToUI(configList) {
+  if (!configList || !Array.isArray(configList) || configList.length === 0) return;
+
+  var sorted = configList.slice().sort(function(a, b) {
+    return (Number(a.order) || 99) - (Number(b.order) || 99);
+  });
+
+  for (var idx = 0; idx < sorted.length; idx++) {
+    sorted[idx].order = idx + 1;
+  }
+
+  cachedPsPortalConfig = sorted;
+  try {
+    safeSetStorage(localStorage, "psk_ps_portal_config_v1", JSON.stringify(sorted));
+  } catch (e) {}
+
+  var navContainer = document.getElementById("psPillNavBar");
+  var enabledCount = 0;
+
+  for (var i = 0; i < sorted.length; i++) {
+    var item = sorted[i];
+    var isVis = item.enabled !== false;
+    if (isVis) enabledCount++;
+
+    var btnEl = document.getElementById(item.domId);
+    if (btnEl) {
+      var iconClass = item.icon || "fa-solid fa-circle-dot";
+      var labelText = item.label || item.tabKey;
+      btnEl.innerHTML = '<i class="' + escapeHtml(iconClass) + '"></i> ' + escapeHtml(labelText);
+      btnEl.style.display = isVis ? "" : "none";
+      if (navContainer) {
+        navContainer.appendChild(btnEl);
+      }
+    }
+  }
+
+  var badgeEl = document.getElementById("totalPsPortalBtnCount");
+  if (badgeEl) {
+    badgeEl.innerText = enabledCount + "/" + sorted.length;
+  }
+}
+
+function normalizeDraftPsPortalConfig() {
+  if (!adminDraftPsPortalConfig || !adminDraftPsPortalConfig.length) {
+    adminDraftPsPortalConfig = getDefaultPsPortalConfigClient();
+  }
+  var anyEnabled = false;
+  var anyDef = false;
+  for (var i = 0; i < adminDraftPsPortalConfig.length; i++) {
+    adminDraftPsPortalConfig[i].order = i + 1;
+    if (adminDraftPsPortalConfig[i].enabled !== false) {
+      adminDraftPsPortalConfig[i].enabled = true;
+      anyEnabled = true;
+      if (adminDraftPsPortalConfig[i].isDefault && !anyDef) {
+        anyDef = true;
+      } else {
+        adminDraftPsPortalConfig[i].isDefault = false;
+      }
+    } else {
+      adminDraftPsPortalConfig[i].enabled = false;
+      adminDraftPsPortalConfig[i].isDefault = false;
+    }
+  }
+  if (!anyEnabled && adminDraftPsPortalConfig.length > 0) {
+    adminDraftPsPortalConfig[0].enabled = true;
+  }
+  if (!anyDef) {
+    for (var j = 0; j < adminDraftPsPortalConfig.length; j++) {
+      if (adminDraftPsPortalConfig[j].enabled) {
+        adminDraftPsPortalConfig[j].isDefault = true;
+        break;
+      }
+    }
+  }
+}
+
+function renderAdminPsPortalControlTable() {
+  normalizeDraftPsPortalConfig();
+  var tbody = document.getElementById("adminPsPortalControlTableBody");
+  var previewBar = document.getElementById("adminPsPortalLivePreviewBar");
+  var summaryEl = document.getElementById("adminPsPortalPreviewSummary");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+  if (previewBar) previewBar.innerHTML = "";
+
+  var frag = document.createDocumentFragment();
+  var previewFrag = document.createDocumentFragment();
+  var enabledCount = 0;
+  var defaultLabel = "-";
+  var totalLen = adminDraftPsPortalConfig.length;
+
+  for (var i = 0; i < totalLen; i++) {
+    var item = adminDraftPsPortalConfig[i];
+    if (item.enabled) {
+      enabledCount++;
+      if (item.isDefault) defaultLabel = item.label;
+
+      if (previewBar) {
+        var pBtn = document.createElement("button");
+        pBtn.type = "button";
+        pBtn.className = "admin-tab-btn" + (item.isDefault ? " active" : "");
+        pBtn.innerHTML = '<span style="background:rgba(255,255,255,0.2); padding:1px 6px; border-radius:10px; font-size:10px; margin-right:4px;">#' + (i + 1) + '</span><i class="' + escapeHtml(item.icon) + '"></i> ' + escapeHtml(item.label);
+        previewFrag.appendChild(pBtn);
+      }
+    }
+
+    var tr = document.createElement("tr");
+    if (!item.enabled) {
+      tr.style.opacity = "0.62";
+    }
+
+    var upDisabled = (i === 0) ? "disabled style=\"opacity:0.35; cursor:not-allowed; padding:5px 9px; border-radius:6px; border:1px solid #cbd5e1; background:#e2e8f0; color:#475569;\"" : "style=\"cursor:pointer; padding:5px 9px; border-radius:6px; border:none; background:#2563eb; color:#fff; font-weight:bold;\"";
+    var downDisabled = (i === totalLen - 1) ? "disabled style=\"opacity:0.35; cursor:not-allowed; padding:5px 9px; border-radius:6px; border:1px solid #cbd5e1; background:#e2e8f0; color:#475569;\"" : "style=\"cursor:pointer; padding:5px 9px; border-radius:6px; border:none; background:#0284c7; color:#fff; font-weight:bold;\"";
+
+    var visBtnHtml = item.enabled
+      ? '<button type="button" onclick="togglePsPortalButtonVisibility(' + i + ')" style="background:#16a34a; color:#ffffff; border:none; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; width:145px;"><i class="fa-solid fa-eye"></i> चालू (दिख रहा है)</button>'
+      : '<button type="button" onclick="togglePsPortalButtonVisibility(' + i + ')" style="background:#dc2626; color:#ffffff; border:none; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; width:145px;"><i class="fa-solid fa-eye-slash"></i> बंद (छुपा हुआ है)</button>';
+
+    var defBtnHtml = "";
+    if (!item.enabled) {
+      defBtnHtml = '<span style="font-size:11px; color:#94a3b8;">(बटन बंद है)</span>';
+    } else if (item.isDefault) {
+      defBtnHtml = '<span style="background:#f59e0b; color:#fff; padding:5px 11px; border-radius:16px; font-size:11.5px; font-weight:800; display:inline-block;"><i class="fa-solid fa-star"></i> डिफ़ॉल्ट टैब</span>';
+    } else {
+      defBtnHtml = '<button type="button" onclick="setPsPortalDefaultTab(' + i + ')" style="background:transparent; color:#2563eb; border:1.5px solid #2563eb; padding:4px 10px; border-radius:16px; font-size:11.5px; font-weight:700; cursor:pointer;">डिफ़ॉल्ट बनाएं</button>';
+    }
+
+    tr.innerHTML =
+      '<td style="text-align:center;">' +
+        '<div style="display:flex; align-items:center; justify-content:center; gap:6px;">' +
+          '<span style="background:#1e3a8a; color:#fff; font-weight:800; font-size:12px; padding:4px 8px; border-radius:6px;">#' + (i + 1) + '</span>' +
+          '<input type="number" min="1" max="' + totalLen + '" value="' + (i + 1) + '" title="सीधे क्रम संख्या दर्ज करें" onchange="changePsButtonSerialDirect(' + i + ', this.value)" style="width:52px; padding:4px 6px; text-align:center; font-weight:bold; border:1.5px solid #3b82f6; border-radius:6px; background:var(--input-bg); color:var(--text-main);">' +
+        '</div>' +
+      '</td>' +
+      '<td style="text-align:center; white-space:nowrap;">' +
+        '<button type="button" title="ऊपर ले जाएं" onclick="movePsPortalButtonOrder(' + i + ', -1)" ' + upDisabled + '><i class="fa-solid fa-arrow-up"></i> ऊपर</button> ' +
+        '<button type="button" title="नीचे ले जाएं" onclick="movePsPortalButtonOrder(' + i + ', 1)" ' + downDisabled + '><i class="fa-solid fa-arrow-down"></i> नीचे</button>' +
+      '</td>' +
+      '<td>' +
+        '<div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">' +
+          '<span style="width:30px; height:30px; border-radius:8px; background:rgba(37,99,235,0.12); color:#2563eb; display:inline-flex; align-items:center; justify-content:center; font-size:15px;"><i class="' + escapeHtml(item.icon) + '"></i></span>' +
+          '<input type="text" value="' + escapeHtml(item.label) + '" onchange="updatePsButtonLabelDraft(' + i + ', this.value)" class="field-input" style="max-width:240px; padding:5px 10px; font-weight:700; font-size:13px; margin:0;" title="बटन का नाम बदलें">' +
+        '</div>' +
+        '<div style="font-size:11.5px; color:#64748b; margin-top:4px; padding-left:38px;">' + escapeHtml(item.desc || "") + '</div>' +
+      '</td>' +
+      '<td style="text-align:center;">' + visBtnHtml + '</td>' +
+      '<td style="text-align:center;">' + defBtnHtml + '</td>';
+
+    frag.appendChild(tr);
+  }
+
+  tbody.appendChild(frag);
+  if (previewBar) previewBar.appendChild(previewFrag);
+  if (summaryEl) {
+    summaryEl.innerText = "सक्रिय बटन: " + enabledCount + "/" + totalLen + " | लॉगिन डिफ़ॉल्ट टैब: " + defaultLabel;
+  }
+}
+
+function movePsPortalButtonOrder(index, direction) {
+  var targetIndex = index + direction;
+  if (targetIndex < 0 || targetIndex >= adminDraftPsPortalConfig.length) return;
+  var temp = adminDraftPsPortalConfig[index];
+  adminDraftPsPortalConfig[index] = adminDraftPsPortalConfig[targetIndex];
+  adminDraftPsPortalConfig[targetIndex] = temp;
+  renderAdminPsPortalControlTable();
+}
+
+function changePsButtonSerialDirect(currentIndex, newSerialStr) {
+  var total = adminDraftPsPortalConfig.length;
+  var targetSerial = parseInt(newSerialStr, 10);
+  if (isNaN(targetSerial)) {
+    renderAdminPsPortalControlTable();
+    return;
+  }
+  if (targetSerial < 1) targetSerial = 1;
+  if (targetSerial > total) targetSerial = total;
+  var newIndex = targetSerial - 1;
+  if (newIndex === currentIndex) {
+    renderAdminPsPortalControlTable();
+    return;
+  }
+  var movedItem = adminDraftPsPortalConfig.splice(currentIndex, 1)[0];
+  adminDraftPsPortalConfig.splice(newIndex, 0, movedItem);
+  renderAdminPsPortalControlTable();
+}
+
+function togglePsPortalButtonVisibility(index) {
+  if (!adminDraftPsPortalConfig[index]) return;
+  var currentState = adminDraftPsPortalConfig[index].enabled !== false;
+  if (currentState) {
+    var activeCount = 0;
+    for (var i = 0; i < adminDraftPsPortalConfig.length; i++) {
+      if (adminDraftPsPortalConfig[i].enabled !== false) activeCount++;
+    }
+    if (activeCount <= 1) {
+      showMsg("ध्यान दें", "PS पोर्टल पर कम से कम 1 बटन चालू रखना अनिवार्य है!", false);
+      return;
+    }
+  }
+  adminDraftPsPortalConfig[index].enabled = !currentState;
+  renderAdminPsPortalControlTable();
+}
+
+function setPsPortalDefaultTab(index) {
+  if (!adminDraftPsPortalConfig[index] || !adminDraftPsPortalConfig[index].enabled) return;
+  for (var i = 0; i < adminDraftPsPortalConfig.length; i++) {
+    adminDraftPsPortalConfig[i].isDefault = (i === index);
+  }
+  renderAdminPsPortalControlTable();
+}
+
+function updatePsButtonLabelDraft(index, newLabel) {
+  if (!adminDraftPsPortalConfig[index]) return;
+  var trimmed = String(newLabel || "").trim();
+  if (!trimmed) {
+    renderAdminPsPortalControlTable();
+    return;
+  }
+  adminDraftPsPortalConfig[index].label = trimmed;
+  renderAdminPsPortalControlTable();
+}
+
+function setAllPsPortalButtonsVisibility(visibleState) {
+  for (var i = 0; i < adminDraftPsPortalConfig.length; i++) {
+    adminDraftPsPortalConfig[i].enabled = Boolean(visibleState);
+  }
+  renderAdminPsPortalControlTable();
+}
+
+function resetPsPortalConfigToDefault() {
+  adminDraftPsPortalConfig = getDefaultPsPortalConfigClient();
+  renderAdminPsPortalControlTable();
+  showMsg("डिफ़ॉल्ट क्रम सेट", "डिफ़ॉल्ट क्रम 1 से 10 लोड कर दिया गया है। इसे लागू करने के लिए 'सेव व लागू करें' बटन दबाएं।", true);
+}
+
+function savePsPortalConfigFromAdmin() {
+  if (!adminSessionToken) {
+    showMsg("त्रुटि", "कृपया पहले एडमिन लॉगिन करें!", false);
+    return;
+  }
+  normalizeDraftPsPortalConfig();
+  showLoader("PS पोर्टल बटन सेटिंग्स व क्रम संख्या सेव हो रही है...");
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    if (res && res.success) {
+      var updatedCfg = (res.psPortalConfig && res.psPortalConfig.length > 0) ? res.psPortalConfig : adminDraftPsPortalConfig;
+      applyPsPortalConfigToUI(updatedCfg);
+      adminDraftPsPortalConfig = JSON.parse(JSON.stringify(cachedPsPortalConfig));
+      renderAdminPsPortalControlTable();
+      safeRemoveStorage(sessionStorage, "psk_home_stats_fast_cache");
+      showMsg("PS पोर्टल अपडेट सफल!", res.message || "PS पोर्टल के बटनों का नया क्रम व दृश्यता लागू हो गई है!", true);
+    } else {
+      showMsg("त्रुटि", (res ? res.message : "सेव नहीं हो सका"), false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("सर्वर त्रुटि", err.toString(), false);
+  }).savePsPortalConfigSecure(adminSessionToken, adminDraftPsPortalConfig);
+}
+
+try {
+  var savedLocalPsCfg = safeGetStorage(localStorage, "psk_ps_portal_config_v1");
+  if (savedLocalPsCfg) {
+    applyPsPortalConfigToUI(JSON.parse(savedLocalPsCfg));
+    adminDraftPsPortalConfig = JSON.parse(JSON.stringify(cachedPsPortalConfig));
+  }
+} catch (e) {}
+
+
+// ================= NEW FEATURE 9: UNION INCOME / COLLECTION MATRIX PORTAL ENGINE =================
+function getTodayFormattedDDMMYYYY() {
+  var d = new Date();
+  return ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear();
+}
+
+function buildMasterUnionIncomeRows() {
+  var rowsByGp = {};
+  var orderedGps = [];
+  var recMap = (cachedUnionIncomeData && cachedUnionIncomeData.recordsMap) ? cachedUnionIncomeData.recordsMap : {};
+  var prabhariByCluster = (cachedUnionIncomeData && cachedUnionIncomeData.clusterPrabhariMap) ? cachedUnionIncomeData.clusterPrabhariMap : {};
+
+  // 1. सबसे पहले Clusters मास्टर डेटा से क्लस्टर-वार ग्राम पंचायतें लें
+  if (cachedClusterRecords && cachedClusterRecords.length > 0) {
+    for (var i = 0; i < cachedClusterRecords.length; i++) {
+      var c = cachedClusterRecords[i];
+      var gp = String(c.gramPanchayat || "").trim();
+      if (!gp || rowsByGp[gp]) continue;
+      var clName = String(c.clusterName || "सामान्य क्लस्टर").trim();
+      var savedRec = recMap[gp] || {};
+      var cPrabhari = prabhariByCluster[clName] || {};
+
+      rowsByGp[gp] = {
+        gramPanchayat: gp,
+        clusterName: savedRec.clusterName || clName,
+        prabhariName: savedRec.prabhariName || cPrabhari.name || "",
+        prabhariMobile: savedRec.prabhariMobile || cPrabhari.mobile || "",
+        psName: savedRec.psName || String(c.psName || "").trim(),
+        psMobile: String(savedRec.psMobile || c.mobile || "").replace(/\D/g, "").slice(-10),
+        payments: savedRec.payments ? JSON.parse(JSON.stringify(savedRec.payments)) : {}
+      };
+      orderedGps.push(gp);
+    }
+  }
+
+  // 2. Registration शीट से उन ग्राम पंचायतों या पंचायत सहायकों का नाम/मोबाइल पूरा करें जो खाली हों
+  if (cachedAllRegistrations && cachedAllRegistrations.length > 0) {
+    for (var j = 0; j < cachedAllRegistrations.length; j++) {
+      var r = cachedAllRegistrations[j];
+      var rGp = String(r.gramPanchayat || "").trim();
+      if (!rGp) continue;
+      if (!rowsByGp[rGp]) {
+        var sRec = recMap[rGp] || {};
+        var clN = sRec.clusterName || "अन्य क्लस्टर";
+        var cPrab = prabhariByCluster[clN] || {};
+        rowsByGp[rGp] = {
+          gramPanchayat: rGp,
+          clusterName: clN,
+          prabhariName: sRec.prabhariName || cPrab.name || "",
+          prabhariMobile: sRec.prabhariMobile || cPrab.mobile || "",
+          psName: sRec.psName || String(r.fullName || "").trim(),
+          psMobile: String(sRec.psMobile || r.mobile || "").replace(/\D/g, "").slice(-10),
+          payments: sRec.payments ? JSON.parse(JSON.stringify(sRec.payments)) : {}
+        };
+        orderedGps.push(rGp);
+      } else {
+        if (!rowsByGp[rGp].psName && r.fullName) rowsByGp[rGp].psName = r.fullName;
+        if (!rowsByGp[rGp].psMobile && r.mobile) rowsByGp[rGp].psMobile = String(r.mobile).replace(/\D/g, "").slice(-10);
+      }
+    }
+  }
+
+  // 3. यदि कोई ग्राम पंचायत केवल UnionIncomeRecords में है तो उसे भी शामिल करें
+  for (var gpKey in recMap) {
+    if (Object.prototype.hasOwnProperty.call(recMap, gpKey) && !rowsByGp[gpKey]) {
+      var item = recMap[gpKey];
+      rowsByGp[gpKey] = {
+        gramPanchayat: gpKey,
+        clusterName: item.clusterName || "सामान्य क्लस्टर",
+        prabhariName: item.prabhariName || "",
+        prabhariMobile: item.prabhariMobile || "",
+        psName: item.psName || "",
+        psMobile: String(item.psMobile || "").replace(/\D/g, "").slice(-10),
+        payments: item.payments ? JSON.parse(JSON.stringify(item.payments)) : {}
+      };
+      orderedGps.push(gpKey);
+    }
+  }
+
+  var finalRows = [];
+  for (var k = 0; k < orderedGps.length; k++) {
+    finalRows.push(rowsByGp[orderedGps[k]]);
+  }
+
+  // क्लस्टर के नाम और फिर ग्राम पंचायत के नाम से क्रमबद्ध करें
+  finalRows.sort(function(a, b) {
+    var cCmp = String(a.clusterName || "").localeCompare(String(b.clusterName || ""), "hi");
+    if (cCmp !== 0) return cCmp;
+    return String(a.gramPanchayat || "").localeCompare(String(b.gramPanchayat || ""), "hi");
+  });
+
+  return finalRows;
+}
+
+function populateUnionIncomeFilters() {
+  var rows = buildMasterUnionIncomeRows();
+  var cols = (cachedUnionIncomeData && cachedUnionIncomeData.columns) ? cachedUnionIncomeData.columns : [];
+
+  var clSelect = document.getElementById("unionIncomeClusterFilter");
+  var bulkClSelect = document.getElementById("bulkPrabhariClusterSelect");
+  if (clSelect) {
+    var prevCl = clSelect.value || "ALL";
+    var clusterSet = {};
+    var clusterList = [];
+    for (var i = 0; i < rows.length; i++) {
+      var cn = rows[i].clusterName || "सामान्य क्लस्टर";
+      if (!clusterSet[cn]) {
+        clusterSet[cn] = true;
+        clusterList.push(cn);
+      }
+    }
+    clSelect.innerHTML = '<option value="ALL">-- सभी क्लस्टर (' + clusterList.length + ') --</option>';
+    if (bulkClSelect) bulkClSelect.innerHTML = "";
+    for (var cIdx = 0; cIdx < clusterList.length; cIdx++) {
+      var opt = document.createElement("option");
+      opt.value = clusterList[cIdx];
+      opt.textContent = clusterList[cIdx];
+      clSelect.appendChild(opt);
+
+      if (bulkClSelect) {
+        var bOpt = document.createElement("option");
+        bOpt.value = clusterList[cIdx];
+        bOpt.textContent = clusterList[cIdx];
+        bulkClSelect.appendChild(bOpt);
+      }
+    }
+    clSelect.value = clusterSet[prevCl] ? prevCl : "ALL";
+  }
+
+  var colSelect = document.getElementById("unionIncomeColFocusSelect");
+  var waColSelect = document.getElementById("bulkWaColumnSelect");
+  if (colSelect) {
+    var prevCol = colSelect.value || "ALL";
+    colSelect.innerHTML = '<option value="ALL">-- सभी पेमेंट मद (' + cols.length + ' Columns) --</option>';
+    if (waColSelect) waColSelect.innerHTML = '<option value="ALL">-- सभी पेमेंट मद (कुल बकाया) --</option>';
+    var colExists = false;
+    for (var j = 0; j < cols.length; j++) {
+      var col = cols[j];
+      if (col.colId === prevCol) colExists = true;
+      var cOpt = document.createElement("option");
+      cOpt.value = col.colId;
+      cOpt.textContent = col.title + " (" + col.date + " - ₹" + col.amount + ")";
+      colSelect.appendChild(cOpt);
+
+      if (waColSelect) {
+        var wOpt = document.createElement("option");
+        wOpt.value = col.colId;
+        wOpt.textContent = col.title + " (₹" + col.amount + " | " + col.date + ")";
+        waColSelect.appendChild(wOpt);
+      }
+    }
+    colSelect.value = colExists ? prevCol : (cols.length === 1 ? cols[0].colId : "ALL");
+    if (waColSelect && cols.length > 0) {
+      waColSelect.value = cols[cols.length - 1].colId;
+    }
+  }
+}
+
+function setUnionIncomeStatusFilter(statusKey) {
+  currentUnionIncomeStatusFilter = statusKey || "ALL";
+  var keys = ["ALL", "PAID", "PENDING", "PARTIAL"];
+  for (var i = 0; i < keys.length; i++) {
+    var btn = document.getElementById("incFilterBtn_" + keys[i]);
+    if (btn) btn.classList.toggle("active", keys[i] === currentUnionIncomeStatusFilter);
+  }
+  renderUnionIncomeMasterView();
+}
+
+function filterUnionIncomeByClusterChip(clusterName) {
+  var clSelect = document.getElementById("unionIncomeClusterFilter");
+  if (!clSelect) return;
+  if (clSelect.value === clusterName) {
+    clSelect.value = "ALL";
+  } else {
+    clSelect.value = clusterName;
+  }
+  renderUnionIncomeMasterView();
+}
+
+function evaluateRowPaymentStatus(row, activeCols) {
+  if (!activeCols || activeCols.length === 0) {
+    return { expected: 0, paid: 0, pending: 0, status: "NONE" };
+  }
+  var exp = 0;
+  var pd = 0;
+  for (var i = 0; i < activeCols.length; i++) {
+    var c = activeCols[i];
+    var targetAmt = Number(c.amount) || 0;
+    var givenAmt = Number((row.payments && row.payments[c.colId]) || 0);
+    exp += targetAmt;
+    pd += givenAmt;
+  }
+  var pend = Math.max(0, exp - pd);
+  var st = "PENDING";
+  if (exp > 0 && pd >= exp) st = "PAID";
+  else if (pd > 0 && pd < exp) st = "PARTIAL";
+  return { expected: exp, paid: pd, pending: pend, status: st };
+}
+
+function renderUnionIncomeMasterView() {
+  var thead = document.getElementById("unionIncomeTableHead");
+  var tbody = document.getElementById("unionIncomeTableBody");
+  var tfoot = document.getElementById("unionIncomeTableFoot");
+  if (!thead || !tbody || !tfoot) return;
+
+  var allRows = buildMasterUnionIncomeRows();
+  var cols = (cachedUnionIncomeData && cachedUnionIncomeData.columns) ? cachedUnionIncomeData.columns : [];
+  var focusColId = document.getElementById("unionIncomeColFocusSelect") ? document.getElementById("unionIncomeColFocusSelect").value : "ALL";
+  var clusterFilter = document.getElementById("unionIncomeClusterFilter") ? document.getElementById("unionIncomeClusterFilter").value : "ALL";
+  var searchQ = document.getElementById("unionIncomeSearchInput") ? document.getElementById("unionIncomeSearchInput").value.toLowerCase().trim() : "";
+
+  var activeColsForStats = cols;
+  if (focusColId !== "ALL") {
+    activeColsForStats = cols.filter(function(c) { return c.colId === focusColId; });
+  }
+
+  // 1. Render Table Header (Fixed 6 columns + Dynamic Payment Columns + Header "+ Add" Button + Actions Column)
+  var headHtml = '<tr>' +
+    '<th style="width:46px; text-align:center;">क्र.</th>' +
+    '<th>क्लस्टर का नाम</th>' +
+    '<th>क्लस्टर प्रभारी व मोबाइल</th>' +
+    '<th>ग्राम पंचायत का नाम</th>' +
+    '<th>पंचायत सहायक का नाम</th>' +
+    '<th>मोबाइल नंबर</th>';
+
+  for (var cIdx = 0; cIdx < cols.length; cIdx++) {
+    var col = cols[cIdx];
+    var isHighlightedCol = (focusColId !== "ALL" && col.colId === focusColId);
+    var thBgStyle = isHighlightedCol ? "background:#065f46; border-bottom:3px solid #facc15;" : "";
+    headHtml += '<th style="text-align:center; vertical-align:middle; ' + thBgStyle + '">' +
+      '<div class="income-col-header-box">' +
+        '<div class="income-col-header-title">' +
+          '<span>' + escapeHtml(col.title) + '</span>' +
+          '<button type="button" onclick="openEditIncomeColumnModal(\'' + escapeHtml(col.colId) + '\')" title="कॉलम संपादित/डिलीट करें" style="background:rgba(255,255,255,0.18); border:none; color:#fff; border-radius:4px; padding:1px 5px; font-size:10px; cursor:pointer;"><i class="fa-solid fa-gear"></i></button>' +
+        '</div>' +
+        '<div class="income-col-header-date"><i class="fa-regular fa-calendar"></i> ' + escapeHtml(col.date) + '</div>' +
+        '<div class="income-col-header-amt">निर्धारित: ₹' + col.amount + '</div>' +
+      '</div>' +
+    '</th>';
+  }
+
+  // हेडिंग के बाद "+ Add" का बटन (जैसा यूज़र ने माँगा है)
+  headHtml += '<th style="text-align:center; vertical-align:middle; width:125px; background:#0f172a;">' +
+    '<button type="button" onclick="openAddIncomeColumnModal()" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; border:none; border-radius:8px; padding:6px 10px; font-size:11.5px; font-weight:800; cursor:pointer; white-space:nowrap; box-shadow:0 3px 8px rgba(245,158,11,0.3);">' +
+      '<i class="fa-solid fa-plus"></i> Add नया मद' +
+    '</button>' +
+  '</th>' +
+  '<th style="text-align:center; width:120px;">कार्रवाई (Actions)</th>' +
+  '</tr>';
+
+  thead.innerHTML = headHtml;
+
+  // 2. Calculate Global & Cluster-wise Stats and Filter Rows
+  var totalExpected = 0;
+  var totalCollected = 0;
+  var totalPending = 0;
+  var countAll = 0;
+  var countPaid = 0;
+  var countPending = 0;
+  var countPartial = 0;
+
+  var clusterStatsMap = {};
+  var filteredRows = [];
+
+  for (var rIdx = 0; rIdx < allRows.length; rIdx++) {
+    var row = allRows[rIdx];
+    var matchesCluster = (clusterFilter === "ALL" || row.clusterName === clusterFilter);
+    var matchesSearch = true;
+    if (searchQ) {
+      var hay = (row.gramPanchayat + " " + row.psName + " " + row.psMobile + " " + row.clusterName + " " + row.prabhariName + " " + row.prabhariMobile).toLowerCase();
+      matchesSearch = hay.indexOf(searchQ) !== -1;
+    }
+
+    var rowEval = evaluateRowPaymentStatus(row, activeColsForStats);
+
+    // Cluster leaderboard aggregation
+    var cKey = row.clusterName || "सामान्य क्लस्टर";
+    if (!clusterStatsMap[cKey]) {
+      clusterStatsMap[cKey] = {
+        clusterName: cKey,
+        prabhariName: row.prabhariName || "-",
+        totalGps: 0,
+        paidGps: 0,
+        expected: 0,
+        collected: 0
+      };
+    }
+    clusterStatsMap[cKey].totalGps++;
+    clusterStatsMap[cKey].expected += rowEval.expected;
+    clusterStatsMap[cKey].collected += rowEval.paid;
+    if (rowEval.status === "PAID") clusterStatsMap[cKey].paidGps++;
+    if (!clusterStatsMap[cKey].prabhariName || clusterStatsMap[cKey].prabhariName === "-") {
+      if (row.prabhariName) clusterStatsMap[cKey].prabhariName = row.prabhariName;
+    }
+
+    if (!matchesCluster || !matchesSearch) continue;
+
+    countAll++;
+    totalExpected += rowEval.expected;
+    totalCollected += rowEval.paid;
+    totalPending += rowEval.pending;
+
+    if (rowEval.status === "PAID") countPaid++;
+    else if (rowEval.status === "PARTIAL") { countPartial++; countPending++; }
+    else countPending++;
+
+    if (currentUnionIncomeStatusFilter === "PAID" && rowEval.status !== "PAID") continue;
+    if (currentUnionIncomeStatusFilter === "PENDING" && rowEval.status === "PAID") continue;
+    if (currentUnionIncomeStatusFilter === "PARTIAL" && rowEval.status !== "PARTIAL") continue;
+
+    filteredRows.push({ row: row, eval: rowEval });
+  }
+
+  // Update KPI Cards & Filter Badges
+  document.getElementById("incStatTotalGps").innerText = countAll + " ग्राम पंचायतें";
+  document.getElementById("incStatTotalCols").innerText = "सक्रिय पेमेंट कॉलम (मद): " + cols.length;
+  document.getElementById("incStatExpectedAmt").innerText = "₹" + totalExpected.toLocaleString("en-IN");
+  document.getElementById("incStatCollectedAmt").innerText = "₹" + totalCollected.toLocaleString("en-IN");
+  document.getElementById("incStatPendingAmt").innerText = "₹" + totalPending.toLocaleString("en-IN");
+
+  var pctCollected = totalExpected > 0 ? Math.round((totalCollected / totalExpected) * 100) : 0;
+  document.getElementById("incStatPaidCountSub").innerText = countPaid + " पूर्ण जमा (" + pctCollected + "% प्राप्त)";
+  document.getElementById("incStatPendingCountSub").innerText = countPending + " पंचायत सहायकों का शुल्क बाकी";
+
+  var navBadge = document.getElementById("totalUnionIncomeBadge");
+  if (navBadge) navBadge.innerText = "₹" + totalCollected.toLocaleString("en-IN");
+
+  document.getElementById("incCntAll").innerText = countAll;
+  document.getElementById("incCntPaid").innerText = countPaid;
+  document.getElementById("incCntPending").innerText = countPending;
+  document.getElementById("incCntPartial").innerText = countPartial;
+
+  // Render Cluster Leaderboard Chips
+  var clProgContainer = document.getElementById("unionIncomeClusterProgressContainer");
+  if (clProgContainer) {
+    clProgContainer.innerHTML = "";
+    var clFrag = document.createDocumentFragment();
+    for (var ck in clusterStatsMap) {
+      if (!Object.prototype.hasOwnProperty.call(clusterStatsMap, ck)) continue;
+      var cs = clusterStatsMap[ck];
+      var cPct = cs.expected > 0 ? Math.round((cs.collected / cs.expected) * 100) : 0;
+      var isSelectedCl = (clusterFilter === cs.clusterName);
+      var chip = document.createElement("div");
+      chip.className = "cluster-prog-chip";
+      chip.style.cursor = "pointer";
+      if (isSelectedCl) {
+        chip.style.borderColor = "#2563eb";
+        chip.style.boxShadow = "0 0 0 2px rgba(37,99,235,0.25)";
+      }
+      chip.onclick = (function(cName) {
+        return function() { filterUnionIncomeByClusterChip(cName); };
+      })(cs.clusterName);
+
+      var barColor = cPct >= 80 ? "#16a34a" : (cPct >= 40 ? "#f59e0b" : "#dc2626");
+      chip.innerHTML =
+        '<div style="display:flex; justify-content:space-between; font-size:12px; font-weight:800; color:var(--text-main);">' +
+          '<span>' + escapeHtml(cs.clusterName) + '</span>' +
+          '<span style="color:' + barColor + ';">' + cPct + '% (₹' + cs.collected.toLocaleString("en-IN") + ')</span>' +
+        '</div>' +
+        '<div style="font-size:10.5px; color:#64748b; margin:2px 0 5px 0;">प्रभारी: ' + escapeHtml(cs.prabhariName) + ' | जमा: ' + cs.paidGps + '/' + cs.totalGps + ' GP</div>' +
+        '<div style="height:6px; width:100%; background:#e2e8f0; border-radius:4px; overflow:hidden;">' +
+          '<div style="height:100%; width:' + Math.min(100, cPct) + '%; background:' + barColor + ';"></div>' +
+        '</div>';
+      clFrag.appendChild(chip);
+    }
+    clProgContainer.appendChild(clFrag);
+  }
+
+  // 3. Render Table Body
+  tbody.innerHTML = "";
+  var totalTableCols = 8 + cols.length;
+  if (filteredRows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="' + totalTableCols + '" style="text-align:center; padding:25px; color:#94a3b8; font-style:italic;">चयनित फ़िल्टर में कोई ग्राम पंचायत रिकॉर्ड नहीं मिला।</td></tr>';
+    tfoot.innerHTML = "";
+    return;
+  }
+
+  var bodyFrag = document.createDocumentFragment();
+  var colTotalsCollected = {};
+  var colTotalsPaidCount = {};
+  for (var m = 0; m < cols.length; m++) {
+    colTotalsCollected[cols[m].colId] = 0;
+    colTotalsPaidCount[cols[m].colId] = 0;
+  }
+
+  for (var idx = 0; idx < filteredRows.length; idx++) {
+    var itemObj = filteredRows[idx];
+    var r = itemObj.row;
+    var tr = document.createElement("tr");
+
+    var prabhariHtml = r.prabhariName
+      ? '<b>' + escapeHtml(r.prabhariName) + '</b><br><span style="font-size:11px; color:#2563eb;">' + escapeHtml(r.prabhariMobile || "-") + '</span>'
+      : '<span style="font-size:11px; color:#94a3b8; font-style:italic;">सेट नहीं है</span>';
+
+    var gpEscapedForJs = escapeHtml(r.gramPanchayat).replace(/'/g, "\'");
+
+    var rowHtml =
+      '<td style="text-align:center; font-weight:bold;">' + (idx + 1) + '</td>' +
+      '<td><b>' + escapeHtml(r.clusterName || "-") + '</b></td>' +
+      '<td>' + prabhariHtml + '</td>' +
+      '<td><b style="color:#2563eb;">' + escapeHtml(r.gramPanchayat) + '</b></td>' +
+      '<td><b>' + escapeHtml(r.psName || "-") + '</b></td>' +
+      '<td>' + escapeHtml(r.psMobile || "-") + '</td>';
+
+    // Render Dynamic Payment Cells for each Payment Column
+    for (var pIdx = 0; pIdx < cols.length; pIdx++) {
+      var pCol = cols[pIdx];
+      var targetVal = Number(pCol.amount) || 0;
+      var paidVal = Number((r.payments && r.payments[pCol.colId]) || 0);
+      var colIdJs = escapeHtml(pCol.colId).replace(/'/g, "\'");
+
+      if (paidVal > 0) {
+        colTotalsCollected[pCol.colId] += paidVal;
+      }
+      if (paidVal >= targetVal && targetVal > 0) {
+        colTotalsPaidCount[pCol.colId]++;
+      }
+
+      var cellInner = "";
+      if (paidVal <= 0) {
+        // 1-Click "+ Add" Button that automatically fills the column target amount (e.g. 500 or 800)
+        cellInner = '<button type="button" class="btn-income-oneclick" title="1-Click में ₹' + targetVal + ' जमा करें" onclick="oneClickCollectUnionIncome(\'' + gpEscapedForJs + '\', \'' + colIdJs + '\', ' + targetVal + ')">' +
+          '<i class="fa-solid fa-plus-circle"></i> Add (₹' + targetVal + ')' +
+        '</button>';
+      } else if (paidVal < targetVal) {
+        var remVal = targetVal - paidVal;
+        cellInner = '<div style="display:flex; flex-direction:column; align-items:center; gap:3px;">' +
+          '<span class="badge-income-partial">⚠️ ₹' + paidVal + ' जमा (₹' + remVal + ' बाकी)</span>' +
+          '<button type="button" onclick="oneClickCollectUnionIncome(\'' + gpEscapedForJs + '\', \'' + colIdJs + '\', ' + targetVal + ')" style="background:#16a34a; color:#fff; border:none; border-radius:10px; padding:2px 8px; font-size:10.5px; font-weight:700; cursor:pointer;">+ शेष ₹' + remVal + ' पूर्ण करें</button>' +
+        '</div>';
+      } else {
+        cellInner = '<div style="display:inline-flex; align-items:center; gap:4px;">' +
+          '<span class="badge-income-paid"><i class="fa-solid fa-circle-check"></i> ₹' + paidVal + '</span>' +
+          '<button type="button" onclick="openUnionIncomeReceiptModal(\'' + gpEscapedForJs + '\', \'' + colIdJs + '\')" title="रसीद देखें/प्रिंट करें" style="background:#0284c7; color:#fff; border:none; border-radius:6px; padding:4px 6px; font-size:11px; cursor:pointer;"><i class="fa-solid fa-receipt"></i></button>' +
+        '</div>';
+      }
+
+      rowHtml += '<td style="text-align:center; vertical-align:middle;">' + cellInner + '</td>';
+    }
+
+    // Empty spacer cell under "+ Add नया मद" header column
+    rowHtml += '<td style="text-align:center; color:#94a3b8; font-size:11px;">—</td>';
+
+    // Last Column: Edit Icon, Receipt Icon & WhatsApp Icon
+    var waHref = buildRowUnionIncomeWhatsAppLink(r, activeColsForStats.length > 0 ? activeColsForStats : cols);
+    rowHtml += '<td style="text-align:center; white-space:nowrap;">' +
+      '<button type="button" class="btn-action-edit" title="राशि व विवरण संपादित करें (Edit)" onclick="openEditIncomeRowModal(\'' + gpEscapedForJs + '\')"><i class="fa-solid fa-pen"></i></button>' +
+      '<button type="button" class="btn-action-view" style="background:#0284c7;" title="आधिकारिक यूनियन रसीद (Receipt)" onclick="openUnionIncomeReceiptModal(\'' + gpEscapedForJs + '\', \'ALL\')"><i class="fa-solid fa-receipt"></i></button>' +
+      '<a href="' + waHref + '" target="_blank" class="btn-action-whatsapp" title="WhatsApp रसीद / रिमाइंडर भेजें"><i class="fa-brands fa-whatsapp"></i></a>' +
+    '</td>';
+
+    tr.innerHTML = rowHtml;
+    bodyFrag.appendChild(tr);
+  }
+  tbody.appendChild(bodyFrag);
+
+  // 4. Render Sticky Footer Grand Totals Row
+  if (cols.length > 0) {
+    var footHtml = '<tr style="background:#0f172a; color:#ffffff; font-weight:800;">' +
+      '<td colspan="6" style="text-align:right; padding:10px 14px; font-size:13px; color:#38bdf8;">कुल योग (Column-Wise Grand Total):</td>';
+
+    for (var fIdx = 0; fIdx < cols.length; fIdx++) {
+      var fCol = cols[fIdx];
+      var cColl = colTotalsCollected[fCol.colId] || 0;
+      var cPaidCnt = colTotalsPaidCount[fCol.colId] || 0;
+      var cExp = (Number(fCol.amount) || 0) * filteredRows.length;
+      var cPend = Math.max(0, cExp - cColl);
+
+      footHtml += '<td style="text-align:center; padding:8px; line-height:1.4;">' +
+        '<div style="color:#4ade80; font-size:13px;">प्राप्त: ₹' + cColl.toLocaleString("en-IN") + ' (' + cPaidCnt + ' PS)</div>' +
+        '<div style="color:#f87171; font-size:11px;">बकाया: ₹' + cPend.toLocaleString("en-IN") + '</div>' +
+      '</td>';
+    }
+    footHtml += '<td colspan="2" style="text-align:center; color:#facc15; font-size:12.5px;">कुल प्राप्त: ₹' + totalCollected.toLocaleString("en-IN") + '</td></tr>';
+    tfoot.innerHTML = footHtml;
+  } else {
+    tfoot.innerHTML = "";
+  }
+}
+
+function buildRowUnionIncomeWhatsAppLink(row, colsList) {
+  var pres = getDynamicPresidentObj();
+  var paidLines = [];
+  var pendingLines = [];
+  var totalPaid = 0;
+  var totalPend = 0;
+
+  for (var i = 0; i < colsList.length; i++) {
+    var c = colsList[i];
+    var target = Number(c.amount) || 0;
+    var paid = Number((row.payments && row.payments[c.colId]) || 0);
+    var rem = Math.max(0, target - paid);
+    if (paid > 0) {
+      totalPaid += paid;
+      paidLines.push("✅ *" + c.title + "* (" + c.date + "): ₹" + paid + " जमा");
+    }
+    if (rem > 0) {
+      totalPend += rem;
+      pendingLines.push("⏳ *" + c.title + "* (" + c.date + "): ₹" + rem + " बकाया");
+    }
+  }
+
+  var msgLines = [
+    "🏛️ *पंचायत सहायक कर्मचारी यूनियन - विकास खण्ड उतरौला (बलरामपुर)*",
+    "──────────────────────",
+    "नमस्ते *" + (row.psName || "पंचायत सहायक") + " जी*,",
+    "🏡 *ग्राम पंचायत:* " + row.gramPanchayat + " (क्लस्टर: " + (row.clusterName || "-") + ")",
+    ""
+  ];
+
+  if (paidLines.length > 0) {
+    msgLines.push("💚 *आपका प्राप्त सहयोग विवरण:*");
+    msgLines = msgLines.concat(paidLines);
+    msgLines.push("*कुल जमा राशि: ₹" + totalPaid + "*");
+    msgLines.push("");
+  }
+  if (pendingLines.length > 0) {
+    msgLines.push("⚠️ *लंबित सहयोग राशि (Pending) विवरण:*");
+    msgLines = msgLines.concat(pendingLines);
+    msgLines.push("*कुल बकाया राशि: ₹" + totalPend + "*");
+    msgLines.push("");
+    msgLines.push("🙏 *विनम्र अनुरोध:* कृपया उपरोक्त लंबित यूनियन सहयोग राशि यथाशीघ्र अपने क्लस्टर प्रभारी अथवा ब्लॉक कोषाध्यक्ष/अध्यक्ष के पास जमा कराने का कष्ट करें।");
+  } else if (paidLines.length > 0) {
+    msgLines.push("🌟 यूनियन में आपके सक्रिय योगदान एवं सहयोग के लिए हार्दिक धन्यवाद!");
+  } else {
+    msgLines.push("यूनियन की तरफ से सादर संपर्क किया जा रहा है।");
+  }
+
+  msgLines.push(
+    "──────────────────────",
+    "– *" + pres.name + "* (" + pres.designation + ", उतरौला)",
+    "📞 मो०: " + pres.mobile
+  );
+
+  var cleanMob = String(row.psMobile || "").replace(/\D/g, "").slice(-10);
+  var baseUrl = cleanMob.length === 10 ? ("https://wa.me/91" + cleanMob) : "https://api.whatsapp.com/send";
+  return baseUrl + (baseUrl.indexOf("?") === -1 ? "?" : "&") + "text=" + encodeURIComponent(msgLines.join("\n"));
+}
+
+// 1-Click Auto-Fill Amount Function (बिना कुछ टाइप किए सीधे निर्धारित राशि सेव करने के लिए)
+function oneClickCollectUnionIncome(gpName, colId, targetAmount) {
+  if (!adminSessionToken) {
+    showMsg("त्रुटि", "कृपया पहले एडमिन लॉगिन करें!", false);
+    return;
+  }
+  var allRows = buildMasterUnionIncomeRows();
+  var targetRowObj = null;
+  for (var i = 0; i < allRows.length; i++) {
+    if (allRows[i].gramPanchayat === gpName) {
+      targetRowObj = allRows[i];
+      break;
+    }
+  }
+  if (!targetRowObj) return;
+
+  // Optimistic 0ms Instant UI Update!
+  if (!cachedUnionIncomeData.recordsMap) cachedUnionIncomeData.recordsMap = {};
+  if (!cachedUnionIncomeData.recordsMap[gpName]) {
+    cachedUnionIncomeData.recordsMap[gpName] = {
+      gramPanchayat: gpName,
+      clusterName: targetRowObj.clusterName,
+      prabhariName: targetRowObj.prabhariName,
+      prabhariMobile: targetRowObj.prabhariMobile,
+      psName: targetRowObj.psName,
+      psMobile: targetRowObj.psMobile,
+      payments: {}
+    };
+  }
+  if (!cachedUnionIncomeData.recordsMap[gpName].payments) {
+    cachedUnionIncomeData.recordsMap[gpName].payments = {};
+  }
+  cachedUnionIncomeData.recordsMap[gpName].payments[colId] = Number(targetAmount);
+
+  // Immediately re-render table so Admin sees "✅ ₹500" in 0ms!
+  renderUnionIncomeMasterView();
+
+  var payload = {
+    gramPanchayat: gpName,
+    clusterName: targetRowObj.clusterName,
+    prabhariName: targetRowObj.prabhariName,
+    prabhariMobile: targetRowObj.prabhariMobile,
+    psName: targetRowObj.psName,
+    psMobile: targetRowObj.psMobile,
+    colId: colId,
+    amount: Number(targetAmount)
+  };
+
+  google.script.run.withSuccessHandler(function(res) {
+    if (res && res.success && res.unionIncomeData) {
+      cachedUnionIncomeData = res.unionIncomeData;
+      renderUnionIncomeMasterView();
+    } else if (res && !res.success) {
+      showMsg("त्रुटि", res.message || "सेव नहीं हो सका", false);
+    }
+  }).withFailureHandler(function(err) {
+    showMsg("नेटवर्क त्रुटि", err.toString(), false);
+  }).recordUnionIncomePaymentSecure(adminSessionToken, payload);
+}
+
+// Add / Edit Column Modal Functions
+function openAddIncomeColumnModal() {
+  document.getElementById("editIncomeColId").value = "";
+  document.getElementById("incomeColModalHeading").innerHTML = '<i class="fa-solid fa-plus-circle"></i> नया पेमेंट कॉलम (मद) बनाएं';
+  document.getElementById("incomeColDateInput").value = getTodayFormattedDDMMYYYY();
+  document.getElementById("incomeColTitleInput").value = "";
+  document.getElementById("incomeColAmountInput").value = "";
+  document.getElementById("incomeColSubmitBtn").innerHTML = '<i class="fa-solid fa-check-circle"></i> Create (कॉलम बनाएं)';
+  document.getElementById("incomeColDeleteBtn").style.display = "none";
+  openModal("addIncomeColumnModal");
+}
+
+function openEditIncomeColumnModal(colId) {
+  var cols = (cachedUnionIncomeData && cachedUnionIncomeData.columns) ? cachedUnionIncomeData.columns : [];
+  var found = null;
+  for (var i = 0; i < cols.length; i++) {
+    if (cols[i].colId === colId) {
+      found = cols[i];
+      break;
+    }
+  }
+  if (!found) return;
+  document.getElementById("editIncomeColId").value = found.colId;
+  document.getElementById("incomeColModalHeading").innerHTML = '<i class="fa-solid fa-gear"></i> पेमेंट कॉलम (मद) संपादित करें';
+  document.getElementById("incomeColDateInput").value = found.date || getTodayFormattedDDMMYYYY();
+  document.getElementById("incomeColTitleInput").value = found.title || "";
+  document.getElementById("incomeColAmountInput").value = found.amount || "";
+  document.getElementById("incomeColSubmitBtn").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> बदलाव सेव करें';
+  document.getElementById("incomeColDeleteBtn").style.display = "inline-block";
+  openModal("addIncomeColumnModal");
+}
+
+function handleSaveIncomeColumnSubmit(e) {
+  e.preventDefault();
+  var editColId = document.getElementById("editIncomeColId").value.trim();
+  var colData = {
+    date: document.getElementById("incomeColDateInput").value.trim() || getTodayFormattedDDMMYYYY(),
+    title: document.getElementById("incomeColTitleInput").value.trim(),
+    amount: Number(document.getElementById("incomeColAmountInput").value) || 0
+  };
+  if (!colData.title || colData.amount <= 0) {
+    showMsg("ध्यान दें", "कृपया पेमेंट का विवरण और निर्धारित राशि (0 से अधिक) दर्ज करें।", false);
+    return;
+  }
+
+  showLoader(editColId ? "पेमेंट कॉलम अपडेट हो रहा है..." : "नया पेमेंट कॉलम बनाया जा रहा है...");
+  if (editColId) {
+    google.script.run.withSuccessHandler(function(res) {
+      hideLoader();
+      if (res && res.success) {
+        closeModal("addIncomeColumnModal");
+        cachedUnionIncomeData = res.unionIncomeData || cachedUnionIncomeData;
+        populateUnionIncomeFilters();
+        renderUnionIncomeMasterView();
+        showMsg("सफलता", res.message, true);
+      } else {
+        showMsg("त्रुटि", (res ? res.message : "अपडेट विफल"), false);
+      }
+    }).withFailureHandler(function(err) {
+      hideLoader();
+      showMsg("सर्वर त्रुटि", err.toString(), false);
+    }).editDeleteUnionIncomeColumnSecure(adminSessionToken, editColId, "EDIT", colData);
+  } else {
+    google.script.run.withSuccessHandler(function(res) {
+      hideLoader();
+      if (res && res.success) {
+        closeModal("addIncomeColumnModal");
+        cachedUnionIncomeData = res.unionIncomeData || cachedUnionIncomeData;
+        populateUnionIncomeFilters();
+        if (res.colId && document.getElementById("unionIncomeColFocusSelect")) {
+          document.getElementById("unionIncomeColFocusSelect").value = res.colId;
+        }
+        renderUnionIncomeMasterView();
+        showMsg("नया कॉलम तैयार!", res.message, true);
+      } else {
+        showMsg("त्रुटि", (res ? res.message : "कॉलम नहीं बन सका"), false);
+      }
+    }).withFailureHandler(function(err) {
+      hideLoader();
+      showMsg("सर्वर त्रुटि", err.toString(), false);
+    }).addUnionIncomeColumnSecure(adminSessionToken, colData);
+  }
+}
+
+function handleDeleteIncomeColumn() {
+  var editColId = document.getElementById("editIncomeColId").value.trim();
+  if (!editColId) return;
+  showLoader("पेमेंट कॉलम हटाया जा रहा है...");
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    if (res && res.success) {
+      closeModal("addIncomeColumnModal");
+      cachedUnionIncomeData = res.unionIncomeData || cachedUnionIncomeData;
+      populateUnionIncomeFilters();
+      renderUnionIncomeMasterView();
+      showMsg("हटाया गया", res.message, true);
+    } else {
+      showMsg("त्रुटि", (res ? res.message : "हटाया नहीं जा सका"), false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("सर्वर त्रुटि", err.toString(), false);
+  }).editDeleteUnionIncomeColumnSecure(adminSessionToken, editColId, "DELETE", {});
+}
+
+// Edit Single Row Modal (✏️ आइकन पर क्लिक करने पर)
+function openEditIncomeRowModal(gpName) {
+  var allRows = buildMasterUnionIncomeRows();
+  var row = null;
+  for (var i = 0; i < allRows.length; i++) {
+    if (allRows[i].gramPanchayat === gpName) {
+      row = allRows[i];
+      break;
+    }
+  }
+  if (!row) return;
+
+  document.getElementById("editIncRowGpKey").value = row.gramPanchayat;
+  document.getElementById("editIncomeRowSubTitle").innerText = "ग्राम पंचायत: " + row.gramPanchayat + " | पंचायत सहायक: " + (row.psName || "-");
+  document.getElementById("editIncRowCluster").value = row.clusterName || "";
+  document.getElementById("editIncRowGpDisplay").value = row.gramPanchayat;
+  document.getElementById("editIncRowPrabhariName").value = row.prabhariName || "";
+  document.getElementById("editIncRowPrabhariMobile").value = row.prabhariMobile || "";
+  document.getElementById("editIncRowPsName").value = row.psName || "";
+  document.getElementById("editIncRowPsMobile").value = row.psMobile || "";
+
+  var cols = (cachedUnionIncomeData && cachedUnionIncomeData.columns) ? cachedUnionIncomeData.columns : [];
+  var container = document.getElementById("editIncomeRowDynamicColsContainer");
+  container.innerHTML = "";
+
+  if (cols.length === 0) {
+    container.innerHTML = '<p style="font-size:12px; color:#94a3b8; font-style:italic;">अभी कोई पेमेंट कॉलम नहीं बनाया गया है।</p>';
+  } else {
+    for (var j = 0; j < cols.length; j++) {
+      var c = cols[j];
+      var curVal = Number((row.payments && row.payments[c.colId]) || 0);
+      var div = document.createElement("div");
+      div.style.cssText = "display:flex; justify-content:space-between; align-items:center; gap:10px; background:var(--sub-box-bg); padding:8px 12px; border-radius:8px; margin-bottom:8px; border:1px solid var(--input-border);";
+      div.innerHTML =
+        '<div style="flex:1;">' +
+          '<div style="font-weight:800; font-size:13px; color:var(--text-main);">' + escapeHtml(c.title) + '</div>' +
+          '<div style="font-size:11px; color:#64748b;">तारीख: ' + escapeHtml(c.date) + ' | निर्धारित: <b>₹' + c.amount + '</b></div>' +
+        '</div>' +
+        '<div style="display:flex; align-items:center; gap:6px;">' +
+          '<input type="number" min="0" step="1" class="field-input edit-inc-col-input" data-col-id="' + escapeHtml(c.colId) + '" value="' + curVal + '" style="width:105px; margin:0; font-weight:800; text-align:center;">' +
+          '<button type="button" onclick="this.previousElementSibling.value=' + c.amount + '" style="background:#16a34a; color:#fff; border:none; border-radius:6px; padding:6px 8px; font-size:11px; font-weight:700; cursor:pointer;" title="पूरा ₹' + c.amount + ' भरें">₹' + c.amount + '</button>' +
+          '<button type="button" onclick="this.previousElementSibling.previousElementSibling.value=0" style="background:#dc2626; color:#fff; border:none; border-radius:6px; padding:6px 8px; font-size:11px; font-weight:700; cursor:pointer;" title="0 / बाकी करें">₹0</button>' +
+        '</div>';
+      container.appendChild(div);
+    }
+  }
+  openModal("editIncomeRowModal");
+}
+
+function handleSaveEditedIncomeRow(e) {
+  e.preventDefault();
+  var gpKey = document.getElementById("editIncRowGpKey").value.trim();
+  if (!gpKey) return;
+
+  var inputs = document.querySelectorAll(".edit-inc-col-input");
+  var paymentsMap = {};
+  for (var i = 0; i < inputs.length; i++) {
+    var cid = inputs[i].getAttribute("data-col-id");
+    var val = Number(inputs[i].value) || 0;
+    paymentsMap[cid] = val;
+  }
+
+  var payload = {
+    gramPanchayat: gpKey,
+    clusterName: document.getElementById("editIncRowCluster").value.trim(),
+    prabhariName: document.getElementById("editIncRowPrabhariName").value.trim(),
+    prabhariMobile: document.getElementById("editIncRowPrabhariMobile").value.trim(),
+    psName: document.getElementById("editIncRowPsName").value.trim(),
+    psMobile: document.getElementById("editIncRowPsMobile").value.trim(),
+    paymentsMap: paymentsMap
+  };
+
+  showLoader("विवरण सुरक्षित किया जा रहा है...");
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    if (res && res.success) {
+      closeModal("editIncomeRowModal");
+      cachedUnionIncomeData = res.unionIncomeData || cachedUnionIncomeData;
+      populateUnionIncomeFilters();
+      renderUnionIncomeMasterView();
+      showMsg("अपडेट सफल!", res.message, true);
+    } else {
+      showMsg("त्रुटि", (res ? res.message : "अपडेट नहीं हो सका"), false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("सर्वर त्रुटि", err.toString(), false);
+  }).recordUnionIncomePaymentSecure(adminSessionToken, payload);
+}
+
+// Cluster Prabhari Bulk Setup Modal
+function openClusterPrabhariModal() {
+  populateUnionIncomeFilters();
+  prefillClusterPrabhariModal();
+  openModal("clusterPrabhariModal");
+}
+
+function prefillClusterPrabhariModal() {
+  var clName = document.getElementById("bulkPrabhariClusterSelect").value;
+  var pMap = (cachedUnionIncomeData && cachedUnionIncomeData.clusterPrabhariMap) ? cachedUnionIncomeData.clusterPrabhariMap : {};
+  var info = pMap[clName] || {};
+  document.getElementById("bulkPrabhariNameInput").value = info.name || "";
+  document.getElementById("bulkPrabhariMobileInput").value = info.mobile || "";
+}
+
+function handleSaveClusterPrabhariBulk(e) {
+  e.preventDefault();
+  var clName = document.getElementById("bulkPrabhariClusterSelect").value.trim();
+  var pName = document.getElementById("bulkPrabhariNameInput").value.trim();
+  var pMob = document.getElementById("bulkPrabhariMobileInput").value.trim();
+  if (!clName || !pName) return;
+
+  var allRows = buildMasterUnionIncomeRows();
+  var gpList = [];
+  for (var i = 0; i < allRows.length; i++) {
+    if (allRows[i].clusterName === clName) {
+      gpList.push({
+        gramPanchayat: allRows[i].gramPanchayat,
+        psName: allRows[i].psName,
+        psMobile: allRows[i].psMobile
+      });
+    }
+  }
+
+  showLoader("क्लस्टर '" + clName + "' की सभी ग्राम पंचायतों में प्रभारी सेट किए जा रहे हैं...");
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    if (res && res.success) {
+      closeModal("clusterPrabhariModal");
+      cachedUnionIncomeData = res.unionIncomeData || cachedUnionIncomeData;
+      renderUnionIncomeMasterView();
+      showMsg("क्लस्टर प्रभारी अपडेट!", res.message, true);
+    } else {
+      showMsg("त्रुटि", (res ? res.message : "सेव नहीं हो सका"), false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("सर्वर त्रुटि", err.toString(), false);
+  }).saveClusterPrabhariBulkSecure(adminSessionToken, clName, pName, pMob, gpList);
+}
+
+// Official Receipt Modal & Print
+function openUnionIncomeReceiptModal(gpName, colIdOrAll) {
+  var allRows = buildMasterUnionIncomeRows();
+  var row = null;
+  for (var i = 0; i < allRows.length; i++) {
+    if (allRows[i].gramPanchayat === gpName) {
+      row = allRows[i];
+      break;
+    }
+  }
+  if (!row) return;
+
+  var cols = (cachedUnionIncomeData && cachedUnionIncomeData.columns) ? cachedUnionIncomeData.columns : [];
+  var targetCols = (colIdOrAll && colIdOrAll !== "ALL")
+    ? cols.filter(function(c) { return c.colId === colIdOrAll; })
+    : cols;
+
+  var pres = getDynamicPresidentObj();
+  var paidItems = [];
+  var totalPaid = 0;
+  for (var j = 0; j < targetCols.length; j++) {
+    var c = targetCols[j];
+    var amt = Number((row.payments && row.payments[c.colId]) || 0);
+    if (amt > 0) {
+      totalPaid += amt;
+      paidItems.push({ title: c.title, date: c.date, target: c.amount, paid: amt });
+    }
+  }
+
+  if (paidItems.length === 0) {
+    showMsg("कोई भुगतान जमा नहीं है", "ग्राम पंचायत '" + gpName + "' का अभी इस मद में कोई शुल्क जमा नहीं हुआ है। पहले + Add बटन दबाकर जमा दर्ज करें।", false);
+    return;
+  }
+
+  var recNo = "PSKU-REC-" + String(gpName).slice(0, 3).toUpperCase() + "-" + (new Date().getTime().toString().slice(-4));
+  var todayStr = getTodayFormattedDDMMYYYY();
+
+  var itemsTableHtml = '<table style="width:100%; border-collapse:collapse; margin:10px 0; font-size:12.5px;">' +
+    '<thead><tr style="background:#1e3a8a; color:#fff;">' +
+      '<th style="border:1px solid #1e3a8a; padding:6px;">क्र.</th>' +
+      '<th style="border:1px solid #1e3a8a; padding:6px; text-align:left;">भुगतान का मद / विवरण</th>' +
+      '<th style="border:1px solid #1e3a8a; padding:6px;">तारीख</th>' +
+      '<th style="border:1px solid #1e3a8a; padding:6px;">जमा राशि (₹)</th>' +
+    '</tr></thead><tbody>';
+
+  for (var k = 0; k < paidItems.length; k++) {
+    var pi = paidItems[k];
+    itemsTableHtml += '<tr>' +
+      '<td style="border:1px solid #cbd5e1; padding:6px; text-align:center; font-weight:bold;">' + (k + 1) + '</td>' +
+      '<td style="border:1px solid #cbd5e1; padding:6px; font-weight:bold;">' + escapeHtml(pi.title) + '</td>' +
+      '<td style="border:1px solid #cbd5e1; padding:6px; text-align:center;">' + escapeHtml(pi.date) + '</td>' +
+      '<td style="border:1px solid #cbd5e1; padding:6px; text-align:center; font-weight:800; color:#16a34a;">₹' + pi.paid + '</td>' +
+    '</tr>';
+  }
+  itemsTableHtml += '<tr style="background:#f0fdf4; font-weight:800;">' +
+    '<td colspan="3" style="border:1px solid #cbd5e1; padding:7px; text-align:right;">कुल प्राप्त सहयोग राशि:</td>' +
+    '<td style="border:1px solid #cbd5e1; padding:7px; text-align:center; color:#15803d; font-size:14px;">₹' + totalPaid + '/-</td>' +
+  '</tr></tbody></table>';
+
+  var receiptHtml = buildOfficialUnionLetterheadHTML(pres) +
+    '<div style="text-align:center; margin-bottom:10px;">' +
+      '<span style="background:#16a34a; color:#ffffff; padding:4px 16px; border-radius:20px; font-size:13px; font-weight:800;">🧾 आधिकारिक सहयोग राशि पावती रसीद (Official Payment Receipt)</span>' +
+    '</div>' +
+    '<div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; background:#f8fafc; padding:6px 10px; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:10px;">' +
+      '<span>रसीद संख्या: ' + escapeHtml(recNo) + '</span>' +
+      '<span>दिनांक: ' + todayStr + '</span>' +
+    '</div>' +
+    '<div style="font-size:13px; line-height:1.8;">' +
+      '<div><b>पंचायत सहायक का नाम:</b> ' + escapeHtml(row.psName || "-") + ' &nbsp;|&nbsp; <b>मोबाइल:</b> ' + escapeHtml(row.psMobile || "-") + '</div>' +
+      '<div><b>ग्राम पंचायत:</b> ' + escapeHtml(row.gramPanchayat) + ' &nbsp;|&nbsp; <b>क्लस्टर:</b> ' + escapeHtml(row.clusterName || "-") + '</div>' +
+      '<div><b>क्लस्टर प्रभारी:</b> ' + escapeHtml(row.prabhariName || "-") + ' (' + escapeHtml(row.prabhariMobile || "-") + ')</div>' +
+    '</div>' +
+    itemsTableHtml +
+    '<div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:18px; padding-top:10px; border-top:1px dashed #cbd5e1; font-size:12px;">' +
+      '<div style="color:#15803d; font-weight:700;">✅ सत्यापित एवं यूनियन कोष में प्राप्त</div>' +
+      '<div style="text-align:center;">' +
+        '<div style="font-weight:800; color:#1e3a8a;">(' + escapeHtml(pres.name) + ')</div>' +
+        '<div style="font-size:11px; font-weight:700; color:#dc2626;">' + escapeHtml(pres.designation) + ' - विकास खण्ड उतरौला</div>' +
+      '</div>' +
+    '</div>';
+
+  document.getElementById("unionReceiptPrintContent").innerHTML = receiptHtml;
+  document.getElementById("btnShareSingleReceiptWa").href = buildRowUnionIncomeWhatsAppLink(row, targetCols);
+  openModal("unionIncomeReceiptModal");
+}
+
+function printSingleUnionReceiptPDF() {
+  var content = document.getElementById("unionReceiptPrintContent").innerHTML;
+  var printArea = document.getElementById("printTemplateArea");
+  printArea.innerHTML = '<div style="padding:20px; max-width:650px; margin:0 auto; font-family:sans-serif;">' + content + '</div>';
+  window.print();
+}
+
+// Automatic Defaulter (Pending) & Paid List PDF Generator on Union Letterhead
+function printUnionIncomeReportPDF(mode) {
+  var allRows = buildMasterUnionIncomeRows();
+  var cols = (cachedUnionIncomeData && cachedUnionIncomeData.columns) ? cachedUnionIncomeData.columns : [];
+  if (cols.length === 0) {
+    showMsg("ध्यान दें", "कृपया पहले कम से कम 1 पेमेंट कॉलम (मद) जोड़ें।", false);
+    return;
+  }
+
+  var focusColId = document.getElementById("unionIncomeColFocusSelect") ? document.getElementById("unionIncomeColFocusSelect").value : "ALL";
+  var clusterFilter = document.getElementById("unionIncomeClusterFilter") ? document.getElementById("unionIncomeClusterFilter").value : "ALL";
+  var activeCols = (focusColId !== "ALL") ? cols.filter(function(c) { return c.colId === focusColId; }) : cols;
+  if (activeCols.length === 0) activeCols = cols;
+
+  var pres = getDynamicPresidentObj();
+  var todayStr = getTodayFormattedDDMMYYYY();
+  var colTitleDesc = (activeCols.length === 1)
+    ? (activeCols[0].title + " (दिनांक: " + activeCols[0].date + " | निर्धारित: ₹" + activeCols[0].amount + ")")
+    : ("समस्त पेमेंट मद (" + activeCols.length + " कॉलम)");
+
+  var reportTitle = "";
+  var badgeColor = "#1e3a8a";
+  if (mode === "PENDING") {
+    reportTitle = "बकाया / लंबित सहयोग राशि ग्राम पंचायत सूची (Pending / Defaulter List)";
+    badgeColor = "#dc2626";
+  } else if (mode === "PAID") {
+    reportTitle = "सहयोग राशि जमा करने वाली ग्राम पंचायतों की सूची (Verified Paid List)";
+    badgeColor = "#16a34a";
+  } else {
+    reportTitle = "यूनियन आय एवं सहयोग राशि संपूर्ण रजिस्टर (Complete Income Statement)";
+    badgeColor = "#1e3a8a";
+  }
+
+  var matched = [];
+  var sumExp = 0;
+  var sumPaid = 0;
+  var sumPend = 0;
+
+  for (var i = 0; i < allRows.length; i++) {
+    var r = allRows[i];
+    if (clusterFilter !== "ALL" && r.clusterName !== clusterFilter) continue;
+    var ev = evaluateRowPaymentStatus(r, activeCols);
+    if (mode === "PENDING" && ev.pending <= 0) continue;
+    if (mode === "PAID" && ev.paid <= 0) continue;
+    sumExp += ev.expected;
+    sumPaid += ev.paid;
+    sumPend += ev.pending;
+    matched.push({ row: r, eval: ev });
+  }
+
+  if (matched.length === 0) {
+    showMsg("सूचना", "इस श्रेणी में कोई भी ग्राम पंचायत रिकॉर्ड नहीं है।", false);
+    return;
+  }
+
+  var tblHtml = '<table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:12px; color:#000;">' +
+    '<thead><tr style="background:#1e3a8a; color:#ffffff;">' +
+      '<th style="border:1px solid #000; padding:6px; width:38px;">क्र.</th>' +
+      '<th style="border:1px solid #000; padding:6px; text-align:left;">क्लस्टर</th>' +
+      '<th style="border:1px solid #000; padding:6px; text-align:left;">क्लस्टर प्रभारी</th>' +
+      '<th style="border:1px solid #000; padding:6px; text-align:left;">ग्राम पंचायत</th>' +
+      '<th style="border:1px solid #000; padding:6px; text-align:left;">पंचायत सहायक का नाम</th>' +
+      '<th style="border:1px solid #000; padding:6px; width:95px;">मोबाइल</th>';
+
+  if (mode === "PENDING") {
+    tblHtml += '<th style="border:1px solid #000; padding:6px; width:95px;">जमा राशि</th>' +
+               '<th style="border:1px solid #000; padding:6px; width:110px;">बकाया राशि (₹)</th>';
+  } else if (mode === "PAID") {
+    tblHtml += '<th style="border:1px solid #000; padding:6px; width:110px;">प्राप्त राशि (₹)</th>' +
+               '<th style="border:1px solid #000; padding:6px; width:95px;">स्थिति</th>';
+  } else {
+    tblHtml += '<th style="border:1px solid #000; padding:6px; width:90px;">निर्धारित (₹)</th>' +
+               '<th style="border:1px solid #000; padding:6px; width:90px;">प्राप्त (₹)</th>' +
+               '<th style="border:1px solid #000; padding:6px; width:90px;">बकाया (₹)</th>';
+  }
+  tblHtml += '</tr></thead><tbody>';
+
+  for (var idx = 0; idx < matched.length; idx++) {
+    var m = matched[idx];
+    var rw = m.row;
+    var evObj = m.eval;
+    tblHtml += '<tr>' +
+      '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold;">' + (idx + 1) + '</td>' +
+      '<td style="border:1px solid #000; padding:5px;">' + escapeHtml(rw.clusterName || "-") + '</td>' +
+      '<td style="border:1px solid #000; padding:5px;">' + escapeHtml(rw.prabhariName || "-") + (rw.prabhariMobile ? " (" + escapeHtml(rw.prabhariMobile) + ")" : "") + '</td>' +
+      '<td style="border:1px solid #000; padding:5px; font-weight:bold;">' + escapeHtml(rw.gramPanchayat) + '</td>' +
+      '<td style="border:1px solid #000; padding:5px;">' + escapeHtml(rw.psName || "-") + '</td>' +
+      '<td style="border:1px solid #000; padding:5px; text-align:center;">' + escapeHtml(rw.psMobile || "-") + '</td>';
+
+    if (mode === "PENDING") {
+      tblHtml += '<td style="border:1px solid #000; padding:5px; text-align:center;">₹' + evObj.paid + '</td>' +
+                 '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold; color:#dc2626;">₹' + evObj.pending + ' बाकी</td>';
+    } else if (mode === "PAID") {
+      tblHtml += '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold; color:#15803d;">₹' + evObj.paid + '</td>' +
+                 '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold;">' + (evObj.pending > 0 ? "आंशिक (₹" + evObj.pending + " शेष)" : "✅ पूर्ण जमा") + '</td>';
+    } else {
+      tblHtml += '<td style="border:1px solid #000; padding:5px; text-align:center;">₹' + evObj.expected + '</td>' +
+                 '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold; color:#15803d;">₹' + evObj.paid + '</td>' +
+                 '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold; color:#dc2626;">₹' + evObj.pending + '</td>';
+    }
+    tblHtml += '</tr>';
+  }
+  tblHtml += '</tbody></table>';
+
+  var fullPdfHtml = '<div style="padding:14px; font-family:sans-serif; color:#000;">' +
+    buildOfficialUnionLetterheadHTML(pres) +
+    '<div style="text-align:center; margin-bottom:10px;">' +
+      '<span style="background:' + badgeColor + '; color:#fff; padding:5px 16px; border-radius:20px; font-size:14px; font-weight:800;">' + reportTitle + '</span>' +
+    '</div>' +
+    '<div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; background:#f1f5f9; border:1px solid #94a3b8; padding:8px 12px; border-radius:6px; font-size:12.5px; font-weight:bold; margin-bottom:8px;">' +
+      '<span>📌 चयनित मद: ' + escapeHtml(colTitleDesc) + '</span>' +
+      '<span>📅 रिपोर्ट दिनांक: ' + todayStr + '</span>' +
+    '</div>' +
+    '<div style="display:flex; justify-content:space-around; background:#f8fafc; border:1px solid #cbd5e1; padding:8px; border-radius:6px; font-size:12.5px; font-weight:800; margin-bottom:10px;">' +
+      '<span>सूचीबद्ध ग्राम पंचायतें: ' + matched.length + '</span>' +
+      '<span style="color:#15803d;">कुल प्राप्त राशि: ₹' + sumPaid.toLocaleString("en-IN") + '</span>' +
+      '<span style="color:#dc2626;">कुल बकाया राशि: ₹' + sumPend.toLocaleString("en-IN") + '</span>' +
+    '</div>' +
+    tblHtml +
+    '<div style="display:flex; justify-content:space-between; margin-top:26px; padding-top:10px; font-size:12.5px; font-weight:bold;">' +
+      '<div>हस्ताक्षर ब्लॉक कोषाध्यक्ष (उतरौला)</div>' +
+      '<div style="text-align:center;">(' + escapeHtml(pres.name) + ')<br>' + escapeHtml(pres.designation) + ' - विकास खण्ड उतरौला</div>' +
+    '</div>' +
+  '</div>';
+
+  var printArea = document.getElementById("printTemplateArea");
+  printArea.innerHTML = fullPdfHtml;
+  window.print();
+}
+
+// Bulk Pending WhatsApp Broadcast & Reminder Queue Modal
+function openBulkPendingWhatsAppModal() {
+  populateUnionIncomeFilters();
+  refreshBulkPendingWhatsAppModal();
+  openModal("bulkPendingWhatsAppModal");
+}
+
+function refreshBulkPendingWhatsAppModal() {
+  var allRows = buildMasterUnionIncomeRows();
+  var cols = (cachedUnionIncomeData && cachedUnionIncomeData.columns) ? cachedUnionIncomeData.columns : [];
+  var selColId = document.getElementById("bulkWaColumnSelect") ? document.getElementById("bulkWaColumnSelect").value : "ALL";
+  var clusterFilter = document.getElementById("unionIncomeClusterFilter") ? document.getElementById("unionIncomeClusterFilter").value : "ALL";
+  var activeCols = (selColId !== "ALL") ? cols.filter(function(c) { return c.colId === selColId; }) : cols;
+  if (activeCols.length === 0) activeCols = cols;
+
+  var pres = getDynamicPresidentObj();
+  var colHeading = (activeCols.length === 1)
+    ? (activeCols[0].title + " (निर्धारित: ₹" + activeCols[0].amount + " | दिनांक: " + activeCols[0].date + ")")
+    : "समस्त यूनियन सहयोग मद";
+
+  var paidGps = [];
+  var pendingGps = [];
+  var totalCollected = 0;
+  var totalPending = 0;
+
+  for (var i = 0; i < allRows.length; i++) {
+    var r = allRows[i];
+    if (clusterFilter !== "ALL" && r.clusterName !== clusterFilter) continue;
+    var ev = evaluateRowPaymentStatus(r, activeCols);
+    totalCollected += ev.paid;
+    totalPending += ev.pending;
+    if (ev.status === "PAID") {
+      paidGps.push(r);
+    } else if (ev.pending > 0) {
+      pendingGps.push({ row: r, eval: ev });
+    }
+  }
+
+  // Build Group Broadcast Summary Text
+  var gLines = [
+    "📢 *पंचायत सहायक कर्मचारी यूनियन - विकास खण्ड उतरौला (बलरामपुर)*",
+    "📌 *मद / विषय:* " + colHeading,
+    "🗓 *अद्यतन स्थिति:* " + getTodayFormattedDDMMYYYY(),
+    "──────────────────────",
+    "✅ *कुल जमा ग्राम पंचायतें:* " + paidGps.length + " (प्राप्त: ₹" + totalCollected + ")",
+    "⏳ *कुल बकाया ग्राम पंचायतें:* " + pendingGps.length + " (बकाया: ₹" + totalPending + ")",
+    "──────────────────────"
+  ];
+
+  if (paidGps.length > 0) {
+    gLines.push("🟢 *सहयोग राशि जमा करने वाले साथी (Paid):*");
+    for (var p = 0; p < Math.min(paidGps.length, 40); p++) {
+      gLines.push((p + 1) + ". " + paidGps[p].gramPanchayat + " (" + (paidGps[p].psName || "-") + ") ✅");
+    }
+    if (paidGps.length > 40) gLines.push("...एवं " + (paidGps.length - 40) + " अन्य जमा।");
+    gLines.push("");
+  }
+
+  if (pendingGps.length > 0) {
+    gLines.push("🔴 *बकाया सहयोग राशि वाली ग्राम पंचायतें (Pending List):*");
+    for (var q = 0; q < Math.min(pendingGps.length, 60); q++) {
+      var pg = pendingGps[q];
+      gLines.push((q + 1) + ". *" + pg.row.gramPanchayat + "* (" + (pg.row.psName || "-") + ") — ₹" + pg.eval.pending + " बाकी");
+    }
+    if (pendingGps.length > 60) gLines.push("...एवं " + (pendingGps.length - 60) + " अन्य ग्राम पंचायतें।");
+    gLines.push("");
+    gLines.push("🙏 *सभी शेष पंचायत सहायक साथियों से विनम्र अनुरोध है कि संगठन की मजबूती हेतु अपनी लंबित सहयोग राशि यथाशीघ्र जमा कराने का कष्ट करें।*");
+  }
+
+  gLines.push(
+    "──────────────────────",
+    "– *" + pres.name + "* (" + pres.designation + ", उतरौला)",
+    "📞 मो०: " + pres.mobile
+  );
+
+  var fullBroadcast = gLines.join("\n");
+  document.getElementById("bulkWaGroupBroadcastText").value = fullBroadcast;
+  document.getElementById("btnShareIncomeGroupWa").href = "https://api.whatsapp.com/send?text=" + encodeURIComponent(fullBroadcast);
+
+  // Render Individual Pending Queue Table
+  var qTitle = document.getElementById("bulkWaPendingQueueTitle");
+  if (qTitle) qTitle.innerHTML = '<i class="fa-solid fa-bell"></i> 2. व्यक्तिगत बकायादार रिमाइंडर कतार (कुल बकायादार: ' + pendingGps.length + '):';
+
+  var qBody = document.getElementById("bulkWaPendingQueueBody");
+  qBody.innerHTML = "";
+  if (pendingGps.length === 0) {
+    qBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:18px; color:#16a34a; font-weight:bold;">🎉 बधाई! सभी ग्राम पंचायतों का शुल्क पूर्ण रूप से जमा है।</td></tr>';
+    return;
+  }
+
+  var qFrag = document.createDocumentFragment();
+  for (var idx = 0; idx < pendingGps.length; idx++) {
+    var item = pendingGps[idx];
+    var rw = item.row;
+    var tr = document.createElement("tr");
+    var waUrl = buildRowUnionIncomeWhatsAppLink(rw, activeCols);
+    var trackerKey = rw.gramPanchayat + "_" + selColId;
+    var isAlreadySent = Boolean(sentBulkWaTracker[trackerKey]);
+
+    var btnLabel = isAlreadySent ? "✓ भेजा गया (पुनः भेजें)" : "📲 रिमाइंडर भेजें";
+    var btnBg = isAlreadySent ? "#64748b" : "#16a34a";
+
+    tr.innerHTML =
+      '<td style="text-align:center; font-weight:bold;">' + (idx + 1) + '</td>' +
+      '<td><b>' + escapeHtml(rw.gramPanchayat) + '</b><br><span style="font-size:10.5px; color:#64748b;">' + escapeHtml(rw.clusterName) + '</span></td>' +
+      '<td>' + escapeHtml(rw.psName || "-") + '</td>' +
+      '<td>' + escapeHtml(rw.psMobile || "-") + '</td>' +
+      '<td style="color:#dc2626; font-weight:800;">₹' + item.eval.pending + ' बाकी</td>' +
+      '<td style="text-align:center;">' +
+        '<a href="' + waUrl + '" target="_blank" onclick="markBulkWaReminderSent(\'' + escapeHtml(trackerKey).replace(/'/g, "\'") + '\', this)" style="background:' + btnBg + '; color:#fff; padding:5px 11px; border-radius:16px; font-size:11.5px; font-weight:700; text-decoration:none; display:inline-block;">' + btnLabel + '</a>' +
+      '</td>';
+    qFrag.appendChild(tr);
+  }
+  qBody.appendChild(qFrag);
+}
+
+function markBulkWaReminderSent(trackerKey, anchorEl) {
+  sentBulkWaTracker[trackerKey] = true;
+  if (anchorEl) {
+    anchorEl.style.background = "#64748b";
+    anchorEl.innerText = "✓ भेजा गया (पुनः भेजें)";
+  }
+}
+
+function copyUnionIncomeGroupBroadcast() {
+  var txt = document.getElementById("bulkWaGroupBroadcastText").value;
+  copyNoticeText(txt);
+}
+
+function exportUnionIncomeToCSV() {
+  var allRows = buildMasterUnionIncomeRows();
+  var cols = (cachedUnionIncomeData && cachedUnionIncomeData.columns) ? cachedUnionIncomeData.columns : [];
+  var headers = ["क्र.", "क्लस्टर का नाम", "क्लस्टर प्रभारी का नाम", "क्लस्टर प्रभारी मोबाइल", "ग्राम पंचायत", "पंचायत सहायक का नाम", "पंचायत सहायक मोबाइल"];
+  for (var i = 0; i < cols.length; i++) {
+    headers.push(csvCell(cols[i].title + " (" + cols[i].date + " - ₹" + cols[i].amount + ")"));
+  }
+  headers.push("कुल प्राप्त (₹)", "कुल बकाया (₹)");
+
+  var csv = headers.join(",") + "\n";
+  for (var rIdx = 0; rIdx < allRows.length; rIdx++) {
+    var r = allRows[rIdx];
+    var ev = evaluateRowPaymentStatus(r, cols);
+    var line = [
+      rIdx + 1,
+      csvCell(r.clusterName),
+      csvCell(r.prabhariName),
+      csvCell(r.prabhariMobile),
+      csvCell(r.gramPanchayat),
+      csvCell(r.psName),
+      csvCell(r.psMobile)
+    ];
+    for (var cIdx = 0; cIdx < cols.length; cIdx++) {
+      var paidAmt = Number((r.payments && r.payments[cols[cIdx].colId]) || 0);
+      line.push(paidAmt);
+    }
+    line.push(ev.paid, ev.pending);
+    csv += line.join(",") + "\n";
+  }
+  downloadCSVFile(csv, "Utraula_Union_Income_Collection_Register.csv");
+}
+
 </script>
 </body>
 </html>
