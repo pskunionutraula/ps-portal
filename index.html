@@ -2139,11 +2139,9 @@ body.modal-open {
 <div class="admin-dashboard-container" id="adminDashboardView">
   <div class="admin-header-bar">
     <h2 style="font-size:18px;"><i class="fa-solid fa-chart-line"></i> उतरौला ब्लॉक - सर्वे एनालिटिक्स व अप्रूवल पोर्टल</h2>
-    <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
-      <span style="margin-right:4px; font-weight:bold; font-size:13px;" id="adminHeaderPresidentInfo">अध्यक्ष: प्रमोद वर्मा (9119323310)</span>
-      <button class="submit-btn" style="background:linear-gradient(135deg, #059669, #15803d); padding:5px 12px; font-size:12px; width:auto; display:inline-block; margin:0;" onclick="switchAdminTab('unionIncome')"><i class="fa-solid fa-indian-rupee-sign"></i> 💰 यूनियन आय</button>
-      <button class="submit-btn" style="background:linear-gradient(135deg, #2563eb, #4f46e5); padding:5px 12px; font-size:12px; width:auto; display:inline-block; margin:0;" onclick="switchAdminTab('psPortalControl')"><i class="fa-solid fa-sliders"></i> 🎛️ PS पोर्टल कंट्रोल</button>
-      <button class="submit-btn" style="background:#dc2626; padding:5px 12px; font-size:12px; width:auto; display:inline-block; margin:0;" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> लॉगआउट</button>
+    <div>
+      <span style="margin-right:10px; font-weight:bold; font-size:13px;" id="adminHeaderPresidentInfo">अध्यक्ष: प्रमोद वर्मा (9119323310)</span>
+      <button class="submit-btn" style="background:#dc2626; padding:5px 12px; font-size:12px; width:auto; display:inline-block;" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> लॉगआउट</button>
     </div>
   </div>
 
@@ -2575,6 +2573,12 @@ body.modal-open {
         <button type="button" class="submit-btn" style="background:#16a34a; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="printUnionIncomeReportPDF('PAID')">
           <i class="fa-solid fa-file-circle-check"></i> 🟢 जमा सूची PDF
         </button>
+        <button type="button" class="submit-btn" style="background:#1e3a8a; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="printUnionIncomeReportPDF('ALL')">
+          <i class="fa-solid fa-print"></i> 🖨️ सभी क्लस्टर PDF
+        </button>
+        <button type="button" class="submit-btn" style="background:#0d9488; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="loadAdminDashboardData()" title="ClusterData शीट से ताज़ा डेटा लोड करें">
+          <i class="fa-solid fa-arrows-rotate"></i> 🔄 शीट सिंक
+        </button>
         <button type="button" class="submit-btn" style="background:#25d366; color:#0f172a; font-weight:800; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="openBulkPendingWhatsAppModal()">
           <i class="fa-brands fa-whatsapp"></i> 📲 पेंडिंग बल्क WhatsApp
         </button>
@@ -2791,9 +2795,17 @@ body.modal-open {
       <button type="button" class="submit-btn" style="background:#dc2626; width:auto; padding:6px 12px; font-size:12px; margin:0;" onclick="closeModal('bulkPendingWhatsAppModal')">✕ बंद करें</button>
     </div>
 
-    <div class="field-group">
-      <label>रिमाइंडर के लिए पेमेंट मद (Column) चुनें:</label>
-      <select id="bulkWaColumnSelect" class="field-input" onchange="refreshBulkPendingWhatsAppModal()" style="font-weight:700;"></select>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px; margin-bottom:10px;">
+      <div class="field-group" style="margin:0;">
+        <label><i class="fa-solid fa-sitemap"></i> 1. क्लस्टर चुनें (सभी क्लस्टर या एक):</label>
+        <select id="bulkWaClusterSelect" class="field-input" onchange="refreshBulkPendingWhatsAppModal()" style="font-weight:700; border-color:#2563eb;">
+          <option value="ALL">🌐 सभी क्लस्टर (एक साथ - All Clusters)</option>
+        </select>
+      </div>
+      <div class="field-group" style="margin:0;">
+        <label><i class="fa-solid fa-coins"></i> 2. पेमेंट मद (Column) चुनें:</label>
+        <select id="bulkWaColumnSelect" class="field-input" onchange="refreshBulkPendingWhatsAppModal()" style="font-weight:700; border-color:#16a34a;"></select>
+      </div>
     </div>
 
     <!-- Box 1: Group Broadcast Message -->
@@ -8327,6 +8339,14 @@ try {
 
 
 // ================= NEW FEATURE 9: UNION INCOME / COLLECTION MATRIX PORTAL ENGINE =================
+function escapeJsStr(str) {
+  return String(str || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/"/g, "&quot;")
+    .replace(/\r?\n/g, " ");
+}
+
 function getTodayFormattedDDMMYYYY() {
   var d = new Date();
   return ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2) + "/" + d.getFullYear();
@@ -8338,70 +8358,44 @@ function buildMasterUnionIncomeRows() {
   var recMap = (cachedUnionIncomeData && cachedUnionIncomeData.recordsMap) ? cachedUnionIncomeData.recordsMap : {};
   var prabhariByCluster = (cachedUnionIncomeData && cachedUnionIncomeData.clusterPrabhariMap) ? cachedUnionIncomeData.clusterPrabhariMap : {};
 
-  // 1. सबसे पहले Clusters मास्टर डेटा से क्लस्टर-वार ग्राम पंचायतें लें
+  // Case-insensitive lookup map for payment records so GP name spacing/case changes never lose payment history
+  var normRecMap = {};
+  for (var rk in recMap) {
+    if (Object.prototype.hasOwnProperty.call(recMap, rk)) {
+      normRecMap[String(rk).trim().toLowerCase()] = recMap[rk];
+    }
+  }
+
+  // केवल और केवल Google Sheet की ClusterData शीट (cachedClusterRecords) से डेटा लें
+  // ताकि ClusterData में क्लस्टर (जैसे पालापुर का क्लस्टर बदलने पर) या पंचायत सहायक का नाम/नंबर बदलने पर यहाँ तुरंत स्वतः बदल जाए!
   if (cachedClusterRecords && cachedClusterRecords.length > 0) {
     for (var i = 0; i < cachedClusterRecords.length; i++) {
       var c = cachedClusterRecords[i];
       var gp = String(c.gramPanchayat || "").trim();
-      if (!gp || rowsByGp[gp]) continue;
-      var clName = String(c.clusterName || "सामान्य क्लस्टर").trim();
-      var savedRec = recMap[gp] || {};
-      var cPrabhari = prabhariByCluster[clName] || {};
+      if (!gp) continue;
+      var gpNorm = gp.toLowerCase();
+      if (rowsByGp[gpNorm]) continue;
 
-      rowsByGp[gp] = {
+      var liveClusterName = String(c.clusterName || "").trim() || "सभी क्लस्टर";
+      var savedRec = recMap[gp] || normRecMap[gpNorm] || {};
+      var cPrabhari = prabhariByCluster[liveClusterName] || {};
+
+      // यदि ग्राम पंचायत का क्लस्टर बदला गया है, तो नए क्लस्टर का प्रभारी स्वतः लागू हो
+      var sameClusterAsSaved = (savedRec.clusterName && String(savedRec.clusterName).trim() === liveClusterName);
+      var finalPrabhariName = (sameClusterAsSaved && savedRec.prabhariName) ? savedRec.prabhariName : (cPrabhari.name || savedRec.prabhariName || "");
+      var finalPrabhariMobile = (sameClusterAsSaved && savedRec.prabhariMobile) ? savedRec.prabhariMobile : (cPrabhari.mobile || savedRec.prabhariMobile || "");
+
+      rowsByGp[gpNorm] = {
+        rowIndex: c.rowIndex,
         gramPanchayat: gp,
-        clusterName: savedRec.clusterName || clName,
-        prabhariName: savedRec.prabhariName || cPrabhari.name || "",
-        prabhariMobile: savedRec.prabhariMobile || cPrabhari.mobile || "",
-        psName: savedRec.psName || String(c.psName || "").trim(),
-        psMobile: String(savedRec.psMobile || c.mobile || "").replace(/\D/g, "").slice(-10),
+        clusterName: liveClusterName,
+        prabhariName: finalPrabhariName,
+        prabhariMobile: finalPrabhariMobile,
+        psName: String(c.psName || "").trim(),
+        psMobile: String(c.mobile || "").replace(/\D/g, "").slice(-10),
         payments: savedRec.payments ? JSON.parse(JSON.stringify(savedRec.payments)) : {}
       };
-      orderedGps.push(gp);
-    }
-  }
-
-  // 2. Registration शीट से उन ग्राम पंचायतों या पंचायत सहायकों का नाम/मोबाइल पूरा करें जो खाली हों
-  if (cachedAllRegistrations && cachedAllRegistrations.length > 0) {
-    for (var j = 0; j < cachedAllRegistrations.length; j++) {
-      var r = cachedAllRegistrations[j];
-      var rGp = String(r.gramPanchayat || "").trim();
-      if (!rGp) continue;
-      if (!rowsByGp[rGp]) {
-        var sRec = recMap[rGp] || {};
-        var clN = sRec.clusterName || "अन्य क्लस्टर";
-        var cPrab = prabhariByCluster[clN] || {};
-        rowsByGp[rGp] = {
-          gramPanchayat: rGp,
-          clusterName: clN,
-          prabhariName: sRec.prabhariName || cPrab.name || "",
-          prabhariMobile: sRec.prabhariMobile || cPrab.mobile || "",
-          psName: sRec.psName || String(r.fullName || "").trim(),
-          psMobile: String(sRec.psMobile || r.mobile || "").replace(/\D/g, "").slice(-10),
-          payments: sRec.payments ? JSON.parse(JSON.stringify(sRec.payments)) : {}
-        };
-        orderedGps.push(rGp);
-      } else {
-        if (!rowsByGp[rGp].psName && r.fullName) rowsByGp[rGp].psName = r.fullName;
-        if (!rowsByGp[rGp].psMobile && r.mobile) rowsByGp[rGp].psMobile = String(r.mobile).replace(/\D/g, "").slice(-10);
-      }
-    }
-  }
-
-  // 3. यदि कोई ग्राम पंचायत केवल UnionIncomeRecords में है तो उसे भी शामिल करें
-  for (var gpKey in recMap) {
-    if (Object.prototype.hasOwnProperty.call(recMap, gpKey) && !rowsByGp[gpKey]) {
-      var item = recMap[gpKey];
-      rowsByGp[gpKey] = {
-        gramPanchayat: gpKey,
-        clusterName: item.clusterName || "सामान्य क्लस्टर",
-        prabhariName: item.prabhariName || "",
-        prabhariMobile: item.prabhariMobile || "",
-        psName: item.psName || "",
-        psMobile: String(item.psMobile || "").replace(/\D/g, "").slice(-10),
-        payments: item.payments ? JSON.parse(JSON.stringify(item.payments)) : {}
-      };
-      orderedGps.push(gpKey);
+      orderedGps.push(gpNorm);
     }
   }
 
@@ -8426,19 +8420,21 @@ function populateUnionIncomeFilters() {
 
   var clSelect = document.getElementById("unionIncomeClusterFilter");
   var bulkClSelect = document.getElementById("bulkPrabhariClusterSelect");
+  var waClSelect = document.getElementById("bulkWaClusterSelect");
   if (clSelect) {
     var prevCl = clSelect.value || "ALL";
     var clusterSet = {};
     var clusterList = [];
     for (var i = 0; i < rows.length; i++) {
-      var cn = rows[i].clusterName || "सामान्य क्लस्टर";
+      var cn = rows[i].clusterName || "सभी क्लस्टर";
       if (!clusterSet[cn]) {
         clusterSet[cn] = true;
         clusterList.push(cn);
       }
     }
-    clSelect.innerHTML = '<option value="ALL">-- सभी क्लस्टर (' + clusterList.length + ') --</option>';
+    clSelect.innerHTML = '<option value="ALL">🌐 सभी क्लस्टर (' + clusterList.length + ' क्लस्टर एक साथ)</option>';
     if (bulkClSelect) bulkClSelect.innerHTML = "";
+    if (waClSelect) waClSelect.innerHTML = '<option value="ALL">🌐 सभी क्लस्टर (एक साथ - ' + rows.length + ' GP)</option>';
     for (var cIdx = 0; cIdx < clusterList.length; cIdx++) {
       var opt = document.createElement("option");
       opt.value = clusterList[cIdx];
@@ -8451,8 +8447,17 @@ function populateUnionIncomeFilters() {
         bOpt.textContent = clusterList[cIdx];
         bulkClSelect.appendChild(bOpt);
       }
+      if (waClSelect) {
+        var wClOpt = document.createElement("option");
+        wClOpt.value = clusterList[cIdx];
+        wClOpt.textContent = "क्लस्टर: " + clusterList[cIdx];
+        waClSelect.appendChild(wClOpt);
+      }
     }
     clSelect.value = clusterSet[prevCl] ? prevCl : "ALL";
+    if (waClSelect) {
+      waClSelect.value = clusterSet[prevCl] ? prevCl : "ALL";
+    }
   }
 
   var colSelect = document.getElementById("unionIncomeColFocusSelect");
@@ -8559,7 +8564,7 @@ function renderUnionIncomeMasterView() {
       '<div class="income-col-header-box">' +
         '<div class="income-col-header-title">' +
           '<span>' + escapeHtml(col.title) + '</span>' +
-          '<button type="button" onclick="openEditIncomeColumnModal(\'' + escapeHtml(col.colId) + '\')" title="कॉलम संपादित/डिलीट करें" style="background:rgba(255,255,255,0.18); border:none; color:#fff; border-radius:4px; padding:1px 5px; font-size:10px; cursor:pointer;"><i class="fa-solid fa-gear"></i></button>' +
+          '<button type="button" onclick="openEditIncomeColumnModal(\'' + escapeJsStr(col.colId) + '\')" title="कॉलम संपादित/डिलीट करें" style="background:rgba(255,255,255,0.18); border:none; color:#fff; border-radius:4px; padding:1px 5px; font-size:10px; cursor:pointer;"><i class="fa-solid fa-gear"></i></button>' +
         '</div>' +
         '<div class="income-col-header-date"><i class="fa-regular fa-calendar"></i> ' + escapeHtml(col.date) + '</div>' +
         '<div class="income-col-header-amt">निर्धारित: ₹' + col.amount + '</div>' +
@@ -8658,11 +8663,42 @@ function renderUnionIncomeMasterView() {
   document.getElementById("incCntPending").innerText = countPending;
   document.getElementById("incCntPartial").innerText = countPartial;
 
-  // Render Cluster Leaderboard Chips
+  // Render Cluster Leaderboard Chips (First chip is always "🌐 सभी क्लस्टर")
   var clProgContainer = document.getElementById("unionIncomeClusterProgressContainer");
   if (clProgContainer) {
     clProgContainer.innerHTML = "";
     var clFrag = document.createDocumentFragment();
+
+    var allClExp = 0, allClColl = 0, allClPaidGps = 0, allClTotalGps = 0;
+    for (var sck in clusterStatsMap) {
+      if (Object.prototype.hasOwnProperty.call(clusterStatsMap, sck)) {
+        allClExp += clusterStatsMap[sck].expected;
+        allClColl += clusterStatsMap[sck].collected;
+        allClPaidGps += clusterStatsMap[sck].paidGps;
+        allClTotalGps += clusterStatsMap[sck].totalGps;
+      }
+    }
+    var allClPct = allClExp > 0 ? Math.round((allClColl / allClExp) * 100) : 0;
+    var allChip = document.createElement("div");
+    allChip.className = "cluster-prog-chip";
+    allChip.style.cursor = "pointer";
+    if (clusterFilter === "ALL") {
+      allChip.style.borderColor = "#16a34a";
+      allChip.style.background = "rgba(22, 163, 74, 0.08)";
+      allChip.style.boxShadow = "0 0 0 2px rgba(22,163,74,0.28)";
+    }
+    allChip.onclick = function() { filterUnionIncomeByClusterChip("ALL"); };
+    allChip.innerHTML =
+      '<div style="display:flex; justify-content:space-between; font-size:12.5px; font-weight:800; color:#16a34a;">' +
+        '<span>🌐 सभी क्लस्टर (All)</span>' +
+        '<span>' + allClPct + '% (₹' + allClColl.toLocaleString("en-IN") + ')</span>' +
+      '</div>' +
+      '<div style="font-size:10.5px; color:#64748b; margin:2px 0 5px 0;">संपूर्ण ब्लॉक उतरौला | जमा: ' + allClPaidGps + '/' + allClTotalGps + ' GP</div>' +
+      '<div style="height:6px; width:100%; background:#e2e8f0; border-radius:4px; overflow:hidden;">' +
+        '<div style="height:100%; width:' + Math.min(100, allClPct) + '%; background:#16a34a;"></div>' +
+      '</div>';
+    clFrag.appendChild(allChip);
+
     for (var ck in clusterStatsMap) {
       if (!Object.prototype.hasOwnProperty.call(clusterStatsMap, ck)) continue;
       var cs = clusterStatsMap[ck];
@@ -8926,7 +8962,17 @@ function oneClickCollectUnionIncome(gpName, colId, targetAmount) {
 }
 
 // Add / Edit Column Modal Functions
+function ensureIncomeDateFlatpickr() {
+  var el = document.getElementById("incomeColDateInput");
+  if (el && !el._flatpickr && typeof flatpickr === "function") {
+    try {
+      flatpickr(el, { dateFormat: "d/m/Y", allowInput: true });
+    } catch (e) {}
+  }
+}
+
 function openAddIncomeColumnModal() {
+  ensureIncomeDateFlatpickr();
   document.getElementById("editIncomeColId").value = "";
   document.getElementById("incomeColModalHeading").innerHTML = '<i class="fa-solid fa-plus-circle"></i> नया पेमेंट कॉलम (मद) बनाएं';
   document.getElementById("incomeColDateInput").value = getTodayFormattedDDMMYYYY();
@@ -9092,21 +9138,39 @@ function handleSaveEditedIncomeRow(e) {
     paymentsMap[cid] = val;
   }
 
+  var newClusterVal = document.getElementById("editIncRowCluster").value.trim();
+  var newPsNameVal = document.getElementById("editIncRowPsName").value.trim();
+  var newPsMobVal = document.getElementById("editIncRowPsMobile").value.trim();
+
   var payload = {
     gramPanchayat: gpKey,
-    clusterName: document.getElementById("editIncRowCluster").value.trim(),
+    clusterName: newClusterVal,
     prabhariName: document.getElementById("editIncRowPrabhariName").value.trim(),
     prabhariMobile: document.getElementById("editIncRowPrabhariMobile").value.trim(),
-    psName: document.getElementById("editIncRowPsName").value.trim(),
-    psMobile: document.getElementById("editIncRowPsMobile").value.trim(),
-    paymentsMap: paymentsMap
+    psName: newPsNameVal,
+    psMobile: newPsMobVal,
+    paymentsMap: paymentsMap,
+    syncToClusterSheet: true
   };
 
-  showLoader("विवरण सुरक्षित किया जा रहा है...");
+  showLoader("विवरण व ClusterData शीट सुरक्षित की जा रही है...");
   google.script.run.withSuccessHandler(function(res) {
     hideLoader();
     if (res && res.success) {
       closeModal("editIncomeRowModal");
+      // Update cachedClusterRecords in memory so ClusterData and Union Income reflect changes immediately
+      if (cachedClusterRecords && cachedClusterRecords.length > 0) {
+        var gpNorm = gpKey.toLowerCase();
+        for (var cIdx = 0; cIdx < cachedClusterRecords.length; cIdx++) {
+          if (String(cachedClusterRecords[cIdx].gramPanchayat || "").trim().toLowerCase() === gpNorm) {
+            if (newClusterVal) cachedClusterRecords[cIdx].clusterName = newClusterVal;
+            if (newPsNameVal) cachedClusterRecords[cIdx].psName = newPsNameVal;
+            if (newPsMobVal) cachedClusterRecords[cIdx].mobile = newPsMobVal;
+            break;
+          }
+        }
+        renderClusterTable(cachedClusterRecords);
+      }
       cachedUnionIncomeData = res.unionIncomeData || cachedUnionIncomeData;
       populateUnionIncomeFilters();
       renderUnionIncomeMasterView();
@@ -9335,9 +9399,11 @@ function printUnionIncomeReportPDF(mode) {
     tblHtml += '<th style="border:1px solid #000; padding:6px; width:110px;">प्राप्त राशि (₹)</th>' +
                '<th style="border:1px solid #000; padding:6px; width:95px;">स्थिति</th>';
   } else {
-    tblHtml += '<th style="border:1px solid #000; padding:6px; width:90px;">निर्धारित (₹)</th>' +
-               '<th style="border:1px solid #000; padding:6px; width:90px;">प्राप्त (₹)</th>' +
-               '<th style="border:1px solid #000; padding:6px; width:90px;">बकाया (₹)</th>';
+    for (var hc = 0; hc < activeCols.length; hc++) {
+      tblHtml += '<th style="border:1px solid #000; padding:5px; text-align:center;">' + escapeHtml(activeCols[hc].title) + '<br><small>(' + escapeHtml(activeCols[hc].date) + ' | ₹' + activeCols[hc].amount + ')</small></th>';
+    }
+    tblHtml += '<th style="border:1px solid #000; padding:6px; width:85px;">कुल प्राप्त (₹)</th>' +
+               '<th style="border:1px solid #000; padding:6px; width:85px;">कुल बकाया (₹)</th>';
   }
   tblHtml += '</tr></thead><tbody>';
 
@@ -9360,8 +9426,14 @@ function printUnionIncomeReportPDF(mode) {
       tblHtml += '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold; color:#15803d;">₹' + evObj.paid + '</td>' +
                  '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold;">' + (evObj.pending > 0 ? "आंशिक (₹" + evObj.pending + " शेष)" : "✅ पूर्ण जमा") + '</td>';
     } else {
-      tblHtml += '<td style="border:1px solid #000; padding:5px; text-align:center;">₹' + evObj.expected + '</td>' +
-                 '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold; color:#15803d;">₹' + evObj.paid + '</td>' +
+      for (var rc = 0; rc < activeCols.length; rc++) {
+        var cObj = activeCols[rc];
+        var pVal = Number((rw.payments && rw.payments[cObj.colId]) || 0);
+        var cellTxt = pVal > 0 ? ("✅ ₹" + pVal) : "बाकी (₹0)";
+        var cellClr = pVal > 0 ? "#15803d" : "#dc2626";
+        tblHtml += '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold; color:' + cellClr + ';">' + cellTxt + '</td>';
+      }
+      tblHtml += '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold; color:#15803d;">₹' + evObj.paid + '</td>' +
                  '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold; color:#dc2626;">₹' + evObj.pending + '</td>';
     }
     tblHtml += '</tr>';
@@ -9375,7 +9447,8 @@ function printUnionIncomeReportPDF(mode) {
     '</div>' +
     '<div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; background:#f1f5f9; border:1px solid #94a3b8; padding:8px 12px; border-radius:6px; font-size:12.5px; font-weight:bold; margin-bottom:8px;">' +
       '<span>📌 चयनित मद: ' + escapeHtml(colTitleDesc) + '</span>' +
-      '<span>📅 रिपोर्ट दिनांक: ' + todayStr + '</span>' +
+      '<span>🏛️ क्लस्टर: ' + escapeHtml(clusterFilter === "ALL" ? "सभी क्लस्टर (संपूर्ण विकास खण्ड उतरौला)" : clusterFilter) + '</span>' +
+      '<span>📅 दिनांक: ' + todayStr + '</span>' +
     '</div>' +
     '<div style="display:flex; justify-content:space-around; background:#f8fafc; border:1px solid #cbd5e1; padding:8px; border-radius:6px; font-size:12.5px; font-weight:800; margin-bottom:10px;">' +
       '<span>सूचीबद्ध ग्राम पंचायतें: ' + matched.length + '</span>' +
@@ -9405,7 +9478,9 @@ function refreshBulkPendingWhatsAppModal() {
   var allRows = buildMasterUnionIncomeRows();
   var cols = (cachedUnionIncomeData && cachedUnionIncomeData.columns) ? cachedUnionIncomeData.columns : [];
   var selColId = document.getElementById("bulkWaColumnSelect") ? document.getElementById("bulkWaColumnSelect").value : "ALL";
-  var clusterFilter = document.getElementById("unionIncomeClusterFilter") ? document.getElementById("unionIncomeClusterFilter").value : "ALL";
+  var clusterFilter = document.getElementById("bulkWaClusterSelect")
+    ? document.getElementById("bulkWaClusterSelect").value
+    : (document.getElementById("unionIncomeClusterFilter") ? document.getElementById("unionIncomeClusterFilter").value : "ALL");
   var activeCols = (selColId !== "ALL") ? cols.filter(function(c) { return c.colId === selColId; }) : cols;
   if (activeCols.length === 0) activeCols = cols;
 
@@ -9413,6 +9488,7 @@ function refreshBulkPendingWhatsAppModal() {
   var colHeading = (activeCols.length === 1)
     ? (activeCols[0].title + " (निर्धारित: ₹" + activeCols[0].amount + " | दिनांक: " + activeCols[0].date + ")")
     : "समस्त यूनियन सहयोग मद";
+  var clusterHeading = (clusterFilter === "ALL") ? "सभी क्लस्टर (संपूर्ण विकास खण्ड उतरौला)" : clusterFilter;
 
   var paidGps = [];
   var pendingGps = [];
@@ -9432,10 +9508,11 @@ function refreshBulkPendingWhatsAppModal() {
     }
   }
 
-  // Build Group Broadcast Summary Text
+  // Build Complete All-Clusters / Selected-Cluster Group Broadcast Summary Text (No Truncation)
   var gLines = [
     "📢 *पंचायत सहायक कर्मचारी यूनियन - विकास खण्ड उतरौला (बलरामपुर)*",
     "📌 *मद / विषय:* " + colHeading,
+    "🏛️ *क्लस्टर क्षेत्र:* " + clusterHeading,
     "🗓 *अद्यतन स्थिति:* " + getTodayFormattedDDMMYYYY(),
     "──────────────────────",
     "✅ *कुल जमा ग्राम पंचायतें:* " + paidGps.length + " (प्राप्त: ₹" + totalCollected + ")",
@@ -9444,21 +9521,21 @@ function refreshBulkPendingWhatsAppModal() {
   ];
 
   if (paidGps.length > 0) {
-    gLines.push("🟢 *सहयोग राशि जमा करने वाले साथी (Paid):*");
-    for (var p = 0; p < Math.min(paidGps.length, 40); p++) {
-      gLines.push((p + 1) + ". " + paidGps[p].gramPanchayat + " (" + (paidGps[p].psName || "-") + ") ✅");
+    gLines.push("🟢 *सहयोग राशि जमा करने वाले साथी (Paid List):*");
+    for (var p = 0; p < paidGps.length; p++) {
+      var clTagPaid = (clusterFilter === "ALL" && paidGps[p].clusterName) ? " [" + paidGps[p].clusterName + "]" : "";
+      gLines.push((p + 1) + ". *" + paidGps[p].gramPanchayat + "*" + clTagPaid + " (" + (paidGps[p].psName || "-") + ") ✅");
     }
-    if (paidGps.length > 40) gLines.push("...एवं " + (paidGps.length - 40) + " अन्य जमा।");
     gLines.push("");
   }
 
   if (pendingGps.length > 0) {
     gLines.push("🔴 *बकाया सहयोग राशि वाली ग्राम पंचायतें (Pending List):*");
-    for (var q = 0; q < Math.min(pendingGps.length, 60); q++) {
+    for (var q = 0; q < pendingGps.length; q++) {
       var pg = pendingGps[q];
-      gLines.push((q + 1) + ". *" + pg.row.gramPanchayat + "* (" + (pg.row.psName || "-") + ") — ₹" + pg.eval.pending + " बाकी");
+      var clTagPend = (clusterFilter === "ALL" && pg.row.clusterName) ? " [" + pg.row.clusterName + "]" : "";
+      gLines.push((q + 1) + ". *" + pg.row.gramPanchayat + "*" + clTagPend + " (" + (pg.row.psName || "-") + ") — ₹" + pg.eval.pending + " बाकी");
     }
-    if (pendingGps.length > 60) gLines.push("...एवं " + (pendingGps.length - 60) + " अन्य ग्राम पंचायतें।");
     gLines.push("");
     gLines.push("🙏 *सभी शेष पंचायत सहायक साथियों से विनम्र अनुरोध है कि संगठन की मजबूती हेतु अपनी लंबित सहयोग राशि यथाशीघ्र जमा कराने का कष्ट करें।*");
   }
