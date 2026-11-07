@@ -2754,7 +2754,7 @@ body.modal-open {
         <div class="kpi-sub" style="color:#dc2626;" id="cbStatMadExpenseSub">कुल 0 मदों/कामों में खर्च</div>
       </div>
       <div class="income-kpi-card" style="border-left:4px solid #2563eb;">
-        <div class="kpi-label"><i class="fa-solid fa-Piggy-bank" style="color:#2563eb;"></i> इस मद में शेष बचा पैसा (Net Balance)</div>
+        <div class="kpi-label"><i class="fa-solid fa-piggy-bank" style="color:#2563eb;"></i> इस मद में शेष बचा पैसा (Net Balance)</div>
         <div class="kpi-val" style="color:#2563eb;" id="cbStatMadBalance">₹0</div>
         <div class="kpi-sub" style="color:#1e40af;" id="cbStatMadBalanceSub">कुल प्राप्त − कुल खर्च = शुद्ध बचत</div>
       </div>
@@ -2763,7 +2763,7 @@ body.modal-open {
     <!-- Step 3: Where Spent Category Breakdown Strip -->
     <div style="background:var(--input-bg); border:1.5px solid var(--input-border); border-radius:10px; padding:12px 14px; margin-bottom:14px;">
       <div style="font-size:13px; font-weight:800; color:#2563eb; margin-bottom:8px;">
-        <i class="fa-solid fa-chart-Simple"></i> इस मद में श्रेणी-वार खर्च विश्लेषण (कहाँ-कहाँ कितना लगा):
+        <i class="fa-solid fa-chart-simple"></i> इस मद में श्रेणी-वार खर्च विश्लेषण (कहाँ-कहाँ कितना लगा):
       </div>
       <div id="cashbookCategoryBreakdownContainer" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
     </div>
@@ -3285,10 +3285,17 @@ body.modal-open {
 <!-- 5. UNIVERSAL VIEW DETAILS MODAL -->
 <div class="modal-backdrop" id="viewDetailsModal">
   <div class="modal-box" style="text-align:center !important; max-width:620px;">
-    <div style="text-align:center; border-bottom:2px double #2563eb; padding-bottom:10px; margin-bottom:12px;">
-      <h2 style="color:#2563eb; font-family:'Rozha One', 'Yatra One', serif; font-size:22px; margin-bottom:4px; font-weight:800; text-align:center !important;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>
-      <h4 style="font-size:15px; font-weight:800; margin-bottom:4px; text-align:center !important;">विकास खंड- उतरौला, जिला- बलरामपुर।</h4>
-      <p style="font-size:13px; font-weight:800; margin:0; text-align:center !important;" id="modalHeaderPresidentInfo">ब्लॉक अध्यक्ष: प्रमोद वर्मा (9119323310)</p>
+    <div style="border-bottom:3.5px double #1e3a8a; padding-bottom:10px; margin-bottom:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#0f172a; color:#ffffff; padding:5px 12px; font-size:11px; font-weight:700; margin-bottom:12px; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+        <span>पंजीकरण सं०: LUC/08494/2024-2025</span>
+        <span style="color:#facc15;">॥ अधिकार • सम्मान • सेवा सुरक्षा ॥</span>
+        <span>Email: pskunionutraula@gmail.com</span>
+      </div>
+      <div style="text-align:center !important;">
+        <h2 style="color:#0f5f7f; font-family:'Rozha One', 'Tiro Devanagari Hindi', serif; font-size:24px; margin:0 0 4px 0; font-weight:800; text-align:center !important;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>
+        <h4 style="color:var(--text-main); font-size:16px; font-weight:800; margin:0 0 4px 0; text-align:center !important;">विकास खण्ड- उतरौला, जनपद- बलरामपुर ।</h4>
+        <p style="color:var(--text-main); font-size:13.5px; font-weight:800; margin:0; text-align:center !important;" id="modalHeaderPresidentInfo">ब्लॉक अध्यक्ष: प्रमोद वर्मा (मो०:9119323310)</p>
+      </div>
     </div>
     <div id="detailsCardContent" style="font-size:13px; line-height:1.6; max-height:55vh; overflow-y:auto; padding-right:5px; text-align:left !important;"></div>
     <div style="display:flex; justify-content:center; gap:10px; margin-top:15px; flex-wrap:wrap;">
@@ -4161,12 +4168,7 @@ function openAdminLoginModal() {
 
   function getDynamicPrintHeaderHTML() {
     var pres = getDynamicPresidentObj();
-    return '<div style="text-align:center; border-bottom:3px double #2563eb; padding-bottom:10px; margin-bottom:15px;">' +
-      '<div style="font-size:11px; font-weight:bold; color:#1e3a8a;">REG.NO - LUC/08494/2024-2025</div>' +
-      '<h2 style="color:#2563eb; font-size:22px; margin-bottom:4px; font-weight:bold;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</h2>' +
-      '<h3 style="color:#000; font-size:16px; font-weight:bold; margin-bottom:4px;">विकास खंड- उतरौला, जिला- बलरामपुर।</h3>' +
-      '<p style="color:#000; font-size:14px; font-weight:bold; margin:0;">' + escapeHtml(pres.designation) + ': ' + escapeHtml(pres.name) + ' (' + escapeHtml(pres.mobile) + ')</p>' +
-      '</div>';
+    return buildOfficialUnionLetterheadHTML(pres);
   }
 
   function applyUnionExecutivesToUI(execList) {
@@ -4185,7 +4187,7 @@ function openAdminLoginModal() {
     if (admPresEl) admPresEl.innerText = pres.designation + ": " + pres.name + " (" + pres.mobile + ")";
 
     var modPresEl = document.getElementById('modalHeaderPresidentInfo');
-    if (modPresEl) modPresEl.innerText = pres.designation + ": " + pres.name + " (" + pres.mobile + ")";
+    if (modPresEl) modPresEl.innerText = pres.designation + ": " + pres.name + " (मो०:" + pres.mobile + ")";
 
     var sigNameEl = document.getElementById('modalSigPresidentName');
     var sigRoleEl = document.getElementById('modalSigPresidentRole');
@@ -5708,7 +5710,9 @@ function openAdminLoginModal() {
       var title = (type === 'survey') ? "सर्वे रिकॉर्ड हटाने की पुष्टि" : 
                   ((type === 'registered') ? "पंजीकरण हटाने की पुष्टि" : 
                   ((type === 'cluster') ? "क्लस्टर रिकॉर्ड हटाने की पुष्टि" : 
-                  ((type === 'notice') ? "नोटिस हटाने की पुष्टि" : "अवकाश रिकॉर्ड हटाने की पुष्टि")));
+                  ((type === 'notice') ? "नोटिस हटाने की पुष्टि" : 
+                  ((type === 'unionExpense') ? "खर्च वाउचर हटाने की पुष्टि" : 
+                  ((type === 'unionIncomeColumn') ? "पेमेंट कॉलम (मद) हटाने की पुष्टि" : "अवकाश रिकॉर्ड हटाने की पुष्टि")))));
       document.getElementById('deleteModalTitle').innerText = title;
       if (msgElem) msgElem.innerText = "क्या आप इस रिकॉर्ड को निश्चित रूप से हटाना चाहते हैं?";
       if (iconBox) { iconBox.style.color = "#dc2626"; iconBox.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>'; }
@@ -5783,6 +5787,45 @@ function openAdminLoginModal() {
         hideLoader();
         showMsg("त्रुटि", err.toString(), false);
       }).deleteNoticeSecure(adminSessionToken, rIdx);
+      return;
+    }
+
+    if (type === 'unionExpense') {
+      showLoader("खर्च प्रविष्टि हटाई जा रही है...");
+      google.script.run.withSuccessHandler(function(res) {
+        hideLoader();
+        if (res && res.success) {
+          if (res.unionIncomeData) cachedUnionIncomeData = res.unionIncomeData;
+          renderExpenseCashbookMasterView();
+          showMsg("हटाया गया", res.message, true);
+        } else {
+          showMsg("त्रुटि", (res ? res.message : "हटाया नहीं जा सका"), false);
+        }
+      }).withFailureHandler(function(err) {
+        hideLoader();
+        showMsg("सर्वर त्रुटि", err.toString(), false);
+      }).deleteUnionExpenseSecure(adminSessionToken, rIdx);
+      return;
+    }
+
+    if (type === 'unionIncomeColumn') {
+      showLoader("पेमेंट कॉलम हटाया जा रहा है...");
+      google.script.run.withSuccessHandler(function(res) {
+        hideLoader();
+        if (res && res.success) {
+          closeModal("addIncomeColumnModal");
+          cachedUnionIncomeData = res.unionIncomeData || cachedUnionIncomeData;
+          populateUnionIncomeFilters();
+          renderUnionIncomeMasterView();
+          renderExpenseCashbookMasterView();
+          showMsg("हटाया गया", res.message, true);
+        } else {
+          showMsg("त्रुटि", (res ? res.message : "हटाया नहीं जा सका"), false);
+        }
+      }).withFailureHandler(function(err) {
+        hideLoader();
+        showMsg("सर्वर त्रुटि", err.toString(), false);
+      }).editDeleteUnionIncomeColumnSecure(adminSessionToken, rIdx, "DELETE", {});
       return;
     }
 
@@ -7941,33 +7984,17 @@ function openMemorandumModal() {
 }
 
 function buildOfficialUnionLetterheadHTML(pres) {
-  var execSummaryList = [];
-  if (cachedUnionExecutives && cachedUnionExecutives.length > 0) {
-    for (var i = 0; i < cachedUnionExecutives.length; i++) {
-      var ex = cachedUnionExecutives[i];
-      if (ex.roleType === "President") continue;
-      execSummaryList.push(escapeHtml(ex.name) + " (" + escapeHtml(ex.designation) + ")");
-      if (execSummaryList.length >= 3) break;
-    }
-  }
-  var rightBearersText = execSummaryList.length > 0
-    ? execSummaryList.join(" • ")
-    : "प्रभावती (उपाध्यक्ष) • पूर्णिमा सिंह (महामंत्री)";
-
-  return '<div style="border-bottom:3.5px double #1e3a8a; padding-bottom:10px; margin-bottom:14px; color:#0f172a;">' +
-    '<div style="display:flex; justify-content:space-between; align-items:center; background:#0f172a; color:#ffffff; padding:5px 12px; border-radius:4px; font-size:11px; font-weight:700; margin-bottom:8px;">' +
+  var p = pres || getDynamicPresidentObj();
+  return '<div style="border-bottom:3.5px double #1e3a8a; padding-bottom:10px; margin-bottom:16px; color:#000000;">' +
+    '<div style="display:flex; justify-content:space-between; align-items:center; background:#0f172a; color:#ffffff; padding:5px 14px; font-size:11.5px; font-weight:700; margin-bottom:16px; -webkit-print-color-adjust:exact; print-color-adjust:exact;">' +
       '<span>पंजीकरण सं०: LUC/08494/2024-2025</span>' +
       '<span style="color:#facc15;">॥ अधिकार • सम्मान • सेवा सुरक्षा ॥</span>' +
       '<span>Email: pskunionutraula@gmail.com</span>' +
     '</div>' +
     '<div style="text-align:center;">' +
-      '<div style="font-family:\'Rozha One\', \'Tiro Devanagari Hindi\', serif; font-size:24px; font-weight:800; color:#1e3a8a; line-height:1.15; letter-spacing:0.3px;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</div>' +
-      '<div style="font-size:15px; font-weight:800; color:#dc2626; margin-top:3px;">ब्लॉक इकाई: विकास खण्ड- उतरौला, जनपद- बलरामपुर (उत्तर प्रदेश)</div>' +
-      '<div style="font-size:11.5px; font-weight:700; color:#334155; margin-top:2px;">कार्यालय: विकास खण्ड परिसर उतरौला, जनपद- बलरामपुर, पिन कोड- 271604</div>' +
-    '</div>' +
-    '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-top:8px; padding-top:6px; border-top:1px solid #cbd5e1; font-size:11.5px; font-weight:700; color:#1e3a8a;">' +
-      '<span>👤 ' + escapeHtml(pres.designation) + ': श्री ' + escapeHtml(pres.name) + ' (मो०: ' + escapeHtml(pres.mobile) + ')</span>' +
-      '<span style="color:#334155;">मुख्य कार्यकारिणी: ' + rightBearersText + '</span>' +
+      '<div style="font-family:\'Rozha One\', \'Tiro Devanagari Hindi\', serif; font-size:26px; font-weight:800; color:#0f5f7f; line-height:1.2; margin-bottom:5px;">पंचायत सहायक कर्मचारी यूनियन उत्तर प्रदेश</div>' +
+      '<div style="font-size:18px; font-weight:800; color:#000000; margin-bottom:5px;">विकास खण्ड- उतरौला, जनपद- बलरामपुर ।</div>' +
+      '<div style="font-size:14.5px; font-weight:800; color:#000000;">' + escapeHtml(p.designation) + ': ' + escapeHtml(p.name) + ' (मो०:' + escapeHtml(p.mobile) + ')</div>' +
     '</div>' +
   '</div>';
 }
@@ -9273,6 +9300,7 @@ function oneClickCollectUnionIncome(gpName, colId, targetAmount) {
     if (res && res.success && res.unionIncomeData) {
       cachedUnionIncomeData = res.unionIncomeData;
       renderUnionIncomeMasterView();
+      renderExpenseCashbookMasterView();
     } else if (res && !res.success) {
       showMsg("त्रुटि", res.message || "सेव नहीं हो सका", false);
     }
@@ -9378,22 +9406,7 @@ function handleSaveIncomeColumnSubmit(e) {
 function handleDeleteIncomeColumn() {
   var editColId = document.getElementById("editIncomeColId").value.trim();
   if (!editColId) return;
-  showLoader("पेमेंट कॉलम हटाया जा रहा है...");
-  google.script.run.withSuccessHandler(function(res) {
-    hideLoader();
-    if (res && res.success) {
-      closeModal("addIncomeColumnModal");
-      cachedUnionIncomeData = res.unionIncomeData || cachedUnionIncomeData;
-      populateUnionIncomeFilters();
-      renderUnionIncomeMasterView();
-      showMsg("हटाया गया", res.message, true);
-    } else {
-      showMsg("त्रुटि", (res ? res.message : "हटाया नहीं जा सका"), false);
-    }
-  }).withFailureHandler(function(err) {
-    hideLoader();
-    showMsg("सर्वर त्रुटि", err.toString(), false);
-  }).editDeleteUnionIncomeColumnSecure(adminSessionToken, editColId, "DELETE", {});
+  confirmUniversalDelete('unionIncomeColumn', editColId);
 }
 
 // Edit Single Row Modal (✏️ आइकन पर क्लिक करने पर)
@@ -10515,20 +10528,7 @@ function handleSaveUnionExpenseSubmit(e) {
 
 function handleDeleteUnionExpense(expenseId) {
   if (!adminSessionToken || !expenseId) return;
-  showLoader("खर्च प्रविष्टि हटाई जा रही है...");
-  google.script.run.withSuccessHandler(function(res) {
-    hideLoader();
-    if (res && res.success) {
-      if (res.unionIncomeData) cachedUnionIncomeData = res.unionIncomeData;
-      renderExpenseCashbookMasterView();
-      showMsg("हटाया गया", res.message, true);
-    } else {
-      showMsg("त्रुटि", (res ? res.message : "हटाया नहीं जा सका"), false);
-    }
-  }).withFailureHandler(function(err) {
-    hideLoader();
-    showMsg("सर्वर त्रुटि", err.toString(), false);
-  }).deleteUnionExpenseSecure(adminSessionToken, expenseId);
+  confirmUniversalDelete('unionExpense', expenseId);
 }
 
 // Single Expense Official Voucher Modal
