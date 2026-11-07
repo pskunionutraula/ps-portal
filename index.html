@@ -919,6 +919,48 @@ body.modal-open {
     flex: 1 1 175px;
   }
 
+  
+  /* ================= MAD-WISE EXPENSE CASHBOOK STYLES ================= */
+  .mad-passbook-card {
+    background: var(--input-bg);
+    border: 2px solid var(--input-border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    min-width: 230px;
+    flex: 1 1 235px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    position: relative;
+  }
+  .mad-passbook-card:hover {
+    transform: translateY(-2px);
+    border-color: #f59e0b;
+  }
+  .mad-passbook-card.active {
+    border-color: #ea580c;
+    background: rgba(234, 88, 12, 0.07);
+    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.22);
+  }
+  .badge-exp-cat {
+    background: rgba(37, 99, 235, 0.12);
+    color: #2563eb;
+    padding: 3px 9px;
+    border-radius: 14px;
+    font-size: 11.5px;
+    font-weight: 700;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .badge-exp-mode {
+    background: rgba(15, 23, 42, 0.08);
+    color: var(--text-main);
+    border: 1px solid var(--input-border);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
   </style>
 
   <!-- तारीख को हमेशा 31/08/2026 (DD/MM/YYYY) फ़ॉर्मेट में दिखाने के लिए -->
@@ -2152,6 +2194,7 @@ body.modal-open {
     <button class="admin-tab-btn" id="tabClusterBtn" onclick="switchAdminTab('cluster')"><i class="fa-solid fa-sitemap"></i> क्लस्टर विवरण (<span id="totalClusterTabCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabExecutivesBtn" onclick="switchAdminTab('executives')"><i class="fa-solid fa-users-gear"></i> 🏛️ कार्यकारिणी प्रबंधन (<span id="totalExecTabCount">7</span>)</button>
     <button class="admin-tab-btn" id="tabUnionIncomeBtn" onclick="switchAdminTab('unionIncome')"><i class="fa-solid fa-indian-rupee-sign"></i> 💰 यूनियन आय (<span id="totalUnionIncomeBadge">₹0</span>)</button>
+    <button class="admin-tab-btn" id="tabExpenseCashbookBtn" onclick="switchAdminTab('expenseCashbook')"><i class="fa-solid fa-book-open"></i> 📒 मद-वार खर्च कैशबुक (<span id="totalUnionExpenseBadge">₹0</span>)</button>
     <button class="admin-tab-btn" id="tabPsPortalControlBtn" onclick="switchAdminTab('psPortalControl')"><i class="fa-solid fa-sliders"></i> 🎛️ PS पोर्टल कंट्रोल (<span id="totalPsPortalBtnCount">10/10</span>)</button>
     <button class="admin-tab-btn" id="tabLoginLogsBtn" onclick="switchAdminTab('loginLogs')"><i class="fa-solid fa-clock-rotate-left"></i> PS लॉगिन ट्रैकर (<span id="totalLoginLogsCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabApprovalBtn" onclick="switchAdminTab('approval')"><i class="fa-solid fa-user-check"></i> नया पंजीकरण अप्रूवल (<span id="pendingCount">0</span>)</button>
@@ -2564,6 +2607,9 @@ body.modal-open {
         <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; width:auto; font-size:13px; padding:9px 16px; margin:0; box-shadow:0 4px 12px rgba(245,158,11,0.35);" onclick="openAddIncomeColumnModal()">
           <i class="fa-solid fa-plus-circle"></i> + नया पेमेंट कॉलम (मद) जोड़ें
         </button>
+        <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #ea580c, #c2410c); color:#fff; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="openMadCashbookDirectly(document.getElementById('unionIncomeColFocusSelect').value)">
+          <i class="fa-solid fa-book-open"></i> 📒 मद-वार खर्च कैशबुक
+        </button>
         <button type="button" class="submit-btn" style="background:#0284c7; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="openClusterPrabhariModal()">
           <i class="fa-solid fa-user-tie"></i> 👥 क्लस्टर प्रभारी सेट करें
         </button>
@@ -2647,6 +2693,122 @@ body.modal-open {
         <thead id="unionIncomeTableHead"></thead>
         <tbody id="unionIncomeTableBody"></tbody>
         <tfoot id="unionIncomeTableFoot"></tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 14: MAD-WISE EXPENSE CASHBOOK & AUDIT PORTAL (📒 मद-वार खर्च एवं हिसाब कैशबुक) -->
+  <div id="expenseCashbookTabContent" style="display:none;">
+    <!-- Top Executive Command Banner -->
+    <div style="background:linear-gradient(135deg, #7c2d12 0%, #0f172a 100%); color:#ffffff; border-radius:12px; padding:16px 20px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border:1px solid #f97316;">
+      <div>
+        <h3 style="font-family:'Rozha One', serif; font-size:21px; color:#fdba74; margin-bottom:4px;"><i class="fa-solid fa-book-open"></i> पंचायत सहायक कर्मचारी यूनियन (उतरौला) - मद-वार खर्च एवं हिसाब कैशबुक</h3>
+        <p style="font-size:12.5px; color:#cbd5e1; margin:0;">जिस मद में पैसा लिया गया है, उसी मद की अलग कैशबुक: कुल कितना आया, कहाँ-कहाँ कितना खर्चा लगा और उस मद में कितना पैसा बचा।</p>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:8px;">
+        <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #ea580c, #c2410c); color:#fff; width:auto; font-size:13px; padding:9px 16px; margin:0; box-shadow:0 4px 12px rgba(234,88,12,0.35);" onclick="openAddExpenseModal()">
+          <i class="fa-solid fa-plus-circle"></i> + इस मद में नया खर्च जोड़ें
+        </button>
+        <button type="button" class="submit-btn" style="background:#dc2626; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="printMadCashbookPDF(false)">
+          <i class="fa-solid fa-file-pdf"></i> 📄 इस मद का खर्च हिसाब PDF
+        </button>
+        <button type="button" class="submit-btn" style="background:#1e3a8a; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="printMadCashbookPDF(true)" title="जमा करने वाले पंचायत सहायकों की लिस्ट + खर्च लिस्ट + बचत एक साथ प्रिंट करें">
+          <i class="fa-solid fa-file-invoice"></i> 📑 संपूर्ण संयुक्त हिसाब PDF
+        </button>
+        <button type="button" class="submit-btn" style="background:#25d366; color:#0f172a; font-weight:800; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="openMadHisabWhatsAppModal()">
+          <i class="fa-brands fa-whatsapp"></i> 📲 WhatsApp पर हिसाब भेजें
+        </button>
+        <button type="button" class="submit-btn" style="background:#4f46e5; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="exportMadCashbookToCSV()">
+          <i class="fa-solid fa-file-excel"></i> Excel / CSV
+        </button>
+        <button type="button" class="submit-btn" style="background:#059669; width:auto; font-size:12.5px; padding:8px 14px; margin:0;" onclick="switchAdminTab('unionIncome')">
+          <i class="fa-solid fa-indian-rupee-sign"></i> 💰 यूनियन आय देखें
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 1: Mad-Wise Passbook Selector Cards -->
+    <div style="background:var(--sub-box-bg); border:1.5px solid var(--input-border); border-radius:12px; padding:12px 14px; margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+        <span style="font-size:13.5px; font-weight:800; color:#ea580c;"><i class="fa-solid fa-layer-group"></i> 1. मद चुनें (प्रत्येक मद का अलग-अलग आय, खर्च व शेष बचत कार्ड):</span>
+        <span style="font-size:11.5px; color:#64748b;">(जिस मद का हिसाब देखना या खर्च जोड़ना है, उस कार्ड पर क्लिक करें)</span>
+      </div>
+      <div id="cashbookMadCardsContainer" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
+    </div>
+
+    <!-- Step 2: 4 Live Accounting Cards for Selected Mad -->
+    <div class="income-kpi-grid">
+      <div class="income-kpi-card" style="border-left:4px solid #ea580c;">
+        <div class="kpi-label"><i class="fa-solid fa-tag" style="color:#ea580c;"></i> चयनित मद (Selected Mad)</div>
+        <div class="kpi-val" style="color:#ea580c; font-size:17px;" id="cbStatMadName">सभी मद</div>
+        <div class="kpi-sub" style="color:#64748b;" id="cbStatMadSub">तारीख व निर्धारित शुल्क विवरण</div>
+      </div>
+      <div class="income-kpi-card" style="border-left:4px solid #16a34a;">
+        <div class="kpi-label"><i class="fa-solid fa-arrow-trend-up" style="color:#16a34a;"></i> इस मद में कुल प्राप्त (Total Income)</div>
+        <div class="kpi-val" style="color:#16a34a;" id="cbStatMadIncome">₹0</div>
+        <div class="kpi-sub" style="color:#15803d;" id="cbStatMadIncomeSub">0 पंचायत सहायकों से प्राप्त</div>
+      </div>
+      <div class="income-kpi-card" style="border-left:4px solid #dc2626;">
+        <div class="kpi-label"><i class="fa-solid fa-arrow-trend-down" style="color:#dc2626;"></i> इस मद में कुल खर्च (Total Spent)</div>
+        <div class="kpi-val" style="color:#dc2626;" id="cbStatMadExpense">₹0</div>
+        <div class="kpi-sub" style="color:#dc2626;" id="cbStatMadExpenseSub">कुल 0 मदों/कामों में खर्च</div>
+      </div>
+      <div class="income-kpi-card" style="border-left:4px solid #2563eb;">
+        <div class="kpi-label"><i class="fa-solid fa-Piggy-bank" style="color:#2563eb;"></i> इस मद में शेष बचा पैसा (Net Balance)</div>
+        <div class="kpi-val" style="color:#2563eb;" id="cbStatMadBalance">₹0</div>
+        <div class="kpi-sub" style="color:#1e40af;" id="cbStatMadBalanceSub">कुल प्राप्त − कुल खर्च = शुद्ध बचत</div>
+      </div>
+    </div>
+
+    <!-- Step 3: Where Spent Category Breakdown Strip -->
+    <div style="background:var(--input-bg); border:1.5px solid var(--input-border); border-radius:10px; padding:12px 14px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:800; color:#2563eb; margin-bottom:8px;">
+        <i class="fa-solid fa-chart-Simple"></i> इस मद में श्रेणी-वार खर्च विश्लेषण (कहाँ-कहाँ कितना लगा):
+      </div>
+      <div id="cashbookCategoryBreakdownContainer" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+    </div>
+
+    <!-- Step 4: Filter & Search Bar -->
+    <div style="background:var(--input-bg); border:1.5px solid var(--input-border); border-radius:10px; padding:12px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; flex:1 1 520px;">
+        <select id="cashbookActiveMadSelect" class="field-input" style="max-width:280px; margin:0; font-weight:800; border-color:#ea580c;" onchange="handleCashbookMadSelectChange(this.value)">
+          <option value="ALL">🌐 सभी मदों की संयुक्त कैशबुक (All Mads)</option>
+        </select>
+        <select id="cashbookCategoryFilter" class="field-input" style="max-width:210px; margin:0;" onchange="renderExpenseCashbookMasterView()">
+          <option value="ALL">-- सभी खर्च श्रेणियाँ (All) --</option>
+          <option value="🚗 वाहन व यात्रा किराया">🚗 वाहन व यात्रा किराया</option>
+          <option value="☕ जलपान व भोजन व्यवस्था">☕ जलपान व भोजन व्यवस्था</option>
+          <option value="🖨️ ज्ञापन, फोटोकॉपी व स्टेशनरी">🖨️ ज्ञापन, फोटोकॉपी व स्टेशनरी</option>
+          <option value="📢 बैनर, पोस्टर व माइक/टेंट">📢 बैनर, पोस्टर व माइक/टेंट</option>
+          <option value="⚖️ विधिक व संगठन कार्य">⚖️ विधिक व संगठन कार्य</option>
+          <option value="📦 अन्य विविध खर्च">📦 अन्य विविध खर्च</option>
+        </select>
+        <input type="text" id="cashbookSearchInput" oninput="debounceTableSearch(renderExpenseCashbookMasterView, 100)" onkeyup="debounceTableSearch(renderExpenseCashbookMasterView, 100)" class="field-input" placeholder="🔍 काम का नाम, विवरण, वाउचर या व्यक्ति खोजें..." style="max-width:260px; margin:0;">
+      </div>
+      <button type="button" class="submit-btn" style="background:#ea580c; width:auto; padding:8px 16px; font-size:12.5px; margin:0;" onclick="openAddExpenseModal()">
+        <i class="fa-solid fa-plus"></i> + नया खर्च दर्ज करें
+      </button>
+    </div>
+
+    <!-- Step 5: Mad-Specific Expense Register Table -->
+    <div class="table-responsive">
+      <table class="data-table" id="madExpenseCashbookTable">
+        <thead>
+          <tr>
+            <th style="width:45px; text-align:center;">क्र.</th>
+            <th style="width:115px;">वाउचर नं.</th>
+            <th style="width:105px;">तारीख</th>
+            <th style="width:180px;">मद का नाम (Source Mad)</th>
+            <th>कहाँ / किस काम में खर्चा लगा (विवरण)</th>
+            <th style="width:155px;">श्रेणी (Category)</th>
+            <th style="width:170px;">किसके द्वारा / किसे भुगतान</th>
+            <th style="width:105px; text-align:center;">माध्यम</th>
+            <th style="width:125px; text-align:center;">खर्च राशि (₹)</th>
+            <th style="width:125px; text-align:center;">कार्रवाई (Actions)</th>
+          </tr>
+        </thead>
+        <tbody id="madExpenseTableBody"></tbody>
+        <tfoot id="madExpenseTableFoot"></tfoot>
       </table>
     </div>
   </div>
@@ -2860,6 +3022,143 @@ body.modal-open {
         <i class="fa-brands fa-whatsapp"></i> WhatsApp पर रसीद भेजें
       </a>
       <button type="button" class="submit-btn" style="background:#64748b; width:auto; padding:9px 18px; font-size:13px; margin:0;" onclick="closeModal('unionIncomeReceiptModal')">
+        बंद करें
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MAD-WISE EXPENSE CASHBOOK MODALS ==================== -->
+
+<!-- F. ADD / EDIT MAD-WISE EXPENSE MODAL (➕ इस मद में नया खर्च जोड़ें पॉपअप) -->
+<div class="modal-backdrop" id="addEditExpenseModal">
+  <div class="modal-box" style="max-width:620px; text-align:left; max-height:92vh; overflow-y:auto;">
+    <div style="background:linear-gradient(135deg, #7c2d12, #0f172a); color:#fff; padding:14px 16px; border-radius:10px; margin-bottom:14px; border:1px solid #f97316;">
+      <h3 style="color:#fdba74; font-family:'Rozha One', serif; font-size:18px; margin:0;" id="expModalTitleHeading"><i class="fa-solid fa-plus-circle"></i> मद-वार नया खर्च (Expense) दर्ज करें</h3>
+      <p style="font-size:11.5px; color:#cbd5e1; margin:4px 0 0 0;">जिस मद में पैसा इकट्ठा किया गया है, उसी मद को चुनकर बताएं कि कहाँ-कहाँ कितना खर्चा लगा।</p>
+    </div>
+
+    <form onsubmit="handleSaveUnionExpenseSubmit(event)">
+      <input type="hidden" id="editExpenseIdHidden" value="">
+
+      <div class="field-group" style="background:var(--sub-box-bg); padding:10px 12px; border-radius:8px; border:1.5px solid #ea580c; margin-bottom:12px;">
+        <label style="color:#ea580c; font-weight:800;"><i class="fa-solid fa-layer-group"></i> 1. किस मद (Column) के पैसे से यह खर्च हुआ है? <span class="req">*</span></label>
+        <select id="expModalMadSelect" class="field-input" style="font-weight:800; margin-top:4px;" onchange="updateExpModalMadBalanceInfo()" required></select>
+        <div id="expModalMadBalanceHint" style="font-size:12px; font-weight:800; color:#16a34a; margin-top:6px;"></div>
+      </div>
+
+      <!-- Single Item / First Item Fields -->
+      <div id="expSingleFormContainer">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
+          <div class="field-group">
+            <label><i class="fa-solid fa-calendar-day"></i> 2. खर्च की तारीख <span class="req">*</span></label>
+            <input type="text" id="expModalDateInput" class="field-input" placeholder="DD/MM/YYYY" required>
+          </div>
+          <div class="field-group">
+            <label><i class="fa-solid fa-tags"></i> 3. खर्च की श्रेणी <span class="req">*</span></label>
+            <select id="expModalCategoryInput" class="field-input">
+              <option value="🚗 वाहन व यात्रा किराया">🚗 वाहन व यात्रा किराया</option>
+              <option value="☕ जलपान व भोजन व्यवस्था">☕ जलपान व भोजन व्यवस्था</option>
+              <option value="🖨️ ज्ञापन, फोटोकॉपी व स्टेशनरी">🖨️ ज्ञापन, फोटोकॉपी व स्टेशनरी</option>
+              <option value="📢 बैनर, पोस्टर व माइक/टेंट">📢 बैनर, पोस्टर व माइक/टेंट</option>
+              <option value="⚖️ विधिक व संगठन कार्य">⚖️ विधिक व संगठन कार्य</option>
+              <option value="📦 अन्य विविध खर्च">📦 अन्य विविध खर्च</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label><i class="fa-solid fa-clipboard-list"></i> 4. कहाँ / किस काम में खर्चा लगा (पूरा विवरण) <span class="req">*</span></label>
+          <input type="text" id="expModalParticularsInput" class="field-input" placeholder="उदा. लखनऊ कार्यक्रम हेतु 2 बोलेरो वाहन किराया / जलपान / बैनर छपाई" required>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:10px;">
+          <div class="field-group">
+            <label><i class="fa-solid fa-user-check"></i> 5. किसके द्वारा / किसे भुगतान किया गया</label>
+            <input type="text" id="expModalPaidByToInput" class="field-input" placeholder="उदा. कोषाध्यक्ष द्वारा / शर्मा ट्रैवल्स">
+          </div>
+          <div class="field-group">
+            <label><i class="fa-solid fa-wallet"></i> 6. भुगतान माध्यम</label>
+            <select id="expModalModeInput" class="field-input">
+              <option value="Cash (नकद)">Cash (नकद)</option>
+              <option value="UPI / PhonePe">UPI / PhonePe / GPay</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label><i class="fa-solid fa-indian-rupee-sign"></i> 7. कितना खर्चा लगा (राशि ₹) <span class="req">*</span></label>
+            <input type="number" id="expModalAmountInput" class="field-input" min="1" step="1" placeholder="उदा. 2500" style="font-weight:800; color:#dc2626;" oninput="updateExpModalLiveRemainingPreview()" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Optional Extra Rows for Multi-Item Entry in Same Mad -->
+      <div id="expExtraRowsContainer" style="margin-top:8px;"></div>
+
+      <div id="expAddMoreRowBtnWrapper" style="margin:8px 0 12px 0;">
+        <button type="button" onclick="addExtraExpenseInputRow()" style="background:rgba(234,88,12,0.12); color:#ea580c; border:1.5px dashed #ea580c; border-radius:8px; padding:7px 14px; font-size:12px; font-weight:800; cursor:pointer; width:100%;">
+          <i class="fa-solid fa-plus"></i> + इसी मद में एक और खर्च आइटम साथ में जोड़ें (Add Another Expense Item)
+        </button>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:14px;">
+        <button type="submit" class="submit-btn" style="background:linear-gradient(135deg, #ea580c, #c2410c); flex:1; margin:0;" id="expModalSubmitBtn">
+          <i class="fa-solid fa-floppy-disk"></i> खर्च सेव करें व मद का बैलेंस अपडेट करें
+        </button>
+        <button type="button" class="submit-btn" style="background:#64748b; width:auto; padding:10px 18px; margin:0;" onclick="closeModal('addEditExpenseModal')">
+          रद्द करें
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- G. MAD-WISE WHATSAPP HISAB BROADCAST MODAL (📲 WhatsApp ग्रुप में इस मद का पूरा हिसाब भेजें) -->
+<div class="modal-backdrop" id="madHisabWhatsAppModal">
+  <div class="modal-box" style="max-width:620px; text-align:left; max-height:90vh; overflow-y:auto;">
+    <div style="background:linear-gradient(135deg, #15803d, #0f172a); color:#fff; padding:14px 16px; border-radius:10px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <div>
+        <h3 style="color:#4ade80; font-family:'Rozha One', serif; font-size:18px; margin:0;"><i class="fa-brands fa-whatsapp"></i> मद-वार आय, खर्च एवं बचत का पारदर्शी WhatsApp हिसाब</h3>
+        <p style="font-size:11.5px; color:#cbd5e1; margin:3px 0 0 0;">पंचायत सहायकों को बताने के लिए कि इस मद में कितना पैसा आया, कहाँ-कहाँ कितना लगा और कितना बचा।</p>
+      </div>
+      <button type="button" class="submit-btn" style="background:#dc2626; width:auto; padding:5px 12px; font-size:12px; margin:0;" onclick="closeModal('madHisabWhatsAppModal')">✕ बंद करें</button>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px; margin-bottom:10px;">
+      <div class="field-group" style="margin:0;">
+        <label>1. किस मद का हिसाब भेजना है?</label>
+        <select id="waHisabMadSelect" class="field-input" style="font-weight:800;" onchange="refreshMadHisabWhatsAppText()"></select>
+      </div>
+      <div class="field-group" style="margin:0; display:flex; align-items:flex-end;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; background:var(--sub-box-bg); padding:9px 12px; border-radius:8px; border:1px solid var(--input-border); width:100%; margin:0;">
+          <input type="checkbox" id="waHisabIncludeContributorsChk" onchange="refreshMadHisabWhatsAppText()" style="width:16px; height:16px;">
+          <span style="font-size:12px; font-weight:700;">जमा करने वाले साथियों के नाम भी जोड़ें</span>
+        </label>
+      </div>
+    </div>
+
+    <textarea id="waHisabPreviewText" class="field-input" rows="12" style="font-size:12.5px; line-height:1.55; margin-bottom:12px;" readonly></textarea>
+
+    <div style="display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
+      <button type="button" class="submit-btn" style="background:#0284c7; width:auto; padding:9px 18px; font-size:13px; margin:0;" onclick="copyNoticeText(document.getElementById('waHisabPreviewText').value)">
+        <i class="fa-solid fa-copy"></i> पूरा हिसाब कॉपी करें
+      </button>
+      <a id="btnShareMadHisabWa" href="#" target="_blank" class="submit-btn" style="background:#16a34a; width:auto; padding:9px 20px; font-size:13px; margin:0; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+        <i class="fa-brands fa-whatsapp"></i> यूनियन WhatsApp ग्रुप में भेजें
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- H. OFFICIAL SINGLE EXPENSE VOUCHER MODAL (🧾 आधिकारिक खर्च वाउचर) -->
+<div class="modal-backdrop" id="singleExpenseVoucherModal">
+  <div class="modal-box" style="max-width:540px; text-align:left;">
+    <div id="singleExpenseVoucherContent" style="background:#ffffff; color:#0f172a; border:3px double #7c2d12; border-radius:10px; padding:18px;"></div>
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:14px; flex-wrap:wrap;">
+      <button type="button" class="submit-btn" style="background:#ea580c; width:auto; padding:9px 18px; font-size:13px; margin:0;" onclick="printSingleExpenseVoucherPDF()">
+        <i class="fa-solid fa-print"></i> वाउचर PDF प्रिंट करें
+      </button>
+      <button type="button" class="submit-btn" style="background:#64748b; width:auto; padding:9px 18px; font-size:13px; margin:0;" onclick="closeModal('singleExpenseVoucherModal')">
         बंद करें
       </button>
     </div>
@@ -3519,6 +3818,12 @@ function formatDateToIndian(dateVal) {
         },
         saveClusterPrabhariBulkSecure: function(token, clusterName, prabhariName, prabhariMobile, gpList) {
           this._callApi('saveClusterPrabhariBulkSecure', { token: token, clusterName: clusterName, prabhariName: prabhariName, prabhariMobile: prabhariMobile, gpList: gpList }, [token, clusterName, prabhariName, prabhariMobile, gpList]);
+        },
+        saveUnionExpenseSecure: function(token, expenseData) {
+          this._callApi('saveUnionExpenseSecure', { token: token, expenseData: expenseData }, [token, expenseData]);
+        },
+        deleteUnionExpenseSecure: function(token, expenseId) {
+          this._callApi('deleteUnionExpenseSecure', { token: token, expenseId: expenseId }, [token, expenseId]);
         }
       }
     }
@@ -3562,7 +3867,8 @@ function formatDateToIndian(dateVal) {
   }
   var cachedPsPortalConfig = getDefaultPsPortalConfigClient();
   var adminDraftPsPortalConfig = JSON.parse(JSON.stringify(cachedPsPortalConfig));
-  var cachedUnionIncomeData = { columns: [], recordsMap: {}, clusterPrabhariMap: {} };
+  var cachedUnionIncomeData = { columns: [], recordsMap: {}, clusterPrabhariMap: {}, expenses: [] };
+  var currentCashbookMadId = "ALL";
   var currentUnionIncomeStatusFilter = "ALL";
   var sentBulkWaTracker = {};
   var cachedAdminStats = null;
@@ -4729,6 +5035,7 @@ function openAdminLoginModal() {
     }
     populateUnionIncomeFilters();
     renderUnionIncomeMasterView();
+    renderExpenseCashbookMasterView();
 
     document.getElementById('totalLeaveCount').innerText = cachedAdminLeaves.length;
     
@@ -4845,6 +5152,9 @@ function openAdminLoginModal() {
     if (document.getElementById('unionIncomeTabContent')) {
       document.getElementById('unionIncomeTabContent').style.display = (tab === 'unionIncome') ? 'block' : 'none';
     }
+    if (document.getElementById('expenseCashbookTabContent')) {
+      document.getElementById('expenseCashbookTabContent').style.display = (tab === 'expenseCashbook') ? 'block' : 'none';
+    }
 
     // Sabhi buttons ka active color set karna
     document.getElementById('tabSurveyBtn').classList.toggle('active', tab === 'survey');
@@ -4869,6 +5179,9 @@ function openAdminLoginModal() {
     if (document.getElementById('tabUnionIncomeBtn')) {
       document.getElementById('tabUnionIncomeBtn').classList.toggle('active', tab === 'unionIncome');
     }
+    if (document.getElementById('tabExpenseCashbookBtn')) {
+      document.getElementById('tabExpenseCashbookBtn').classList.toggle('active', tab === 'expenseCashbook');
+    }
 
     if (tab === 'imageLogs') {
       renderImageLogsTable(cachedAdminImageLogs);
@@ -4882,6 +5195,9 @@ function openAdminLoginModal() {
     if (tab === 'unionIncome') {
       populateUnionIncomeFilters();
       renderUnionIncomeMasterView();
+    }
+    if (tab === 'expenseCashbook') {
+      renderExpenseCashbookMasterView();
     }
     var activeAdmBtn = document.querySelector('#adminPillNavBar .admin-tab-btn.active');
     if (activeAdmBtn && activeAdmBtn.scrollIntoView) {
@@ -8568,7 +8884,10 @@ function renderUnionIncomeMasterView() {
           '<button type="button" onclick="openEditIncomeColumnModal(\'' + escapeJsStr(col.colId) + '\')" title="कॉलम संपादित/डिलीट करें" style="background:rgba(255,255,255,0.18); border:none; color:#fff; border-radius:4px; padding:1px 5px; font-size:10px; cursor:pointer;"><i class="fa-solid fa-gear"></i></button>' +
         '</div>' +
         '<div class="income-col-header-date"><i class="fa-regular fa-calendar"></i> ' + escapeHtml(col.date) + '</div>' +
-        '<div class="income-col-header-amt">निर्धारित: ₹' + col.amount + '</div>' +
+        '<div style="display:flex; align-items:center; gap:4px; margin-top:2px;">' +
+          '<span class="income-col-header-amt" style="margin:0;">₹' + col.amount + '</span>' +
+          '<button type="button" onclick="openMadCashbookDirectly(\'' + escapeJsStr(col.colId) + '\')" title="इस मद की खर्च कैशबुक व हिसाब खोलें" style="background:#ea580c; color:#fff; border:none; border-radius:10px; padding:1px 7px; font-size:10px; font-weight:800; cursor:pointer;">📒 खर्च</button>' +
+        '</div>' +
       '</div>' +
     '</th>';
   }
@@ -9631,6 +9950,913 @@ function exportUnionIncomeToCSV() {
     csv += line.join(",") + "\n";
   }
   downloadCSVFile(csv, "Utraula_Union_Income_Collection_Register.csv");
+}
+
+
+// ================= NEW FEATURE 10: MAD-WISE EXPENSE CASHBOOK & AUDIT ENGINE =================
+function getMadWiseFinancialSummaryMap() {
+  var allRows = buildMasterUnionIncomeRows();
+  var cols = (cachedUnionIncomeData && cachedUnionIncomeData.columns) ? cachedUnionIncomeData.columns : [];
+  var expenses = (cachedUnionIncomeData && cachedUnionIncomeData.expenses) ? cachedUnionIncomeData.expenses : [];
+
+  var madMap = {};
+  var grandIncome = 0;
+  var grandExpected = 0;
+  var grandExpense = 0;
+  var grandExpenseCount = 0;
+
+  for (var i = 0; i < cols.length; i++) {
+    var c = cols[i];
+    var colIncome = 0;
+    var paidGpsCnt = 0;
+    var targetAmt = Number(c.amount) || 0;
+    var colExpected = targetAmt * allRows.length;
+
+    for (var r = 0; r < allRows.length; r++) {
+      var pVal = Number((allRows[r].payments && allRows[r].payments[c.colId]) || 0);
+      if (pVal > 0) {
+        colIncome += pVal;
+        paidGpsCnt++;
+      }
+    }
+
+    madMap[c.colId] = {
+      colId: c.colId,
+      title: c.title,
+      date: c.date,
+      targetPerPs: targetAmt,
+      expectedTotal: colExpected,
+      collectedTotal: colIncome,
+      paidGpsCount: paidGpsCnt,
+      totalGpsCount: allRows.length,
+      spentTotal: 0,
+      expenseItemsCount: 0,
+      balance: colIncome
+    };
+    grandIncome += colIncome;
+    grandExpected += colExpected;
+  }
+
+  // General / Unlinked Mad fallback if any expense has colId = "GENERAL" or deleted colId
+  for (var e = 0; e < expenses.length; e++) {
+    var ex = expenses[e];
+    var cid = ex.colId || "GENERAL";
+    var amt = Number(ex.amount) || 0;
+    if (!madMap[cid]) {
+      madMap[cid] = {
+        colId: cid,
+        title: ex.madTitle || "सामान्य यूनियन कोष",
+        date: ex.date || "-",
+        targetPerPs: 0,
+        expectedTotal: 0,
+        collectedTotal: 0,
+        paidGpsCount: 0,
+        totalGpsCount: allRows.length,
+        spentTotal: 0,
+        expenseItemsCount: 0,
+        balance: 0
+      };
+    }
+    madMap[cid].spentTotal += amt;
+    madMap[cid].expenseItemsCount++;
+    madMap[cid].balance = madMap[cid].collectedTotal - madMap[cid].spentTotal;
+    grandExpense += amt;
+    grandExpenseCount++;
+  }
+
+  for (var mk in madMap) {
+    if (Object.prototype.hasOwnProperty.call(madMap, mk)) {
+      madMap[mk].balance = madMap[mk].collectedTotal - madMap[mk].spentTotal;
+    }
+  }
+
+  return {
+    madMap: madMap,
+    cols: cols,
+    expenses: expenses,
+    allRows: allRows,
+    grandIncome: grandIncome,
+    grandExpected: grandExpected,
+    grandExpense: grandExpense,
+    grandExpenseCount: grandExpenseCount,
+    grandBalance: grandIncome - grandExpense
+  };
+}
+
+function openMadCashbookDirectly(colId) {
+  currentCashbookMadId = (colId && colId !== "ALL") ? colId : "ALL";
+  switchAdminTab("expenseCashbook");
+  var sel = document.getElementById("cashbookActiveMadSelect");
+  if (sel) sel.value = currentCashbookMadId;
+  renderExpenseCashbookMasterView();
+}
+
+function handleCashbookMadSelectChange(madId) {
+  currentCashbookMadId = madId || "ALL";
+  renderExpenseCashbookMasterView();
+}
+
+function renderExpenseCashbookMasterView() {
+  var fin = getMadWiseFinancialSummaryMap();
+  var cols = fin.cols;
+  var madMap = fin.madMap;
+  var expenses = fin.expenses;
+
+  // Update top pill badge for Expense Cashbook
+  var expBadge = document.getElementById("totalUnionExpenseBadge");
+  if (expBadge) {
+    expBadge.innerText = "खर्च ₹" + fin.grandExpense.toLocaleString("en-IN");
+  }
+
+  // Ensure currentCashbookMadId is valid (if only 1 Mad exists and ALL was default, keep ALL or valid)
+  if (currentCashbookMadId !== "ALL" && !madMap[currentCashbookMadId]) {
+    currentCashbookMadId = cols.length > 0 ? cols[cols.length - 1].colId : "ALL";
+  }
+
+  // 1. Populate #cashbookActiveMadSelect dropdown
+  var madSel = document.getElementById("cashbookActiveMadSelect");
+  if (madSel) {
+    madSel.innerHTML = '<option value="ALL">🌐 सभी मदों का संयुक्त हिसाब (' + cols.length + ' मद)</option>';
+    for (var i = 0; i < cols.length; i++) {
+      var c = cols[i];
+      var mObj = madMap[c.colId];
+      var opt = document.createElement("option");
+      opt.value = c.colId;
+      opt.textContent = "📌 " + c.title + " (" + c.date + ") — आया: ₹" + mObj.collectedTotal + " | खर्च: ₹" + mObj.spentTotal + " | बचा: ₹" + mObj.balance;
+      madSel.appendChild(opt);
+    }
+    madSel.value = currentCashbookMadId;
+  }
+
+  // 2. Render Mad-Wise Passbook Selector Cards (#cashbookMadCardsContainer)
+  var cardsBox = document.getElementById("cashbookMadCardsContainer");
+  if (cardsBox) {
+    cardsBox.innerHTML = "";
+    var cFrag = document.createDocumentFragment();
+
+    // First Card: All Mads Combined
+    var allCard = document.createElement("div");
+    allCard.className = "mad-passbook-card" + (currentCashbookMadId === "ALL" ? " active" : "");
+    allCard.onclick = function() { handleCashbookMadSelectChange("ALL"); };
+    var allUsedPct = fin.grandIncome > 0 ? Math.min(100, Math.round((fin.grandExpense / fin.grandIncome) * 100)) : 0;
+    var allBalColor = fin.grandBalance >= 0 ? "#2563eb" : "#dc2626";
+    allCard.innerHTML =
+      '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">' +
+        '<span style="font-weight:800; font-size:13.5px; color:#ea580c;"><i class="fa-solid fa-globe"></i> सभी मद संयुक्त (All)</span>' +
+        '<span style="font-size:11px; font-weight:700; background:rgba(234,88,12,0.14); color:#ea580c; padding:2px 8px; border-radius:10px;">' + cols.length + ' मद</span>' +
+      '</div>' +
+      '<div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">' +
+        '<span style="color:#16a34a; font-weight:700;">आया: ₹' + fin.grandIncome.toLocaleString("en-IN") + '</span>' +
+        '<span style="color:#dc2626; font-weight:700;">खर्च: ₹' + fin.grandExpense.toLocaleString("en-IN") + '</span>' +
+      '</div>' +
+      '<div style="font-size:13px; font-weight:800; color:' + allBalColor + '; margin-bottom:6px;">🏦 शेष बचा: ₹' + fin.grandBalance.toLocaleString("en-IN") + '</div>' +
+      '<div style="height:6px; width:100%; background:#e2e8f0; border-radius:4px; overflow:hidden;">' +
+        '<div style="height:100%; width:' + allUsedPct + '%; background:#ea580c;"></div>' +
+      '</div>';
+    cFrag.appendChild(allCard);
+
+    // Individual Card for Each Mad (Payment Column)
+    for (var j = 0; j < cols.length; j++) {
+      var col = cols[j];
+      var m = madMap[col.colId];
+      var mCard = document.createElement("div");
+      mCard.className = "mad-passbook-card" + (currentCashbookMadId === col.colId ? " active" : "");
+      mCard.onclick = (function(cid) {
+        return function() { handleCashbookMadSelectChange(cid); };
+      })(col.colId);
+
+      var spentPct = m.collectedTotal > 0 ? Math.min(100, Math.round((m.spentTotal / m.collectedTotal) * 100)) : 0;
+      var balClr = m.balance >= 0 ? "#16a34a" : "#dc2626";
+
+      mCard.innerHTML =
+        '<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:6px; margin-bottom:4px;">' +
+          '<span style="font-weight:800; font-size:13.5px; color:var(--text-main);">📌 ' + escapeHtml(m.title) + '</span>' +
+          '<span style="font-size:10.5px; font-weight:700; background:#1e3a8a; color:#fff; padding:2px 7px; border-radius:8px; white-space:nowrap;">₹' + m.targetPerPs + '/PS</span>' +
+        '</div>' +
+        '<div style="font-size:11px; color:#64748b; margin-bottom:6px;"><i class="fa-regular fa-calendar"></i> ' + escapeHtml(m.date) + ' | जमा: ' + m.paidGpsCount + '/' + m.totalGpsCount + ' PS</div>' +
+        '<div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">' +
+          '<span style="color:#16a34a; font-weight:800;">🟢 आया: ₹' + m.collectedTotal.toLocaleString("en-IN") + '</span>' +
+          '<span style="color:#dc2626; font-weight:800;">🔴 खर्च: ₹' + m.spentTotal.toLocaleString("en-IN") + '</span>' +
+        '</div>' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">' +
+          '<span style="font-size:13px; font-weight:800; color:' + balClr + ';">🏦 बचा: ₹' + m.balance.toLocaleString("en-IN") + '</span>' +
+          '<span style="font-size:10.5px; color:#64748b;">(' + m.expenseItemsCount + ' खर्च आइटम)</span>' +
+        '</div>' +
+        '<div style="height:6px; width:100%; background:#e2e8f0; border-radius:4px; overflow:hidden;">' +
+          '<div style="height:100%; width:' + spentPct + '%; background:' + (m.balance >= 0 ? "#2563eb" : "#dc2626") + ';"></div>' +
+        '</div>';
+      cFrag.appendChild(mCard);
+    }
+    cardsBox.appendChild(cFrag);
+  }
+
+  // 3. Update 4 KPI Cards for the Selected Mad
+  var activeIncome = fin.grandIncome;
+  var activeExpense = fin.grandExpense;
+  var activeBalance = fin.grandBalance;
+  var activeExpCount = fin.grandExpenseCount;
+
+  if (currentCashbookMadId !== "ALL" && madMap[currentCashbookMadId]) {
+    var selMad = madMap[currentCashbookMadId];
+    activeIncome = selMad.collectedTotal;
+    activeExpense = selMad.spentTotal;
+    activeBalance = selMad.balance;
+    activeExpCount = selMad.expenseItemsCount;
+
+    document.getElementById("cbStatMadName").innerText = selMad.title;
+    document.getElementById("cbStatMadSub").innerText = "तारीख: " + selMad.date + " | निर्धारित: ₹" + selMad.targetPerPs + " प्रति PS";
+    document.getElementById("cbStatMadIncomeSub").innerText = selMad.paidGpsCount + " पंचायत सहायकों द्वारा जमा";
+  } else {
+    document.getElementById("cbStatMadName").innerText = "🌐 सभी मद संयुक्त (" + cols.length + " मद)";
+    document.getElementById("cbStatMadSub").innerText = "यूनियन के समस्त मदों का संयुक्त कोष";
+    document.getElementById("cbStatMadIncomeSub").innerText = "सभी मदों से प्राप्त कुल सहयोग राशि";
+  }
+
+  document.getElementById("cbStatMadIncome").innerText = "₹" + activeIncome.toLocaleString("en-IN");
+  document.getElementById("cbStatMadExpense").innerText = "₹" + activeExpense.toLocaleString("en-IN");
+  document.getElementById("cbStatMadExpenseSub").innerText = "कुल " + activeExpCount + " मदों/कामों में खर्च";
+  document.getElementById("cbStatMadBalance").innerText = (activeBalance >= 0 ? "₹" : "-₹") + Math.abs(activeBalance).toLocaleString("en-IN");
+  document.getElementById("cbStatMadBalance").style.color = activeBalance >= 0 ? "#2563eb" : "#dc2626";
+  document.getElementById("cbStatMadBalanceSub").innerText = activeBalance >= 0
+    ? ("₹" + activeIncome.toLocaleString("en-IN") + " (आया) − ₹" + activeExpense.toLocaleString("en-IN") + " (खर्च) = ₹" + activeBalance.toLocaleString("en-IN") + " बचा")
+    : ("⚠️ जमा राशि से ₹" + Math.abs(activeBalance).toLocaleString("en-IN") + " अधिक खर्च (Deficit)");
+
+  // 4. Filter Expenses & Compute Category Breakdown
+  var catFilter = document.getElementById("cashbookCategoryFilter") ? document.getElementById("cashbookCategoryFilter").value : "ALL";
+  var searchQ = document.getElementById("cashbookSearchInput") ? document.getElementById("cashbookSearchInput").value.toLowerCase().trim() : "";
+
+  var categoryTotals = {};
+  var filteredExpenses = [];
+  var filteredSpentSum = 0;
+
+  for (var k = 0; k < expenses.length; k++) {
+    var exp = expenses[k];
+    if (currentCashbookMadId !== "ALL" && exp.colId !== currentCashbookMadId) continue;
+
+    var catName = exp.category || "📦 अन्य विविध खर्च";
+    categoryTotals[catName] = (categoryTotals[catName] || 0) + (Number(exp.amount) || 0);
+
+    if (catFilter !== "ALL" && exp.category !== catFilter) continue;
+    if (searchQ) {
+      var hay = (exp.particulars + " " + exp.category + " " + exp.paidByTo + " " + exp.expenseId + " " + exp.madTitle + " " + exp.date).toLowerCase();
+      if (hay.indexOf(searchQ) === -1) continue;
+    }
+
+    filteredSpentSum += (Number(exp.amount) || 0);
+    filteredExpenses.push(exp);
+  }
+
+  // Render Category Breakdown Strip
+  var catBox = document.getElementById("cashbookCategoryBreakdownContainer");
+  if (catBox) {
+    catBox.innerHTML = "";
+    var catKeys = Object.keys(categoryTotals);
+    if (catKeys.length === 0) {
+      catBox.innerHTML = '<span style="font-size:12px; color:#94a3b8; font-style:italic;">इस मद में अभी कोई खर्च दर्ज नहीं किया गया है। "+ इस मद में नया खर्च जोड़ें" बटन से खर्च दर्ज करें।</span>';
+    } else {
+      for (var ck = 0; ck < catKeys.length; ck++) {
+        var cTitle = catKeys[ck];
+        var cVal = categoryTotals[cTitle];
+        var cPct = activeExpense > 0 ? Math.round((cVal / activeExpense) * 100) : 0;
+        var pill = document.createElement("div");
+        pill.style.cssText = "background:var(--sub-box-bg); border:1px solid var(--input-border); border-radius:8px; padding:6px 12px; font-size:12px; font-weight:700; display:flex; align-items:center; gap:8px;";
+        pill.innerHTML = '<span>' + escapeHtml(cTitle) + ':</span> <b style="color:#dc2626;">₹' + cVal.toLocaleString("en-IN") + '</b> <span style="font-size:10.5px; color:#64748b;">(' + cPct + '%)</span>';
+        catBox.appendChild(pill);
+      }
+    }
+  }
+
+  // 5. Render Expense Cashbook Table Body & Footer
+  var tbody = document.getElementById("madExpenseTableBody");
+  var tfoot = document.getElementById("madExpenseTableFoot");
+  if (!tbody || !tfoot) return;
+
+  tbody.innerHTML = "";
+  if (filteredExpenses.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:25px; color:#94a3b8; font-style:italic;"><i class="fa-solid fa-receipt" style="font-size:22px; display:block; margin-bottom:6px;"></i>चयनित मद में अभी कोई खर्च प्रविष्टि नहीं है। ऊपर <b>"+ इस मद में नया खर्च जोड़ें"</b> पर क्लिक करके खर्च चढ़ाएं।</td></tr>';
+  } else {
+    var bFrag = document.createDocumentFragment();
+    for (var idx = 0; idx < filteredExpenses.length; idx++) {
+      var item = filteredExpenses[idx];
+      var tr = document.createElement("tr");
+      var mTitleDisplay = (madMap[item.colId] && madMap[item.colId].title) ? madMap[item.colId].title : (item.madTitle || "सामान्य कोष");
+      var expIdJs = escapeJsStr(item.expenseId);
+
+      tr.innerHTML =
+        '<td style="text-align:center; font-weight:bold;">' + (idx + 1) + '</td>' +
+        '<td style="font-weight:700; font-size:11.5px; color:#64748b;">' + escapeHtml(item.expenseId) + '</td>' +
+        '<td style="white-space:nowrap; font-weight:700;">' + escapeHtml(item.date) + '</td>' +
+        '<td><b style="color:#ea580c;">📌 ' + escapeHtml(mTitleDisplay) + '</b></td>' +
+        '<td style="font-weight:800; color:var(--text-main);">' + escapeHtml(item.particulars) + '</td>' +
+        '<td><span class="badge-exp-cat">' + escapeHtml(item.category) + '</span></td>' +
+        '<td>' + escapeHtml(item.paidByTo || "-") + '</td>' +
+        '<td style="text-align:center;"><span class="badge-exp-mode">' + escapeHtml(item.paymentMode || "Cash") + '</span></td>' +
+        '<td style="text-align:center; font-weight:800; font-size:14px; color:#dc2626;">₹' + Number(item.amount || 0).toLocaleString("en-IN") + '</td>' +
+        '<td style="text-align:center; white-space:nowrap;">' +
+          '<button type="button" class="btn-action-view" style="background:#ea580c;" title="खर्च वाउचर देखें / प्रिंट करें" onclick="openSingleExpenseVoucherModal(\'' + expIdJs + '\')"><i class="fa-solid fa-receipt"></i></button>' +
+          '<button type="button" class="btn-action-edit" title="खर्च संपादित करें (Edit)" onclick="openEditExpenseModal(\'' + expIdJs + '\')"><i class="fa-solid fa-pen"></i></button>' +
+          '<button type="button" class="btn-action-delete" title="खर्च हटाएं (Delete)" onclick="handleDeleteUnionExpense(\'' + expIdJs + '\')"><i class="fa-solid fa-trash"></i></button>' +
+        '</td>';
+      bFrag.appendChild(tr);
+    }
+    tbody.appendChild(bFrag);
+  }
+
+  // Footer Summary Row showing Income vs Expense vs Remaining Balance of this Mad
+  tfoot.innerHTML =
+    '<tr style="background:#0f172a; color:#ffffff; font-weight:800; font-size:13px;">' +
+      '<td colspan="4" style="padding:10px 12px; color:#4ade80;">🟢 इस मद में कुल प्राप्त: ₹' + activeIncome.toLocaleString("en-IN") + '</td>' +
+      '<td colspan="4" style="padding:10px 12px; text-align:right; color:#f87171;">🔴 इस मद में कुल खर्चा लगा: ₹' + activeExpense.toLocaleString("en-IN") + '</td>' +
+      '<td colspan="2" style="padding:10px 12px; text-align:center; color:#facc15; font-size:13.5px;">🏦 शेष बचा: ₹' + activeBalance.toLocaleString("en-IN") + '</td>' +
+    '</tr>';
+}
+
+// Add / Edit Expense Modal Functions
+function populateExpModalMadSelect(selectedColId) {
+  var fin = getMadWiseFinancialSummaryMap();
+  var cols = fin.cols;
+  var madMap = fin.madMap;
+  var sel = document.getElementById("expModalMadSelect");
+  if (!sel) return;
+  sel.innerHTML = "";
+
+  if (cols.length === 0) {
+    var defOpt = document.createElement("option");
+    defOpt.value = "GENERAL";
+    defOpt.textContent = "सामान्य यूनियन कोष (अभी यूनियन आय में कोई मद नहीं बना है)";
+    sel.appendChild(defOpt);
+  } else {
+    for (var i = 0; i < cols.length; i++) {
+      var c = cols[i];
+      var m = madMap[c.colId];
+      var opt = document.createElement("option");
+      opt.value = c.colId;
+      opt.textContent = c.title + " (" + c.date + ") — कुल आया: ₹" + m.collectedTotal + " | बचा: ₹" + m.balance;
+      sel.appendChild(opt);
+    }
+  }
+
+  if (selectedColId && selectedColId !== "ALL" && madMap[selectedColId]) {
+    sel.value = selectedColId;
+  } else if (cols.length > 0) {
+    sel.value = cols[cols.length - 1].colId;
+  }
+  updateExpModalMadBalanceInfo();
+}
+
+function updateExpModalMadBalanceInfo() {
+  var fin = getMadWiseFinancialSummaryMap();
+  var sel = document.getElementById("expModalMadSelect");
+  var hint = document.getElementById("expModalMadBalanceHint");
+  if (!sel || !hint) return;
+  var cid = sel.value;
+  var m = fin.madMap[cid];
+  if (!m) {
+    hint.innerText = "";
+    return;
+  }
+  hint.innerHTML = "📊 <b>" + escapeHtml(m.title) + "</b> में कुल जमा आया: <span style='color:#16a34a;'>₹" + m.collectedTotal.toLocaleString("en-IN") + "</span> | अब तक खर्च: <span style='color:#dc2626;'>₹" + m.spentTotal.toLocaleString("en-IN") + "</span> | वर्तमान उपलब्ध शेष: <span style='color:#2563eb;'>₹" + m.balance.toLocaleString("en-IN") + "</span>";
+  updateExpModalLiveRemainingPreview();
+}
+
+function updateExpModalLiveRemainingPreview() {
+  var fin = getMadWiseFinancialSummaryMap();
+  var sel = document.getElementById("expModalMadSelect");
+  var hint = document.getElementById("expModalMadBalanceHint");
+  if (!sel || !hint) return;
+  var m = fin.madMap[sel.value];
+  if (!m) return;
+
+  var editId = document.getElementById("editExpenseIdHidden").value.trim();
+  var oldAmtOfEditing = 0;
+  if (editId) {
+    for (var i = 0; i < fin.expenses.length; i++) {
+      if (fin.expenses[i].expenseId === editId && fin.expenses[i].colId === sel.value) {
+        oldAmtOfEditing = Number(fin.expenses[i].amount) || 0;
+        break;
+      }
+    }
+  }
+
+  var enteredSum = Number(document.getElementById("expModalAmountInput").value) || 0;
+  var extraAmtInputs = document.querySelectorAll(".extra-exp-amt-input");
+  for (var j = 0; j < extraAmtInputs.length; j++) {
+    enteredSum += (Number(extraAmtInputs[j].value) || 0);
+  }
+
+  var newRemaining = (m.balance + oldAmtOfEditing) - enteredSum;
+  var remColor = newRemaining >= 0 ? "#16a34a" : "#dc2626";
+  hint.innerHTML = "📊 इस मद में कुल जमा: <b>₹" + m.collectedTotal.toLocaleString("en-IN") + "</b> | नया खर्च घटाने के बाद इस मद में बचेगा: <b style='color:" + remColor + "; font-size:13px;'>₹" + newRemaining.toLocaleString("en-IN") + "</b>";
+}
+
+function ensureExpenseDateFlatpickr() {
+  var el = document.getElementById("expModalDateInput");
+  if (el && !el._flatpickr && typeof flatpickr === "function") {
+    try {
+      flatpickr(el, { dateFormat: "d/m/Y", allowInput: true });
+    } catch (e) {}
+  }
+}
+
+function openAddExpenseModal() {
+  var cols = (cachedUnionIncomeData && cachedUnionIncomeData.columns) ? cachedUnionIncomeData.columns : [];
+  if (cols.length === 0) {
+    showMsg("पहले पेमेंट मद बनाएं", "कृपया पहले '💰 यूनियन आय' में जाकर कम से कम 1 पेमेंट कॉलम (मद) बनाएं, ताकि उसी मद के अंतर्गत खर्च जोड़ा जा सके।", false);
+    return;
+  }
+  ensureExpenseDateFlatpickr();
+  document.getElementById("editExpenseIdHidden").value = "";
+  document.getElementById("expModalTitleHeading").innerHTML = '<i class="fa-solid fa-plus-circle"></i> मद-वार नया खर्च (Expense) दर्ज करें';
+  document.getElementById("expModalDateInput").value = getTodayFormattedDDMMYYYY();
+  document.getElementById("expModalCategoryInput").value = "🚗 वाहन व यात्रा किराया";
+  document.getElementById("expModalParticularsInput").value = "";
+  document.getElementById("expModalPaidByToInput").value = "";
+  document.getElementById("expModalModeInput").value = "Cash (नकद)";
+  document.getElementById("expModalAmountInput").value = "";
+  document.getElementById("expExtraRowsContainer").innerHTML = "";
+  document.getElementById("expAddMoreRowBtnWrapper").style.display = "block";
+  document.getElementById("expModalSubmitBtn").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> खर्च सेव करें व मद का बैलेंस अपडेट करें';
+
+  populateExpModalMadSelect(currentCashbookMadId);
+  openModal("addEditExpenseModal");
+}
+
+function addExtraExpenseInputRow() {
+  var container = document.getElementById("expExtraRowsContainer");
+  if (!container) return;
+  var rowDiv = document.createElement("div");
+  rowDiv.className = "extra-exp-item-row";
+  rowDiv.style.cssText = "background:var(--sub-box-bg); border:1px solid var(--input-border); border-radius:8px; padding:10px; margin-bottom:8px; position:relative;";
+  rowDiv.innerHTML =
+    '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">' +
+      '<span style="font-size:12px; font-weight:800; color:#ea580c;">➕ अतिरिक्त खर्च आइटम:</span>' +
+      '<button type="button" onclick="this.parentElement.parentElement.remove(); updateExpModalLiveRemainingPreview();" style="background:#dc2626; color:#fff; border:none; border-radius:4px; padding:2px 7px; font-size:11px; cursor:pointer;">✕ हटाएं</button>' +
+    '</div>' +
+    '<div style="display:grid; grid-template-columns:2fr 1.2fr 1fr; gap:8px;">' +
+      '<input type="text" class="field-input extra-exp-part-input" placeholder="कहाँ / किस काम में खर्चा लगा *" style="margin:0;" required>' +
+      '<select class="field-input extra-exp-cat-input" style="margin:0;">' +
+        '<option value="🚗 वाहन व यात्रा किराया">🚗 वाहन/यात्रा</option>' +
+        '<option value="☕ जलपान व भोजन व्यवस्था">☕ जलपान/भोजन</option>' +
+        '<option value="🖨️ ज्ञापन, फोटोकॉपी व स्टेशनरी">🖨️ प्रिंटिंग/स्टेशनरी</option>' +
+        '<option value="📢 बैनर, पोस्टर व माइक/टेंट">📢 बैनर/माइक</option>' +
+        '<option value="⚖️ विधिक व संगठन कार्य">⚖️ संगठन कार्य</option>' +
+        '<option value="📦 अन्य विविध खर्च">📦 अन्य खर्च</option>' +
+      '</select>' +
+      '<input type="number" min="1" step="1" class="field-input extra-exp-amt-input" placeholder="राशि ₹ *" style="margin:0; font-weight:800; color:#dc2626;" oninput="updateExpModalLiveRemainingPreview()" required>' +
+    '</div>';
+  container.appendChild(rowDiv);
+}
+
+function openEditExpenseModal(expenseId) {
+  var expenses = (cachedUnionIncomeData && cachedUnionIncomeData.expenses) ? cachedUnionIncomeData.expenses : [];
+  var found = null;
+  for (var i = 0; i < expenses.length; i++) {
+    if (expenses[i].expenseId === expenseId) {
+      found = expenses[i];
+      break;
+    }
+  }
+  if (!found) return;
+
+  ensureExpenseDateFlatpickr();
+  document.getElementById("editExpenseIdHidden").value = found.expenseId;
+  document.getElementById("expModalTitleHeading").innerHTML = '<i class="fa-solid fa-pen-to-square"></i> खर्च प्रविष्टि संपादित करें (Edit Expense)';
+  populateExpModalMadSelect(found.colId);
+  document.getElementById("expModalDateInput").value = found.date || getTodayFormattedDDMMYYYY();
+  document.getElementById("expModalCategoryInput").value = found.category || "📦 अन्य विविध खर्च";
+  document.getElementById("expModalParticularsInput").value = found.particulars || "";
+  document.getElementById("expModalPaidByToInput").value = found.paidByTo || "";
+  document.getElementById("expModalModeInput").value = found.paymentMode || "Cash (नकद)";
+  document.getElementById("expModalAmountInput").value = found.amount || "";
+  document.getElementById("expExtraRowsContainer").innerHTML = "";
+  document.getElementById("expAddMoreRowBtnWrapper").style.display = "none";
+  document.getElementById("expModalSubmitBtn").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> बदलाव सुरक्षित करें';
+  updateExpModalLiveRemainingPreview();
+  openModal("addEditExpenseModal");
+}
+
+function handleSaveUnionExpenseSubmit(e) {
+  e.preventDefault();
+  var fin = getMadWiseFinancialSummaryMap();
+  var editId = document.getElementById("editExpenseIdHidden").value.trim();
+  var colId = document.getElementById("expModalMadSelect").value;
+  var madObj = fin.madMap[colId] || {};
+  var madTitle = madObj.title || "सामान्य यूनियन कोष";
+  var dateStr = document.getElementById("expModalDateInput").value.trim() || getTodayFormattedDDMMYYYY();
+  var catStr = document.getElementById("expModalCategoryInput").value;
+  var partStr = document.getElementById("expModalParticularsInput").value.trim();
+  var paidByStr = document.getElementById("expModalPaidByToInput").value.trim();
+  var modeStr = document.getElementById("expModalModeInput").value;
+  var amtNum = Number(document.getElementById("expModalAmountInput").value) || 0;
+
+  if (!partStr || amtNum <= 0) {
+    showMsg("ध्यान दें", "कृपया खर्च का विवरण और मान्य राशि दर्ज करें।", false);
+    return;
+  }
+
+  var extraRows = document.querySelectorAll(".extra-exp-item-row");
+  var payload = {
+    expenseId: editId,
+    colId: colId,
+    madTitle: madTitle,
+    date: dateStr,
+    category: catStr,
+    particulars: partStr,
+    paidByTo: paidByStr,
+    paymentMode: modeStr,
+    amount: amtNum
+  };
+
+  if (!editId && extraRows.length > 0) {
+    var items = [{
+      date: dateStr,
+      category: catStr,
+      particulars: partStr,
+      paidByTo: paidByStr,
+      paymentMode: modeStr,
+      amount: amtNum
+    }];
+    for (var i = 0; i < extraRows.length; i++) {
+      var pIn = extraRows[i].querySelector(".extra-exp-part-input");
+      var cIn = extraRows[i].querySelector(".extra-exp-cat-input");
+      var aIn = extraRows[i].querySelector(".extra-exp-amt-input");
+      if (pIn && aIn && pIn.value.trim() && Number(aIn.value) > 0) {
+        items.push({
+          date: dateStr,
+          category: cIn ? cIn.value : catStr,
+          particulars: pIn.value.trim(),
+          paidByTo: paidByStr,
+          paymentMode: modeStr,
+          amount: Number(aIn.value)
+        });
+      }
+    }
+    payload.items = items;
+  }
+
+  showLoader("खर्च कैशबुक में सुरक्षित किया जा रहा है...");
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    if (res && res.success) {
+      closeModal("addEditExpenseModal");
+      if (res.unionIncomeData) cachedUnionIncomeData = res.unionIncomeData;
+      currentCashbookMadId = colId;
+      renderExpenseCashbookMasterView();
+      renderUnionIncomeMasterView();
+      showMsg("कैशबुक अपडेट सफल!", res.message, true);
+    } else {
+      showMsg("त्रुटि", (res ? res.message : "खर्च सेव नहीं हो सका"), false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("सर्वर त्रुटि", err.toString(), false);
+  }).saveUnionExpenseSecure(adminSessionToken, payload);
+}
+
+function handleDeleteUnionExpense(expenseId) {
+  if (!adminSessionToken || !expenseId) return;
+  showLoader("खर्च प्रविष्टि हटाई जा रही है...");
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    if (res && res.success) {
+      if (res.unionIncomeData) cachedUnionIncomeData = res.unionIncomeData;
+      renderExpenseCashbookMasterView();
+      showMsg("हटाया गया", res.message, true);
+    } else {
+      showMsg("त्रुटि", (res ? res.message : "हटाया नहीं जा सका"), false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("सर्वर त्रुटि", err.toString(), false);
+  }).deleteUnionExpenseSecure(adminSessionToken, expenseId);
+}
+
+// Single Expense Official Voucher Modal
+function openSingleExpenseVoucherModal(expenseId) {
+  var fin = getMadWiseFinancialSummaryMap();
+  var found = null;
+  for (var i = 0; i < fin.expenses.length; i++) {
+    if (fin.expenses[i].expenseId === expenseId) {
+      found = fin.expenses[i];
+      break;
+    }
+  }
+  if (!found) return;
+
+  var pres = getDynamicPresidentObj();
+  var mObj = fin.madMap[found.colId] || {};
+  var madName = mObj.title || found.madTitle || "सामान्य यूनियन कोष";
+
+  var html = buildOfficialUnionLetterheadHTML(pres) +
+    '<div style="text-align:center; margin-bottom:10px;">' +
+      '<span style="background:#ea580c; color:#fff; padding:4px 16px; border-radius:20px; font-size:13px; font-weight:800;">🧾 आधिकारिक व्यय वाउचर (Official Expense Voucher)</span>' +
+    '</div>' +
+    '<div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; background:#fff7ed; padding:6px 10px; border:1px solid #fed7aa; border-radius:6px; margin-bottom:10px;">' +
+      '<span>वाउचर सं०: ' + escapeHtml(found.expenseId) + '</span>' +
+      '<span>खर्च दिनांक: ' + escapeHtml(found.date) + '</span>' +
+    '</div>' +
+    '<table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:12px;">' +
+      '<tr><td style="border:1px solid #cbd5e1; padding:7px; font-weight:700; width:38%; background:#f8fafc;">संबंधित मद (Source Fund):</td><td style="border:1px solid #cbd5e1; padding:7px; font-weight:800; color:#ea580c;">' + escapeHtml(madName) + '</td></tr>' +
+      '<tr><td style="border:1px solid #cbd5e1; padding:7px; font-weight:700; background:#f8fafc;">कहाँ / किस काम में खर्चा लगा:</td><td style="border:1px solid #cbd5e1; padding:7px; font-weight:800;">' + escapeHtml(found.particulars) + '</td></tr>' +
+      '<tr><td style="border:1px solid #cbd5e1; padding:7px; font-weight:700; background:#f8fafc;">खर्च श्रेणी (Category):</td><td style="border:1px solid #cbd5e1; padding:7px;">' + escapeHtml(found.category) + '</td></tr>' +
+      '<tr><td style="border:1px solid #cbd5e1; padding:7px; font-weight:700; background:#f8fafc;">किसके द्वारा / किसे भुगतान:</td><td style="border:1px solid #cbd5e1; padding:7px;">' + escapeHtml(found.paidByTo || "-") + '</td></tr>' +
+      '<tr><td style="border:1px solid #cbd5e1; padding:7px; font-weight:700; background:#f8fafc;">भुगतान माध्यम (Mode):</td><td style="border:1px solid #cbd5e1; padding:7px;">' + escapeHtml(found.paymentMode || "Cash") + '</td></tr>' +
+      '<tr style="background:#fef2f2;"><td style="border:1px solid #cbd5e1; padding:8px; font-weight:800;">कुल भुगतान राशि (Amount):</td><td style="border:1px solid #cbd5e1; padding:8px; font-weight:800; font-size:15px; color:#dc2626;">₹' + Number(found.amount || 0).toLocaleString("en-IN") + '/-</td></tr>' +
+    '</table>' +
+    '<div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:20px; padding-top:10px; border-top:1px dashed #cbd5e1; font-size:12px; font-weight:700;">' +
+      '<div>हस्ताक्षर ब्लॉक कोषाध्यक्ष</div>' +
+      '<div style="text-align:center;">(' + escapeHtml(pres.name) + ')<br><span style="color:#dc2626; font-size:11px;">' + escapeHtml(pres.designation) + ' - उतरौला</span></div>' +
+    '</div>';
+
+  document.getElementById("singleExpenseVoucherContent").innerHTML = html;
+  openModal("singleExpenseVoucherModal");
+}
+
+function printSingleExpenseVoucherPDF() {
+  var content = document.getElementById("singleExpenseVoucherContent").innerHTML;
+  var printArea = document.getElementById("printTemplateArea");
+  printArea.innerHTML = '<div style="padding:20px; max-width:650px; margin:0 auto; font-family:sans-serif;">' + content + '</div>';
+  window.print();
+}
+
+// 1-Click Mad-Wise Audit Statement PDF on Official Union Letterhead
+function printMadCashbookPDF(includeContributorsList) {
+  var fin = getMadWiseFinancialSummaryMap();
+  var cols = fin.cols;
+  var madMap = fin.madMap;
+  var pres = getDynamicPresidentObj();
+  var todayStr = getTodayFormattedDDMMYYYY();
+
+  var isSingleMad = (currentCashbookMadId !== "ALL" && madMap[currentCashbookMadId]);
+  var selMad = isSingleMad ? madMap[currentCashbookMadId] : null;
+
+  var madHeading = isSingleMad
+    ? (selMad.title + " (दिनांक: " + selMad.date + " | निर्धारित: ₹" + selMad.targetPerPs + "/PS)")
+    : ("समस्त यूनियन मद संयुक्त (" + cols.length + " मद)");
+
+  var totalIncome = isSingleMad ? selMad.collectedTotal : fin.grandIncome;
+  var totalExpense = isSingleMad ? selMad.spentTotal : fin.grandExpense;
+  var netBalance = isSingleMad ? selMad.balance : fin.grandBalance;
+  var paidPsCount = isSingleMad ? selMad.paidGpsCount : "-";
+
+  var madExpenses = [];
+  for (var i = 0; i < fin.expenses.length; i++) {
+    if (!isSingleMad || fin.expenses[i].colId === currentCashbookMadId) {
+      madExpenses.push(fin.expenses[i]);
+    }
+  }
+
+  var expTableHtml = '<h4 style="color:#7c2d12; font-size:13.5px; margin:12px 0 6px 0; border-bottom:2px solid #ea580c; padding-bottom:3px;">📋 भाग 1: कहाँ-कहाँ कितना खर्चा लगा (मद-वार व्यय विवरण तालिका)</h4>';
+  if (madExpenses.length === 0) {
+    expTableHtml += '<p style="font-size:12px; color:#475569; font-style:italic; padding:8px; border:1px dashed #94a3b8;">इस मद में अभी कोई खर्च प्रविष्टि दर्ज नहीं है।</p>';
+  } else {
+    expTableHtml += '<table style="width:100%; border-collapse:collapse; font-size:12px; color:#000; margin-bottom:12px;">' +
+      '<thead><tr style="background:#7c2d12; color:#fff;">' +
+        '<th style="border:1px solid #000; padding:6px; width:38px;">क्र.</th>' +
+        '<th style="border:1px solid #000; padding:6px; width:85px;">तारीख</th>' +
+        (!isSingleMad ? '<th style="border:1px solid #000; padding:6px; text-align:left;">मद का नाम</th>' : "") +
+        '<th style="border:1px solid #000; padding:6px; text-align:left;">कहाँ / किस काम में खर्चा लगा (विवरण)</th>' +
+        '<th style="border:1px solid #000; padding:6px; text-align:left;">श्रेणी</th>' +
+        '<th style="border:1px solid #000; padding:6px; text-align:left;">किसके द्वारा / किसे भुगतान</th>' +
+        '<th style="border:1px solid #000; padding:6px; width:75px;">माध्यम</th>' +
+        '<th style="border:1px solid #000; padding:6px; width:95px;">खर्च राशि (₹)</th>' +
+      '</tr></thead><tbody>';
+
+    for (var j = 0; j < madExpenses.length; j++) {
+      var ex = madExpenses[j];
+      var mTitle = (madMap[ex.colId] && madMap[ex.colId].title) ? madMap[ex.colId].title : (ex.madTitle || "-");
+      expTableHtml += '<tr>' +
+        '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold;">' + (j + 1) + '</td>' +
+        '<td style="border:1px solid #000; padding:5px; text-align:center;">' + escapeHtml(ex.date) + '</td>' +
+        (!isSingleMad ? ('<td style="border:1px solid #000; padding:5px; font-weight:bold;">' + escapeHtml(mTitle) + '</td>') : "") +
+        '<td style="border:1px solid #000; padding:5px; font-weight:bold;">' + escapeHtml(ex.particulars) + '</td>' +
+        '<td style="border:1px solid #000; padding:5px;">' + escapeHtml(ex.category) + '</td>' +
+        '<td style="border:1px solid #000; padding:5px;">' + escapeHtml(ex.paidByTo || "-") + '</td>' +
+        '<td style="border:1px solid #000; padding:5px; text-align:center;">' + escapeHtml(ex.paymentMode || "Cash") + '</td>' +
+        '<td style="border:1px solid #000; padding:5px; text-align:center; font-weight:bold; color:#dc2626;">₹' + Number(ex.amount || 0).toLocaleString("en-IN") + '</td>' +
+      '</tr>';
+    }
+
+    var spanCols = isSingleMad ? 6 : 7;
+    expTableHtml += '<tr style="background:#fef2f2; font-weight:800;">' +
+      '<td colspan="' + spanCols + '" style="border:1px solid #000; padding:6px; text-align:right;">इस मद में कुल खर्च योग (Total Spent):</td>' +
+      '<td style="border:1px solid #000; padding:6px; text-align:center; color:#dc2626; font-size:13px;">₹' + totalExpense.toLocaleString("en-IN") + '/-</td>' +
+    '</tr></tbody></table>';
+  }
+
+  // Optional Part 2: Verified Contributors List for this Mad
+  var contributorsHtml = "";
+  if (includeContributorsList) {
+    var activeCols = isSingleMad ? [selMad] : cols;
+    var paidRows = [];
+    for (var r = 0; r < fin.allRows.length; r++) {
+      var rw = fin.allRows[r];
+      var paidAmt = 0;
+      if (isSingleMad) {
+        paidAmt = Number((rw.payments && rw.payments[currentCashbookMadId]) || 0);
+      } else {
+        for (var cIdx = 0; cIdx < activeCols.length; cIdx++) {
+          paidAmt += Number((rw.payments && rw.payments[activeCols[cIdx].colId]) || 0);
+        }
+      }
+      if (paidAmt > 0) {
+        paidRows.push({ row: rw, paidAmt: paidAmt });
+      }
+    }
+
+    contributorsHtml = '<h4 style="color:#15803d; font-size:13.5px; margin:14px 0 6px 0; border-bottom:2px solid #16a34a; padding-bottom:3px;">🟢 भाग 2: इस मद में सहयोग राशि जमा करने वाली ग्राम पंचायतों की सूची (' + paidRows.length + ' GP)</h4>';
+    if (paidRows.length > 0) {
+      contributorsHtml += '<table style="width:100%; border-collapse:collapse; font-size:11.5px; color:#000; margin-bottom:12px;">' +
+        '<thead><tr style="background:#15803d; color:#fff;">' +
+          '<th style="border:1px solid #000; padding:5px; width:38px;">क्र.</th>' +
+          '<th style="border:1px solid #000; padding:5px; text-align:left;">क्लस्टर</th>' +
+          '<th style="border:1px solid #000; padding:5px; text-align:left;">ग्राम पंचायत</th>' +
+          '<th style="border:1px solid #000; padding:5px; text-align:left;">पंचायत सहायक का नाम</th>' +
+          '<th style="border:1px solid #000; padding:5px; width:95px;">मोबाइल</th>' +
+          '<th style="border:1px solid #000; padding:5px; width:95px;">जमा राशि (₹)</th>' +
+        '</tr></thead><tbody>';
+      for (var p = 0; p < paidRows.length; p++) {
+        var pr = paidRows[p];
+        contributorsHtml += '<tr>' +
+          '<td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;">' + (p + 1) + '</td>' +
+          '<td style="border:1px solid #000; padding:4px;">' + escapeHtml(pr.row.clusterName) + '</td>' +
+          '<td style="border:1px solid #000; padding:4px; font-weight:bold;">' + escapeHtml(pr.row.gramPanchayat) + '</td>' +
+          '<td style="border:1px solid #000; padding:4px;">' + escapeHtml(pr.row.psName || "-") + '</td>' +
+          '<td style="border:1px solid #000; padding:4px; text-align:center;">' + escapeHtml(pr.row.psMobile || "-") + '</td>' +
+          '<td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold; color:#15803d;">₹' + pr.paidAmt + '</td>' +
+        '</tr>';
+      }
+      contributorsHtml += '</tbody></table>';
+    }
+  }
+
+  var fullPdf = '<div style="padding:14px; font-family:sans-serif; color:#000;">' +
+    buildOfficialUnionLetterheadHTML(pres) +
+    '<div style="text-align:center; margin-bottom:10px;">' +
+      '<span style="background:#7c2d12; color:#fff; padding:5px 18px; border-radius:20px; font-size:14px; font-weight:800;">📊 मद-वार आय, व्यय एवं शेष बचत का आधिकारिक हिसाब (Audit Statement)</span>' +
+    '</div>' +
+    '<div style="display:flex; justify-content:space-between; background:#fff7ed; border:1px solid #fdba74; padding:8px 12px; border-radius:6px; font-size:12.5px; font-weight:bold; margin-bottom:10px;">' +
+      '<span>📌 चयनित मद: ' + escapeHtml(madHeading) + '</span>' +
+      '<span>📅 दिनांक: ' + todayStr + '</span>' +
+    '</div>' +
+    '<table style="width:100%; border-collapse:collapse; margin-bottom:14px; text-align:center; font-size:13px;">' +
+      '<tr>' +
+        '<td style="border:1.5px solid #16a34a; background:#f0fdf4; padding:10px; width:33%;">' +
+          '<div style="font-size:11.5px; font-weight:bold; color:#15803d;">🟢 इस मद में कुल प्राप्त राशि</div>' +
+          '<div style="font-size:18px; font-weight:800; color:#16a34a; margin-top:2px;">₹' + totalIncome.toLocaleString("en-IN") + '/-</div>' +
+          (isSingleMad ? ('<div style="font-size:10.5px; color:#15803d;">(' + paidPsCount + ' पंचायत सहायकों से)</div>') : "") +
+        '</td>' +
+        '<td style="border:1.5px solid #dc2626; background:#fef2f2; padding:10px; width:33%;">' +
+          '<div style="font-size:11.5px; font-weight:bold; color:#b91c1c;">🔴 इस मद में कुल खर्च राशि</div>' +
+          '<div style="font-size:18px; font-weight:800; color:#dc2626; margin-top:2px;">₹' + totalExpense.toLocaleString("en-IN") + '/-</div>' +
+          '<div style="font-size:10.5px; color:#b91c1c;">(कुल ' + madExpenses.length + ' मदों/कामों में खर्च)</div>' +
+        '</td>' +
+        '<td style="border:1.5px solid #2563eb; background:#eff6ff; padding:10px; width:34%;">' +
+          '<div style="font-size:11.5px; font-weight:bold; color:#1e40af;">🏦 इस मद में शेष बचा पैसा (बचत)</div>' +
+          '<div style="font-size:18px; font-weight:800; color:#2563eb; margin-top:2px;">₹' + netBalance.toLocaleString("en-IN") + '/-</div>' +
+          '<div style="font-size:10.5px; color:#1e40af;">(कुल प्राप्त − कुल खर्च)</div>' +
+        '</td>' +
+      '</tr>' +
+    '</table>' +
+    expTableHtml +
+    contributorsHtml +
+    '<div style="display:flex; justify-content:space-between; margin-top:26px; padding-top:10px; font-size:12.5px; font-weight:bold;">' +
+      '<div>हस्ताक्षर ब्लॉक कोषाध्यक्ष (उतरौला)</div>' +
+      '<div style="text-align:center;">(' + escapeHtml(pres.name) + ')<br>' + escapeHtml(pres.designation) + ' - विकास खण्ड उतरौला</div>' +
+    '</div>' +
+  '</div>';
+
+  var printArea = document.getElementById("printTemplateArea");
+  printArea.innerHTML = fullPdf;
+  window.print();
+}
+
+// 1-Click Mad-Wise WhatsApp Hisab Broadcast Modal
+function openMadHisabWhatsAppModal() {
+  var fin = getMadWiseFinancialSummaryMap();
+  var cols = fin.cols;
+  var sel = document.getElementById("waHisabMadSelect");
+  if (sel) {
+    sel.innerHTML = '<option value="ALL">🌐 सभी मदों का संयुक्त हिसाब (' + cols.length + ' मद)</option>';
+    for (var i = 0; i < cols.length; i++) {
+      var c = cols[i];
+      var m = fin.madMap[c.colId];
+      var opt = document.createElement("option");
+      opt.value = c.colId;
+      opt.textContent = "📌 " + c.title + " (" + c.date + ") — आया: ₹" + m.collectedTotal + " | खर्च: ₹" + m.spentTotal + " | बचा: ₹" + m.balance;
+      sel.appendChild(opt);
+    }
+    sel.value = currentCashbookMadId;
+  }
+  refreshMadHisabWhatsAppText();
+  openModal("madHisabWhatsAppModal");
+}
+
+function refreshMadHisabWhatsAppText() {
+  var fin = getMadWiseFinancialSummaryMap();
+  var selMadId = document.getElementById("waHisabMadSelect") ? document.getElementById("waHisabMadSelect").value : currentCashbookMadId;
+  var includeContrib = document.getElementById("waHisabIncludeContributorsChk") ? document.getElementById("waHisabIncludeContributorsChk").checked : false;
+  var pres = getDynamicPresidentObj();
+
+  var isSingle = (selMadId !== "ALL" && fin.madMap[selMadId]);
+  var selMad = isSingle ? fin.madMap[selMadId] : null;
+
+  var madHeading = isSingle
+    ? (selMad.title + " (दिनांक: " + selMad.date + " | निर्धारित: ₹" + selMad.targetPerPs + ")")
+    : ("समस्त यूनियन सहयोग मद (" + fin.cols.length + " मद संयुक्त)");
+
+  var totalInc = isSingle ? selMad.collectedTotal : fin.grandIncome;
+  var totalExp = isSingle ? selMad.spentTotal : fin.grandExpense;
+  var netBal = isSingle ? selMad.balance : fin.grandBalance;
+
+  var madExpenses = [];
+  for (var i = 0; i < fin.expenses.length; i++) {
+    if (!isSingle || fin.expenses[i].colId === selMadId) {
+      madExpenses.push(fin.expenses[i]);
+    }
+  }
+
+  var lines = [
+    "🏛️ *पंचायत सहायक कर्मचारी यूनियन - विकास खण्ड उतरौला (बलरामपुर)*",
+    "📊 *मद-वार आय, खर्च एवं बचत का पारदर्शी हिसाब*",
+    "──────────────────────",
+    "📌 *मद का नाम:* " + madHeading,
+    "🗓 *दिनांक:* " + getTodayFormattedDDMMYYYY(),
+    "──────────────────────",
+    "🟢 *इस मद में कुल प्राप्त सहयोग राशि:* ₹" + totalInc + (isSingle ? (" (" + selMad.paidGpsCount + " पंचायत सहायकों से)") : ""),
+    "🔴 *इस मद में कुल हुआ खर्चा:* ₹" + totalExp,
+    "🏦 *इस मद में शेष बचा पैसा (शुद्ध बचत):* ₹" + netBal,
+    "──────────────────────"
+  ];
+
+  if (madExpenses.length > 0) {
+    lines.push("🧾 *कहाँ-कहाँ कितना खर्चा लगा (क्रमवार खर्च विवरण):*");
+    for (var j = 0; j < madExpenses.length; j++) {
+      var ex = madExpenses[j];
+      var byTxt = ex.paidByTo ? (" [" + ex.paidByTo + "]") : "";
+      lines.push((j + 1) + ". *" + ex.particulars + "* (" + ex.date + ")" + byTxt + " — *₹" + ex.amount + "*");
+    }
+    lines.push("──────────────────────");
+    lines.push("*कुल खर्च योग:* ₹" + totalExp + " | *शेष बचा फंड:* ₹" + netBal);
+  } else {
+    lines.push("ℹ️ *इस मद में अभी कोई खर्च दर्ज नहीं हुआ है। संपूर्ण ₹" + totalInc + " यूनियन कोष में सुरक्षित है।*");
+  }
+
+  if (includeContrib) {
+    lines.push("");
+    lines.push("✅ *इस मद में सहयोग राशि जमा करने वाले साथी:*");
+    var pCount = 0;
+    for (var r = 0; r < fin.allRows.length; r++) {
+      var rw = fin.allRows[r];
+      var pVal = 0;
+      if (isSingle) {
+        pVal = Number((rw.payments && rw.payments[selMadId]) || 0);
+      } else {
+        for (var c = 0; c < fin.cols.length; c++) {
+          pVal += Number((rw.payments && rw.payments[fin.cols[c].colId]) || 0);
+        }
+      }
+      if (pVal > 0) {
+        pCount++;
+        lines.push(pCount + ". " + rw.gramPanchayat + " (" + (rw.psName || "-") + ") — ₹" + pVal);
+      }
+    }
+  }
+
+  lines.push(
+    "──────────────────────",
+    "– *" + pres.name + "* (" + pres.designation + ", उतरौला)",
+    "📞 मो०: " + pres.mobile
+  );
+
+  var fullMsg = lines.join("\n");
+  document.getElementById("waHisabPreviewText").value = fullMsg;
+  document.getElementById("btnShareMadHisabWa").href = "https://api.whatsapp.com/send?text=" + encodeURIComponent(fullMsg);
+}
+
+function exportMadCashbookToCSV() {
+  var fin = getMadWiseFinancialSummaryMap();
+  var isSingle = (currentCashbookMadId !== "ALL" && fin.madMap[currentCashbookMadId]);
+  var csv = "क्र.,वाउचर नं.,तारीख,मद का नाम,कहाँ / किस काम में खर्चा लगा,श्रेणी,किसके द्वारा / किसे भुगतान,माध्यम,खर्च राशि (₹)\n";
+  var idx = 0;
+  for (var i = 0; i < fin.expenses.length; i++) {
+    var ex = fin.expenses[i];
+    if (isSingle && ex.colId !== currentCashbookMadId) continue;
+    idx++;
+    var mName = (fin.madMap[ex.colId] && fin.madMap[ex.colId].title) ? fin.madMap[ex.colId].title : (ex.madTitle || "सामान्य कोष");
+    csv += [
+      idx,
+      csvCell(ex.expenseId),
+      csvCell(ex.date),
+      csvCell(mName),
+      csvCell(ex.particulars),
+      csvCell(ex.category),
+      csvCell(ex.paidByTo),
+      csvCell(ex.paymentMode),
+      Number(ex.amount || 0)
+    ].join(",") + "\n";
+  }
+  downloadCSVFile(csv, "Utraula_Union_Mad_Wise_Expense_Cashbook.csv");
 }
 
 </script>
