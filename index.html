@@ -5,13 +5,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#1e3a8a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="पंचायत सहायक कर्मचारी यूनियन - विकास खण्ड उतरौला, जनपद बलरामपुर (उ०प्र०) का आधिकारिक डिजिटल पोर्टल।">
+  <link rel="manifest" href='data:application/manifest+json,{"name":"पंचायत सहायक यूनियन उतरौला","short_name":"PSK Union","start_url":".","display":"standalone","background_color":"#0f172a","theme_color":"#1e3a8a"}'>
   <title>पंचायत सहायक कर्मचारी यूनियन - उतरौला, बलरामपुर</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Tiro+Devanagari+Hindi:ital@0;1&family=Yatra+One&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Rozha+One&family=Tiro+Devanagari+Hindi:ital@0;1&family=Yatra+One&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script defer src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
@@ -37,7 +43,7 @@
     }
 
     body {
-      font-family: 'Tiro Devanagari Hindi', 'Poppins', sans-serif;
+      font-family: 'Noto Sans Devanagari', 'Poppins', 'Tiro Devanagari Hindi', sans-serif;
       background: var(--bg-gradient);
       color: var(--text-main);
       padding: 8px;
@@ -961,14 +967,74 @@ body.modal-open {
     font-weight: 700;
   }
 
+
+  /* ================= MODERN RESPONSIVE, DARK-MODE & SMOOTH UI FIXES ================= */
+  .table-responsive, .union-matrix-table-wrap {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  button, .ps-tab-btn, .admin-tab-btn, .btn-submit {
+    transition: transform 0.14s ease, box-shadow 0.16s ease, opacity 0.16s ease;
+  }
+  button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  /* Dark Mode overrides for inline light backgrounds & dark text (excluding printable paper cards) */
+  body.dark-mode .form-card:not(#generatedLetterCard) [style*="background:#f8fafc"],
+  body.dark-mode .form-card:not(#generatedLetterCard) [style*="background: #f8fafc"],
+  body.dark-mode .form-card:not(#generatedLetterCard) [style*="background:#eff6ff"],
+  body.dark-mode .form-card:not(#generatedLetterCard) [style*="background: #eff6ff"],
+  body.dark-mode .form-card:not(#generatedLetterCard) [style*="background:#fffbeb"],
+  body.dark-mode .form-card:not(#generatedLetterCard) [style*="background: #fffbeb"],
+  body.dark-mode .form-card:not(#generatedLetterCard) [style*="background:#f0fdf4"],
+  body.dark-mode .form-card:not(#generatedLetterCard) [style*="background: #f0fdf4"],
+  body.dark-mode .modal-box [style*="background:#f8fafc"],
+  body.dark-mode .modal-box [style*="background: #f8fafc"],
+  body.dark-mode .modal-box [style*="background:#eff6ff"],
+  body.dark-mode .modal-box [style*="background: #eff6ff"] {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-color: #334155 !important;
+  }
+  body.dark-mode #unionIdCardVisual,
+  body.dark-mode #leaveLetterContent,
+  body.dark-mode #memoPreviewPaper,
+  body.dark-mode #incomeReceiptPrintArea,
+  body.dark-mode #expenseVoucherPrintArea {
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+  @media (max-width: 768px) {
+    .modal-box, .custom-modal-card {
+      width: 96% !important;
+      max-width: 96vw !important;
+      padding: 14px !important;
+      margin: 10px auto !important;
+    }
+    .form-card [style*="min-width: 240px"],
+    .form-card [style*="min-width:240px"],
+    .form-card [style*="min-width: 260px"],
+    .form-card [style*="min-width:260px"],
+    .form-card [style*="min-width: 280px"],
+    .form-card [style*="min-width:280px"],
+    .form-card [style*="min-width: 300px"],
+    .form-card [style*="min-width:300px"],
+    .form-card [style*="min-width: 320px"],
+    .form-card [style*="min-width:320px"] {
+      min-width: 100% !important;
+    }
+    #unionIdCardVisual {
+      max-width: 100% !important;
+    }
+  }
   </style>
 
   <!-- तारीख को हमेशा 31/08/2026 (DD/MM/YYYY) फ़ॉर्मेट में दिखाने के लिए -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <!-- Advanced Crop Library (Cropper.js) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </head>
 <body>
 
@@ -3762,11 +3828,11 @@ function formatDateToIndian(dateVal) {
         verifyPSLogin: function(email, mobile, isSessionRestore) { this._callApi('verifyPSLogin', { email: email, mobile: mobile, isSessionRestore: !!isSessionRestore }, [email, mobile, !!isSessionRestore]); },
         loginAdminSecure: function(userId, password) { this._callApi('loginAdminSecure', { userId: userId, password: password }, [userId, password]); },
         logoutAdminSecure: function(token) { this._callApi('logoutAdminSecure', { token: token }, [token]); },
-        getAdminDashboardDataSecure: function(token) { this._callApi('getAdminDashboardDataSecure', { token: token }, [token]); },
+        getAdminDashboardDataSecure: function(token, bypassCache) { this._callApi('getAdminDashboardDataSecure', { token: token, bypassCache: !!bypassCache }, [token, !!bypassCache]); },
         processNewRegistration: function(data) { this._callApi('processNewRegistration', data, [data]); },
         processMainSurveyForm: function(data) { this._callApi('processMainSurveyForm', data, [data]); },
         submitGrievanceTicket: function(data) { this._callApi('submitGrievanceTicket', data, [data]); },
-        getPsGrievanceTickets: function(email) { this._callApi('getPsGrievanceTickets', { email: email }, [email]); },
+        getPsGrievanceTickets: function(email, psToken) { this._callApi('getPsGrievanceTickets', { email: email, psToken: psToken || '' }, [email, psToken || '']); },
         submitLeaveApplication: function(data) { this._callApi('submitLeaveApplication', data, [data]); },
         getEventDetailsForScan: function(eventId) { this._callApi('getEventDetailsForScan', { eventId: eventId }, [eventId]); },
         submitQRAttendance: function(eventId, email, mobile) { this._callApi('submitQRAttendance', { eventId: eventId, email: email, mobile: mobile }, [eventId, email, mobile]); },
@@ -3928,6 +3994,39 @@ function formatDateToIndian(dateVal) {
       .replace(/'/g, "&#039;");
   }
 
+  // 0ms इन-ब्राउज़र ऑफ़लाइन QR जनरेटर (बाहरी API या धीमे इंटरनेट पर निर्भरता खत्म)
+  function generateInstantQrDataUrl(qrText, sizePx) {
+    var targetSize = sizePx || 240;
+    try {
+      if (typeof qrcode === "function") {
+        var qr = qrcode(0, "M");
+        qr.addData(unescape(encodeURIComponent(String(qrText || ""))));
+        qr.make();
+        var count = qr.getModuleCount();
+        var marginModules = 2;
+        var totalModules = count + marginModules * 2;
+        var cellSize = Math.max(2, Math.floor(targetSize / totalModules));
+        var canvasSize = totalModules * cellSize;
+        var c = document.createElement("canvas");
+        c.width = canvasSize;
+        c.height = canvasSize;
+        var ctx = c.getContext("2d");
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvasSize, canvasSize);
+        ctx.fillStyle = "#0f172a";
+        for (var r = 0; r < count; r++) {
+          for (var col = 0; col < count; col++) {
+            if (qr.isDark(r, col)) {
+              ctx.fillRect((col + marginModules) * cellSize, (r + marginModules) * cellSize, cellSize, cellSize);
+            }
+          }
+        }
+        return c.toDataURL("image/png");
+      }
+    } catch (e) {}
+    return "https://api.qrserver.com/v1/create-qr-code/?size=" + targetSize + "x" + targetSize + "&margin=8&data=" + encodeURIComponent(String(qrText || ""));
+  }
+
   function showLoader(message) {
   var loader = document.getElementById('globalAppLoader');
   var textElem = document.getElementById('globalLoaderText');
@@ -3958,36 +4057,65 @@ function hideLoader() {
       return;
     }
 
-    // 2. ऑटो-रिस्टोर: एडमिन पोर्टल सेशन चेक करें
+    // 2. ऑटो-रिस्टोर: एडमिन पोर्टल सेशन चेक करें (0ms Instant Cache + Background Verification)
     var savedAdminToken = safeGetStorage(sessionStorage, 'psk_admin_token');
     var activeView = safeGetStorage(sessionStorage, 'psk_active_view');
 
     if (activeView === 'admin' && savedAdminToken) {
       adminSessionToken = savedAdminToken;
-      showLoader("एडमिन सत्र पुनः लोड हो रहा है...");
+      var cachedAdmStr = safeGetStorage(sessionStorage, 'psk_admin_dashboard_fast_cache');
+      var admRenderedFast = false;
+      if (cachedAdmStr) {
+        try {
+          var cachedAdmRes = JSON.parse(cachedAdmStr);
+          if (cachedAdmRes && cachedAdmRes.success && cachedAdmRes.stats) {
+            restoreAdminDashboard(cachedAdmRes, true);
+            var lastAdminTabFast = safeGetStorage(sessionStorage, 'psk_admin_tab') || 'survey';
+            switchAdminTab(lastAdminTabFast);
+            admRenderedFast = true;
+          }
+        } catch (e) {}
+      }
+      if (!admRenderedFast) {
+        showLoader("एडमिन सत्र पुनः लोड हो रहा है...");
+      }
       google.script.run.withSuccessHandler(function(res) {
+        hideLoader();
         if (res && res.success) {
-          restoreAdminDashboard(res);
+          restoreAdminDashboard(res, admRenderedFast);
           var lastAdminTab = safeGetStorage(sessionStorage, 'psk_admin_tab') || 'survey';
-          switchAdminTab(lastAdminTab);
-          hideLoader();
+          if (!admRenderedFast) switchAdminTab(lastAdminTab);
         } else {
-          hideLoader();
           logoutAdmin();
         }
       }).withFailureHandler(function() {
         hideLoader();
-        logoutAdmin();
+        if (!admRenderedFast) logoutAdmin();
       }).getAdminDashboardDataSecure(savedAdminToken);
       return;
     }
 
-    // 3. ऑटो-रिस्टोर: पंचायत सहायक (PS) पोर्टल सेशन चेक करें
+    // 3. ऑटो-रिस्टोर: पंचायत सहायक (PS) पोर्टल सेशन चेक करें (0ms Instant Cache + Background Sync)
     var savedPsEmail = safeGetStorage(sessionStorage, 'psk_ps_email');
     var savedPsAuth = safeGetStorage(sessionStorage, 'psk_ps_token') || safeGetStorage(sessionStorage, 'psk_ps_mobile');
 
     if (activeView === 'ps' && savedPsEmail && savedPsAuth) {
-      showLoader("पंचायत सहायक पोर्टल पुनः लोड हो रहा है...");
+      var cachedPsResStr = safeGetStorage(sessionStorage, 'psk_ps_portal_fast_cache');
+      var renderedFromFastCache = false;
+      if (cachedPsResStr) {
+        try {
+          var cachedPsRes = JSON.parse(cachedPsResStr);
+          if (cachedPsRes && cachedPsRes.success && cachedPsRes.userData) {
+            restorePsPortal(cachedPsRes);
+            var lastPsTabFast = safeGetStorage(sessionStorage, 'psk_ps_tab') || getDefaultEnabledPsTab();
+            switchPsTab(lastPsTabFast);
+            renderedFromFastCache = true;
+          }
+        } catch (e) {}
+      }
+      if (!renderedFromFastCache) {
+        showLoader("पंचायत सहायक पोर्टल पुनः लोड हो रहा है...");
+      }
       google.script.run.withSuccessHandler(function(res) {
         hideLoader();
         if (res && res.success && res.isApproved) {
@@ -3995,15 +4123,16 @@ function hideLoader() {
             safeSetStorage(sessionStorage, 'psk_ps_token', res.psSessionToken);
             safeRemoveStorage(sessionStorage, 'psk_ps_mobile');
           }
+          safeSetStorage(sessionStorage, 'psk_ps_portal_fast_cache', JSON.stringify(res));
           restorePsPortal(res);
           var lastPsTab = safeGetStorage(sessionStorage, 'psk_ps_tab') || getDefaultEnabledPsTab();
-          switchPsTab(lastPsTab);
+          if (!renderedFromFastCache) switchPsTab(lastPsTab);
         } else {
           logoutPS();
         }
       }).withFailureHandler(function() {
         hideLoader();
-        logoutPS();
+        if (!renderedFromFastCache) logoutPS();
       }).verifyPSLogin(savedPsEmail, savedPsAuth, true);
       return;
     }
@@ -4230,9 +4359,6 @@ function openAdminLoginModal() {
     } else {
       applyPsPortalConfigToUI(cachedPsPortalConfig);
     }
-    if (res.psPortalConfig && res.psPortalConfig.length > 0) {
-      applyPsPortalConfigToUI(res.psPortalConfig);
-    }
     document.getElementById('homeGpCount').innerText = res.stats.totalGramPanchayat;
     document.getElementById('homeAppointedPsCount').innerText = res.stats.totalAppointedPS;
     document.getElementById('homePortalRegisteredCount').innerText = res.stats.totalRegisteredPS;
@@ -4273,6 +4399,13 @@ function openAdminLoginModal() {
     }
   }
 
+  function formatNoticeSafeHtml(rawText) {
+    var safe = escapeHtml(rawText || "");
+    // URLs को ऑटोमैटिक क्लिकेबल लिंक बनाएं
+    safe = safe.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:#2563eb; font-weight:700; text-decoration:underline;">$1</a>');
+    return safe;
+  }
+
   function renderNoticesHTML(containerId, notices) {
     var c = document.getElementById(containerId);
     if (!c) return;
@@ -4281,12 +4414,19 @@ function openAdminLoginModal() {
       c.innerHTML = '<div class="notice-item" style="font-style:italic; text-align:center;">कोई नया नोटिस उपलब्ध नहीं है।</div>';
       return;
     }
+    var presInfo = getDynamicPresidentObj();
     var frag = document.createDocumentFragment();
     for (var i = 0; i < notices.length; i++) {
       var n = notices[i];
       var div = document.createElement('div');
       div.className = 'notice-item';
-      div.innerHTML = '<div><i class="fa-solid fa-bullhorn" style="color:#2563eb; margin-right:6px;"></i> ' + escapeHtml(n.noticeText) + '<div class="notice-date"><i class="fa-regular fa-clock"></i> ' + escapeHtml(n.timestamp) + '</div></div>';
+      var waShareText = "📢 *पंचायत सहायक कर्मचारी यूनियन - उतरौला (बलरामपुर)*\n\n📌 *सूचना:*\n" + (n.noticeText || "") + "\n\n🗓 *दिनांक:* " + (n.timestamp || "") + "\n– *" + presInfo.name + " (" + presInfo.designation + ")*";
+      var waUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(waShareText);
+      div.innerHTML = '<div style="white-space:pre-line; line-height:1.65; word-break:break-word;"><i class="fa-solid fa-bullhorn" style="color:#2563eb; margin-right:6px;"></i> ' + formatNoticeSafeHtml(n.noticeText) +
+        '<div class="notice-date" style="white-space:normal; margin-top:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">' +
+          '<span><i class="fa-regular fa-clock"></i> ' + escapeHtml(n.timestamp) + '</span>' +
+          '<a href="' + waUrl + '" target="_blank" style="color:#16a34a; font-weight:700; text-decoration:none; font-size:11.5px; background:rgba(22,163,74,0.1); padding:2px 8px; border-radius:12px;"><i class="fa-brands fa-whatsapp"></i> शेयर करें</a>' +
+        '</div></div>';
       frag.appendChild(div);
     }
     c.appendChild(frag);
@@ -4315,6 +4455,7 @@ function openAdminLoginModal() {
 
   // PS डेटा लोड करने का हेल्पर फ़ंक्शन (रीफ़्रेश और लॉगिन दोनों के लिए)
   function restorePsPortal(res) {
+    try { if (res && res.userData) safeSetStorage(sessionStorage, 'psk_ps_portal_fast_cache', JSON.stringify(res)); } catch(e) {}
     window.scrollTo({ top: 0, behavior: 'smooth' });
     loggedInPsUser = res.userData;
     loggedInPsUser.alreadySubmitted = res.alreadySubmitted;
@@ -4612,6 +4753,7 @@ function openAdminLoginModal() {
     safeRemoveStorage(sessionStorage, 'psk_ps_email');
     safeRemoveStorage(sessionStorage, 'psk_ps_mobile');
     safeRemoveStorage(sessionStorage, 'psk_ps_token');
+    safeRemoveStorage(sessionStorage, 'psk_ps_portal_fast_cache');
     safeRemoveStorage(sessionStorage, 'psk_active_view');
     safeRemoveStorage(sessionStorage, 'psk_ps_tab');
     safeRemoveStorage(localStorage, 'psUserLoggedIn');
@@ -4793,12 +4935,22 @@ function openAdminLoginModal() {
       if (showFeedback) showMsg("अवकाश दर्ज है", "आपका यह अवकाश आवेदन पोर्टल पर पहले ही सुरक्षित हो चुका है।", false);
       return;
     }
-    lastSubmittedLeaveKey = sig;
-    if (badge) badge.style.display = 'inline-block';
     if (typeof google !== 'undefined' && google.script && google.script.run) {
       google.script.run.withSuccessHandler(function(res) {
+        if (res && res.success) {
+          lastSubmittedLeaveKey = sig;
+          if (badge) badge.style.display = 'inline-block';
+        }
         if (showFeedback) {
-          showMsg("अवकाश दर्ज हुआ", (res && res.message) ? res.message : "आपका अवकाश रिकॉर्ड एडमिन पोर्टल पर सुरक्षित कर दिया गया है।", false);
+          showMsg(
+            (res && res.success) ? "अवकाश दर्ज हुआ" : "ध्यान दें",
+            (res && res.message) ? res.message : "आपका अवकाश रिकॉर्ड एडमिन पोर्टल पर सुरक्षित कर दिया गया है।",
+            false
+          );
+        }
+      }).withFailureHandler(function() {
+        if (showFeedback) {
+          showMsg("नेटवर्क त्रुटि", "सर्वर से संपर्क नहीं हो सका। कृपया पुनः प्रयास करें।", false);
         }
       }).submitLeaveApplication(currentLeaveDraftPayload);
     }
@@ -4971,7 +5123,9 @@ function openAdminLoginModal() {
     saveCurrentLeaveToSheetOnce();
     var content = document.getElementById('leaveLetterContent').innerHTML;
     var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>" +
-      "<head><meta charset='utf-8'><title>Leave Application</title><style>body{font-family:'Arial', sans-serif; line-height:1.8;}</style></head><body>";
+      "<head><meta charset='utf-8'><title>Leave Application</title>" +
+      "<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml><![endif]-->" +
+      "<style>@page{size:21cm 29.7cm; margin:2cm;} body{font-family:'Noto Sans Devanagari','Mangal','Nirmala UI','Arial',sans-serif; font-size:12pt; line-height:1.8; color:#000000;}</style></head><body>";
     var footer = "</body></html>";
     var sourceHTML = header + content + footer;
 
@@ -4989,8 +5143,11 @@ function openAdminLoginModal() {
   // ================= ADMIN DASHBOARD JS =================
 
   // 1. एडमिन डैशबोर्ड डेटा लोड करने का हेल्पर फ़ंक्शन (रीफ़्रेश और लॉगिन दोनों के लिए)
-  function restoreAdminDashboard(res) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  function restoreAdminDashboard(res, isSilentRefresh) {
+    try { if (res && res.success && res.stats) safeSetStorage(sessionStorage, 'psk_admin_dashboard_fast_cache', JSON.stringify(res)); } catch(e) {}
+    if (!isSilentRefresh) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     document.getElementById('publicFormView').style.display = 'none';
     document.getElementById('adminDashboardView').style.display = 'block';
 
@@ -5047,18 +5204,40 @@ function openAdminLoginModal() {
     }
 
     initCharts(res.stats);
-    renderAdminTable(cachedSurveyRecords);
-    renderRegisteredTable(cachedAllRegistrations);
-    renderClusterTable(cachedClusterRecords);
-    renderLoginLogsTable(cachedLoginLogs);
+    if (isSilentRefresh && document.getElementById('surveySearchInput') && document.getElementById('surveySearchInput').value.trim()) {
+      filterAdminTable();
+    } else {
+      renderAdminTable(cachedSurveyRecords);
+    }
+    if (isSilentRefresh && document.getElementById('regSearchInput') && document.getElementById('regSearchInput').value.trim()) {
+      filterRegisteredTable();
+    } else {
+      renderRegisteredTable(cachedAllRegistrations);
+    }
+    if (isSilentRefresh && document.getElementById('clusterSearchInput') && document.getElementById('clusterSearchInput').value.trim()) {
+      filterClusterTable();
+    } else {
+      renderClusterTable(cachedClusterRecords);
+    }
+    if (isSilentRefresh && document.getElementById('loginLogSearchInput') && document.getElementById('loginLogSearchInput').value.trim()) {
+      filterLoginLogsTable();
+    } else {
+      renderLoginLogsTable(cachedLoginLogs);
+    }
     renderPendingTable(cachedPendingRegs);
-    renderAdminNoticesTable(cachedAdminNotices);
+    if (isSilentRefresh && document.getElementById('noticeSearchInput') && document.getElementById('noticeSearchInput').value.trim()) {
+      filterAdminNoticesTable();
+    } else {
+      renderAdminNoticesTable(cachedAdminNotices);
+    }
     renderAdminGrievancesTable(cachedAdminGrievances);
     populateEventFilterDropdown(cachedAdminEvents);
     renderAdminAttendanceTable(cachedAdminAttendance);
-    renderAdminLeaveTable(cachedAdminLeaves);
-    
-    // 3. फोटो लॉग्स की टेबल रेंडर करना
+    if (isSilentRefresh && document.getElementById('leaveSearchInput') && document.getElementById('leaveSearchInput').value.trim()) {
+      filterAdminLeaveTable();
+    } else {
+      renderAdminLeaveTable(cachedAdminLeaves);
+    }
     renderImageLogsTable(cachedAdminImageLogs);
 
     var adminNotifs = [];
@@ -5117,15 +5296,17 @@ function openAdminLoginModal() {
     }).loginAdminSecure(u, p);
   }
 
-  function loadAdminDashboardData() {
+  function loadAdminDashboardData(isSilent) {
     if (!adminSessionToken) return;
-    showLoader("डेटा रीफ़्रेश हो रहा है...");
+    if (!isSilent) showLoader("डेटा रीफ़्रेश हो रहा है...");
     google.script.run.withSuccessHandler(function(res) {
-      hideLoader();
+      if (!isSilent) hideLoader();
       if (res && res.success) {
-        restoreAdminDashboard(res);
+        restoreAdminDashboard(res, !!isSilent);
       }
-    }).withFailureHandler(function() { hideLoader(); }).getAdminDashboardDataSecure(adminSessionToken);
+    }).withFailureHandler(function() {
+      if (!isSilent) hideLoader();
+    }).getAdminDashboardDataSecure(adminSessionToken, !isSilent);
   }
 
   function switchAdminTab(tab) {
@@ -5344,7 +5525,14 @@ function openAdminLoginModal() {
       hideLoader();
       closeModal('editSurveyModal');
       showMsg("सर्वे स्थिति", res.message, res.success);
-      if (res.success) loadAdminDashboardData();
+      if (res && res.success) {
+        var sItem = findRecordByRowOrIdx(cachedSurveyRecords, payload.rowIndex);
+        if (sItem) {
+          Object.assign(sItem, payload);
+          renderAdminTable(cachedSurveyRecords);
+        }
+        loadAdminDashboardData(true);
+      }
     }).withFailureHandler(function(err) {
       hideLoader();
       showMsg("त्रुटि", err.toString(), false);
@@ -5459,7 +5647,15 @@ function openAdminLoginModal() {
       hideLoader();
       closeModal('editRegisteredModal');
       showMsg("पंजीकरण स्थिति", res.message, res.success);
-      if (res.success) loadAdminDashboardData();
+      if (res && res.success) {
+        var rItem = findRecordByRowOrIdx(cachedAllRegistrations, payload.rowIndex);
+        if (rItem) {
+          Object.assign(rItem, payload);
+          if (payload.status === "Approved") rItem.isLocked = false;
+          renderRegisteredTable(cachedAllRegistrations);
+        }
+        loadAdminDashboardData(true);
+      }
     }).withFailureHandler(function(err) {
       hideLoader();
       showMsg("त्रुटि", err.toString(), false);
@@ -5609,7 +5805,14 @@ function openAdminLoginModal() {
       hideLoader();
       closeModal('editClusterModal');
       showMsg("क्लस्टर स्थिति", res.message, res.success);
-      if (res.success) loadAdminDashboardData();
+      if (res && res.success) {
+        var cItem = findRecordByRowOrIdx(cachedClusterRecords, payload.rowIndex);
+        if (cItem) {
+          Object.assign(cItem, payload);
+          renderClusterTable(cachedClusterRecords);
+        }
+        loadAdminDashboardData(true);
+      }
     }).withFailureHandler(function(err) {
       hideLoader();
       showMsg("त्रुटि", err.toString(), false);
@@ -5733,7 +5936,14 @@ function openAdminLoginModal() {
       google.script.run.withSuccessHandler(function(res) {
         hideLoader();
         showMsg("अनुमति स्थिति", res.message, res.success);
-        if (res.success) loadAdminDashboardData();
+        if (res && res.success) {
+          var sRec = findRecordByRowOrIdx(cachedSurveyRecords, rIdx);
+          if (sRec) {
+            sRec.updateAllowed = "YES";
+            renderAdminTable(cachedSurveyRecords);
+          }
+          loadAdminDashboardData(true);
+        }
       }).withFailureHandler(function(err) {
         hideLoader();
         showMsg("त्रुटि", err.toString(), false);
@@ -5747,8 +5957,15 @@ function openAdminLoginModal() {
       google.script.run.withSuccessHandler(function(res) {
         hideLoader();
         if (res && res.success) {
+          var uRec = findRecordByRowOrIdx(cachedAllRegistrations, rIdx);
+          if (uRec) {
+            uRec.isLocked = false;
+            uRec.lockTier = 0;
+            if (uRec.status === "Locked") uRec.status = "Approved";
+            renderRegisteredTable(cachedAllRegistrations);
+          }
           showMsg("सफलता", res.message, false);
-          loadAdminDashboardData();
+          loadAdminDashboardData(true);
         } else {
           showMsg("त्रुटि", (res ? res.message : "प्रक्रिया विफल"), false);
         }
@@ -5782,7 +5999,17 @@ function openAdminLoginModal() {
       google.script.run.withSuccessHandler(function(res) {
         hideLoader();
         showMsg("नोटिस स्थिति", res.message, res.success);
-        if (res.success) loadAdminDashboardData();
+        if (res && res.success) {
+          if (res.adminNotices) {
+            cachedAdminNotices = res.adminNotices;
+            renderAdminNoticesTable(cachedAdminNotices);
+            renderNoticesHTML('publicNoticesListContainer', cachedAdminNotices);
+            renderNoticesHTML('psNoticesListContainer', cachedAdminNotices);
+            safeRemoveStorage(sessionStorage, 'psk_home_stats_fast_cache');
+          } else {
+            loadAdminDashboardData(true);
+          }
+        }
       }).withFailureHandler(function(err) {
         hideLoader();
         showMsg("त्रुटि", err.toString(), false);
@@ -5835,7 +6062,11 @@ function openAdminLoginModal() {
       google.script.run.withSuccessHandler(function(res) {
         hideLoader();
         showMsg("रिकॉर्ड स्थिति", res.message, res.success);
-        if (res.success) loadAdminDashboardData();
+        if (res && res.success) {
+          cachedSurveyRecords = cachedSurveyRecords.filter(function(item) { return Number(item.rowIndex) !== Number(rIdx); });
+          renderAdminTable(cachedSurveyRecords);
+          loadAdminDashboardData(true);
+        }
       }).withFailureHandler(function(err) {
         hideLoader();
         showMsg("त्रुटि", err.toString(), false);
@@ -5844,7 +6075,13 @@ function openAdminLoginModal() {
       google.script.run.withSuccessHandler(function(res) {
         hideLoader();
         showMsg("पंजीकरण स्थिति", res.message, res.success);
-        if (res.success) loadAdminDashboardData();
+        if (res && res.success) {
+          cachedAllRegistrations = cachedAllRegistrations.filter(function(item) { return Number(item.rowIndex) !== Number(rIdx); });
+          cachedPendingRegs = cachedPendingRegs.filter(function(item) { return Number(item.rowIndex) !== Number(rIdx); });
+          renderRegisteredTable(cachedAllRegistrations);
+          renderPendingTable(cachedPendingRegs);
+          loadAdminDashboardData(true);
+        }
       }).withFailureHandler(function(err) {
         hideLoader();
         showMsg("त्रुटि", err.toString(), false);
@@ -5853,7 +6090,11 @@ function openAdminLoginModal() {
       google.script.run.withSuccessHandler(function(res) {
         hideLoader();
         showMsg("क्लस्टर स्थिति", res.message, res.success);
-        if (res.success) loadAdminDashboardData();
+        if (res && res.success) {
+          cachedClusterRecords = cachedClusterRecords.filter(function(item) { return Number(item.rowIndex) !== Number(rIdx); });
+          renderClusterTable(cachedClusterRecords);
+          loadAdminDashboardData(true);
+        }
       }).withFailureHandler(function(err) {
         hideLoader();
         showMsg("त्रुटि", err.toString(), false);
@@ -5862,7 +6103,11 @@ function openAdminLoginModal() {
       google.script.run.withSuccessHandler(function(res) {
         hideLoader();
         showMsg("अवकाश स्थिति", res.message, res.success);
-        if (res.success) loadAdminDashboardData();
+        if (res && res.success) {
+          cachedAdminLeaves = cachedAdminLeaves.filter(function(item) { return Number(item.rowIndex) !== Number(rIdx); });
+          renderAdminLeaveTable(cachedAdminLeaves);
+          loadAdminDashboardData(true);
+        }
       }).withFailureHandler(function(err) {
         hideLoader();
         showMsg("त्रुटि", err.toString(), false);
@@ -5912,7 +6157,15 @@ function openAdminLoginModal() {
     google.script.run.withSuccessHandler(function(res) {
       hideLoader();
       showMsg("स्थिति अद्यतन", res.message, res.success);
-      if (res.success) loadAdminDashboardData();
+      if (res && res.success) {
+        var rItem = findRecordByRowOrIdx(cachedAllRegistrations, rowIndex);
+        if (rItem) rItem.status = action;
+        cachedPendingRegs = cachedPendingRegs.filter(function(p) { return Number(p.rowIndex) !== Number(rowIndex); });
+        renderPendingTable(cachedPendingRegs);
+        renderRegisteredTable(cachedAllRegistrations);
+        if (document.getElementById('pendingCount')) document.getElementById('pendingCount').innerText = cachedPendingRegs.length;
+        loadAdminDashboardData(true);
+      }
     }).withFailureHandler(function(err) {
       hideLoader();
       showMsg("त्रुटि", err.toString(), false);
@@ -5980,7 +6233,7 @@ function openAdminLoginModal() {
         '<td style="white-space:normal; line-height:1.6; word-break:break-word; font-size:13.5px; padding:10px;">' + escapeHtml(n.noticeText) + '</td>' +
         '<td style="text-align:center; white-space:nowrap;">' +
           '<a href="' + waLink + '" target="_blank" class="btn-action-whatsapp" title="व्हाट्सएप पर शेयर करें"><i class="fa-brands fa-whatsapp"></i></a>' +
-          '<button class="btn-action-view" style="background:#0284c7;" title="नोटिस कॉपी करें" onclick="copyNoticeText(\'' + escapeHtml(n.noticeText).replace(/'/g, "\\'") + '\')"><i class="fa-solid fa-copy"></i></button>' +
+          '<button class="btn-action-view" style="background:#0284c7;" title="नोटिस कॉपी करें" onclick="copyNoticeByRow(' + n.rowIndex + ')"><i class="fa-solid fa-copy"></i></button>' +
           '<button class="btn-action-edit" title="संपादित करें" onclick="openEditNoticeModal(' + n.rowIndex + ')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn-action-delete" title="हटाएं" onclick="deleteNotice(' + n.rowIndex + ')"><i class="fa-solid fa-trash"></i></button>' +
         '</td>';
@@ -5996,6 +6249,11 @@ function openAdminLoginModal() {
              (n.timestamp && n.timestamp.toLowerCase().indexOf(q) !== -1);
     });
     renderAdminNoticesTable(filtered);
+  }
+
+  function copyNoticeByRow(rowOrIdx) {
+    var n = findRecordByRowOrIdx(cachedAdminNotices, rowOrIdx);
+    if (n && n.noticeText) copyNoticeText(n.noticeText);
   }
 
   function copyNoticeText(text) {
@@ -6022,7 +6280,17 @@ function openAdminLoginModal() {
       hideLoader();
       document.getElementById('newNoticeTextInput').value = "";
       showMsg("नोटिस स्थिति", res.message, res.success);
-      if (res.success) loadAdminDashboardData();
+      if (res && res.success) {
+        if (res.adminNotices) {
+          cachedAdminNotices = res.adminNotices;
+          renderAdminNoticesTable(cachedAdminNotices);
+          renderNoticesHTML('publicNoticesListContainer', cachedAdminNotices);
+          renderNoticesHTML('psNoticesListContainer', cachedAdminNotices);
+          safeRemoveStorage(sessionStorage, 'psk_home_stats_fast_cache');
+        } else {
+          loadAdminDashboardData(true);
+        }
+      }
     }).withFailureHandler(function(err) {
       hideLoader();
       showMsg("त्रुटि", err.toString(), false);
@@ -6046,7 +6314,17 @@ function openAdminLoginModal() {
       hideLoader();
       closeModal('editNoticeModal');
       showMsg("नोटिस स्थिति", res.message, res.success);
-      if (res.success) loadAdminDashboardData();
+      if (res && res.success) {
+        if (res.adminNotices) {
+          cachedAdminNotices = res.adminNotices;
+          renderAdminNoticesTable(cachedAdminNotices);
+          renderNoticesHTML('publicNoticesListContainer', cachedAdminNotices);
+          renderNoticesHTML('psNoticesListContainer', cachedAdminNotices);
+          safeRemoveStorage(sessionStorage, 'psk_home_stats_fast_cache');
+        } else {
+          loadAdminDashboardData(true);
+        }
+      }
     }).withFailureHandler(function(err) {
       hideLoader();
       showMsg("त्रुटि", err.toString(), false);
@@ -6113,7 +6391,15 @@ function openAdminLoginModal() {
       hideLoader();
       closeModal('editGrievanceModal');
       showMsg("शिकायत स्थिति", res.message, res.success);
-      if (res.success) loadAdminDashboardData();
+      if (res && res.success) {
+        var gRec = findRecordByRowOrIdx(cachedAdminGrievances, rIdx);
+        if (gRec) {
+          gRec.status = status;
+          gRec.adminRemark = remark;
+          renderAdminGrievancesTable(cachedAdminGrievances);
+        }
+        loadAdminDashboardData(true);
+      }
     }).withFailureHandler(function(err) {
       hideLoader();
       showMsg("त्रुटि", err.toString(), false);
@@ -6186,7 +6472,7 @@ function openAdminLoginModal() {
       }
     }).withFailureHandler(function() {
       container.innerHTML = '<div class="notice-item" style="text-align:center; color:#dc2626;">स्टेटस लोड करने में समस्या आई। कृपया पुनः प्रयास करें।</div>';
-    }).getPsGrievanceTickets(loggedInPsUser.email);
+    }).getPsGrievanceTickets(loggedInPsUser.email, safeGetStorage(sessionStorage, 'psk_ps_token') || '');
   }
 
   // ================= ADMIN LEAVE APPLICATIONS TAB =================
@@ -6338,23 +6624,16 @@ function viewAdminLeaveModal(rowOrIdx) {
 
         // वेब लिंक के बजाय केवल सीक्रेट टोकन डालें (बाहरी कैमरे को रोकने के लिए)
         var secretQrData = "PSK_SECURE_ATTENDANCE:" + res.eventId;
-        var qrImgUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=" + encodeURIComponent(secretQrData);
+        var qrImgUrl = generateInstantQrDataUrl(secretQrData, 300);
 
         document.getElementById('displayQRTitle').innerText = title;
         document.getElementById('displayQRDetails').innerText = "ईवेंट ID: " + res.eventId + " | तिथि: " + date + " | स्थान: " + loc;
         var dispQrEl = document.getElementById('displayQRImage');
         dispQrEl.src = qrImgUrl;
-        if (typeof fetch !== 'undefined') {
-          fetch(qrImgUrl).then(function(r) { return r.blob(); }).then(function(b) {
-            var rdr = new FileReader();
-            rdr.onloadend = function() { if (rdr.result) dispQrEl.src = rdr.result; };
-            rdr.readAsDataURL(b);
-          }).catch(function() {});
-        }
         document.getElementById('activeEventQRCard').style.display = 'block';
 
         showMsg("QR जनरेट!", "बैठक का सुरक्षित QR कोड सफलतापूर्वक तैयार हो गया है।", false);
-        loadAdminDashboardData();
+        loadAdminDashboardData(true);
       } else {
         showMsg("त्रुटि", (res ? res.message : "QR कोड बनाने में विफल"), false);
       }
@@ -6474,6 +6753,7 @@ function viewAdminLeaveModal(rowOrIdx) {
     safeRemoveStorage(sessionStorage, 'psk_admin_token');
     safeRemoveStorage(sessionStorage, 'psk_active_view');
     safeRemoveStorage(sessionStorage, 'psk_admin_tab');
+    safeRemoveStorage(sessionStorage, 'psk_admin_dashboard_fast_cache');
     if (oldToken && typeof google !== 'undefined' && google.script && google.script.run) {
       google.script.run.logoutAdminSecure(oldToken);
     }
@@ -6635,20 +6915,25 @@ function viewAdminLeaveModal(rowOrIdx) {
   }
 
  // अवकाश की तारीखों को हमेशा 31/08/2026 (DD/MM/YYYY) फ़ॉर्मेट में सेट करना
-window.addEventListener('DOMContentLoaded', function() {
+function initLeaveDatePickersSafe() {
   if (typeof flatpickr !== 'undefined') {
-    flatpickr("#leaveSingleDate, #leaveStartDate, #leaveEndDate", {
-      dateFormat: "d/m/Y",
-      defaultDate: new Date(),
-      allowInput: true,
-      disableMobile: true,
-      onChange: function() {
-        calculateLeaveDays();
-        autoGenerateLeaveLetter();
-      }
-    });
+    var el = document.getElementById('leaveSingleDate');
+    if (el && !el._flatpickr) {
+      flatpickr("#leaveSingleDate, #leaveStartDate, #leaveEndDate", {
+        dateFormat: "d/m/Y",
+        defaultDate: new Date(),
+        allowInput: true,
+        disableMobile: true,
+        onChange: function() {
+          calculateLeaveDays();
+          autoGenerateLeaveLetter();
+        }
+      });
+    }
   }
-});
+}
+window.addEventListener('DOMContentLoaded', initLeaveDatePickersSafe);
+window.addEventListener('load', initLeaveDatePickersSafe);
 
 // ================= PS लॉगिन एवं सत्यापन =================
 // ================= PS लॉगिन एवं सत्यापन =================
@@ -6820,19 +7105,38 @@ function recordPsActivity() {
   window.addEventListener(evt, recordPsActivity, { passive: true });
 });
 
-// केवल तभी लॉक होगा जब यूजर PS पोर्टल में हो और स्क्रीन सच में बैकग्राउंड में जाए
+var suppressMpinLockUntil = 0;
+document.addEventListener("click", function(e) {
+  var t = e.target;
+  if (!t) return;
+  if ((t.tagName === "INPUT" && t.type === "file") || (t.closest && t.closest("#imgUploadDropArea, #uploadDropArea, [onclick*='FileInput'], [onclick*='PhotoInput'], a[target='_blank']"))) {
+    // फोटो अपलोड या बाहरी शेयरिंग के दौरान 90 सेकंड तक अनावश्यक MPIN लॉक न लगाएं
+    suppressMpinLockUntil = Date.now() + 90000;
+  }
+}, true);
+
+// केवल तभी लॉक होगा जब यूजर PS पोर्टल में हो और स्क्रीन सच में 2 मिनट से अधिक बैकग्राउंड में जाए
 document.addEventListener("visibilitychange", function() {
   var isPsLoggedIn = safeGetStorage(sessionStorage, 'psk_ps_email');
   var activeView = safeGetStorage(sessionStorage, 'psk_active_view');
 
-  // अगर यूजर PS पोर्टल में लॉगिन नहीं है, तो कुछ नहीं करना
   if (!isPsLoggedIn || activeView !== 'ps') return;
 
   if (document.visibilityState === "hidden") {
     hideStartTime = Date.now();
   } else if (document.visibilityState === "visible") {
-    // 5 सेकंड से ज्यादा ऐप बाहर/बैकग्राउंड में रहने पर ही MPIN मांगेगा (ड्रॉपडाउन या टाइपिंग पर नहीं)
-    if (hideStartTime > 0 && (Date.now() - hideStartTime) > 5000) {
+    evaluatePsSession();
+    var setupModal = document.getElementById('firstTimeSetupModal');
+    if (setupModal && setupModal.style.display === 'flex') {
+      hideStartTime = 0;
+      return;
+    }
+    if (Date.now() < suppressMpinLockUntil) {
+      hideStartTime = 0;
+      return;
+    }
+    // 2 मिनट (120 सेकंड) से ज्यादा ऐप बाहर/बैकग्राउंड में रहने पर ही MPIN मांगेगा (फोटो चुनने या WhatsApp शेयर पर तंग नहीं करेगा)
+    if (hideStartTime > 0 && (Date.now() - hideStartTime) > 120000) {
       hideStartTime = 0;
       openMpinScreen();
     }
@@ -6850,6 +7154,7 @@ function evaluatePsSession() {
   }
 }
 window.addEventListener("load", evaluatePsSession);
+setInterval(evaluatePsSession, 60000);
 
 function openMpinScreen() {
   var isPsLoggedIn = safeGetStorage(sessionStorage, 'psk_ps_email');
@@ -7738,20 +8043,11 @@ function renderUnionIdCardLive() {
     "\nGP: " + (loggedInPsUser.gramPanchayat || "") +
     "\nBlock: Utraula, Balrampur" +
     "\nMobile: " + (loggedInPsUser.mobile || "");
-  var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=4&data=" + encodeURIComponent(qrVerifyText);
   var qrImg = document.getElementById('idCardQrImg');
-  if (qrImg && qrImg.getAttribute('data-qr-src') !== qrUrl) {
-    qrImg.setAttribute('data-qr-src', qrUrl);
-    qrImg.src = qrUrl;
-    if (typeof fetch !== 'undefined') {
-      fetch(qrUrl).then(function(r) { return r.blob(); }).then(function(blob) {
-        var reader = new FileReader();
-        reader.onloadend = function() {
-          if (reader.result) qrImg.src = reader.result;
-        };
-        reader.readAsDataURL(blob);
-      }).catch(function() {});
-    }
+  if (qrImg && qrImg.getAttribute('data-qr-key') !== qrVerifyText) {
+    qrImg.setAttribute('data-qr-key', qrVerifyText);
+    var instantQrDataUrl = generateInstantQrDataUrl(qrVerifyText, 220);
+    qrImg.src = instantQrDataUrl;
   }
 }
 
@@ -8322,7 +8618,7 @@ function printOfficialMemorandumPDF() {
 function downloadOfficialMemorandumWord() {
   var content = document.getElementById('memoPreviewContainer').innerHTML;
   var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>" +
-    "<head><meta charset='utf-8'><title>Union Official Memorandum</title><style>body{font-family:'Mangal', 'Arial', sans-serif; line-height:1.65; color:#000;} table{border-collapse:collapse; width:100%; margin:10px 0;} td,th{border:1px solid #1e3a8a; padding:6px; font-size:11pt;}</style></head><body>";
+    "<head><meta charset='utf-8'><title>Union Official Memorandum</title><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml><![endif]--><style>@page{size:21cm 29.7cm; margin:1.8cm;} body{font-family:'Noto Sans Devanagari','Mangal','Nirmala UI','Arial',sans-serif; line-height:1.65; color:#000;} table{border-collapse:collapse; width:100%; margin:10px 0;} td,th{border:1px solid #1e3a8a; padding:6px; font-size:11pt;}</style></head><body>";
   var blob = new Blob(['\ufeff' + header + content + "</body></html>"], { type: 'application/msword' });
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -8376,7 +8672,7 @@ function handleAddClusterSubmit(e) {
     showMsg("क्लस्टर स्थिति", res.message, res.success);
     if (res && res.success) {
       safeRemoveStorage(sessionStorage, 'psk_home_stats_fast_cache');
-      loadAdminDashboardData();
+      loadAdminDashboardData(true);
     }
   }).withFailureHandler(function(err) {
     hideLoader();
