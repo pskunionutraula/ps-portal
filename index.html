@@ -1412,164 +1412,43 @@ body.modal-open {
           </div>
         </div>
 
-        <!-- PS TAB 4: PS SURVEY FORM -->
+        <!-- PS TAB 4: PS SURVEY FORM (DYNAMIC MULTI-FORM ENGINE) -->
         <div id="psSurveyTabContent" style="display:none;">
-          <div class="form-header-banner">
-            <h2 style="font-size:18px; text-align:center;" id="surveyBannerHeading">पंचायत भवन सुविधा एवं व्यवस्था - विस्तृत सूचना फ़ॉर्म</h2>
+          <div class="form-header-banner" style="background:linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); border-radius:12px; padding:16px 18px; margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <span id="psSurveyActiveBadge" style="background:rgba(34,197,94,0.2); color:#4ade80; border:1px solid #22c55e; padding:2px 10px; border-radius:12px; font-size:11px; font-weight:800;"><i class="fa-solid fa-circle-dot"></i> लाइव सर्वे फ़ॉर्म</span>
+              <span id="psSurveyPolicyBadge" style="background:rgba(56,189,248,0.18); color:#38bdf8; padding:2px 10px; border-radius:12px; font-size:11px; font-weight:700;">आधिकारिक यूनियन पोर्टल</span>
+            </div>
+            <h2 style="font-size:18px; text-align:center; margin-top:8px; color:#ffffff;" id="surveyBannerHeading">पंचायत भवन सुविधा एवं व्यवस्था - विस्तृत सूचना फ़ॉर्म</h2>
+            <p id="surveyBannerSubtitle" style="font-size:12.5px; color:#cbd5e1; text-align:center; margin-top:4px; margin-bottom:0;">कृपया अपनी ग्राम पंचायत के सचिवालय की भौतिक सुविधाओं एवं मानदेय की सटीक जानकारी दर्ज करें।</p>
+          </div>
+
+          <div id="psSurveyClosedAlert" style="display:none; background:#fef2f2; border:2px solid #ef4444; color:#991b1b; padding:18px; border-radius:12px; text-align:center; margin-bottom:16px; font-weight:700;">
+            <i class="fa-solid fa-lock" style="font-size:24px; color:#dc2626; display:block; margin-bottom:6px;"></i>
+            यह सर्वे फ़ॉर्म वर्तमान में एडमिन द्वारा बंद (Closed) कर दिया गया है।
           </div>
 
           <form id="mainSurveyForm" onsubmit="handleMainSurveySubmit(event)">
-            <div class="field-group"><label>1. ईमेल आईडी (पंजीकृत)</label><input type="email" id="email" class="field-input field-readonly" readonly required></div>
-            <div class="field-group"><label>2. जनपद</label><input type="text" id="district" class="field-input field-readonly" value="बलरामपुर" readonly></div>
-            <div class="field-group"><label>3. विकास खंड</label><input type="text" id="block" class="field-input field-readonly" value="उतरौला" readonly></div>
-            <div class="field-group"><label>4. ग्राम पंचायत का नाम</label><input type="text" id="gramPanchayat" class="field-input field-readonly" readonly required></div>
-            <div class="field-group"><label>5. पंचायत सहायक का नाम</label><input type="text" id="fullName" class="field-input field-readonly" readonly required></div>
-            <div class="field-group"><label>6. मोबाइल नंबर</label><input type="text" id="mobile" class="field-input field-readonly" readonly required></div>
+            <div id="psSurveyProfileFieldsBox" style="background:var(--sub-box-bg); border:1.5px solid var(--input-border); border-radius:12px; padding:14px; margin-bottom:16px;">
+              <div style="font-size:12.5px; font-weight:800; color:#2563eb; margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-user-check"></i> पंजीकृत पंचायत सहायक प्रोफ़ाइल विवरण (स्वतः सत्यापित)
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:10px;">
+                <div class="field-group" style="margin-bottom:0;"><label style="font-size:12px;">1. ईमेल आईडी (पंजीकृत)</label><input type="email" id="email" class="field-input field-readonly" readonly required></div>
+                <div class="field-group" style="margin-bottom:0;"><label style="font-size:12px;">2. जनपद</label><input type="text" id="district" class="field-input field-readonly" value="बलरामपुर" readonly></div>
+                <div class="field-group" style="margin-bottom:0;"><label style="font-size:12px;">3. विकास खंड</label><input type="text" id="block" class="field-input field-readonly" value="उतरौला" readonly></div>
+                <div class="field-group" style="margin-bottom:0;"><label style="font-size:12px;">4. ग्राम पंचायत का नाम</label><input type="text" id="gramPanchayat" class="field-input field-readonly" readonly required></div>
+                <div class="field-group" style="margin-bottom:0;"><label style="font-size:12px;">5. पंचायत सहायक का नाम</label><input type="text" id="fullName" class="field-input field-readonly" readonly required></div>
+                <div class="field-group" style="margin-bottom:0;"><label style="font-size:12px;">6. मोबाइल नंबर</label><input type="text" id="mobile" class="field-input field-readonly" readonly required></div>
+              </div>
+            </div>
 
             <input type="hidden" id="guardianName">
 
-            <div class="field-group">
-              <label for="pendingSalary">7. आपका कुल बकाया मानदेय कितने माह का है? <span class="req">*</span></label>
-              <input type="number" id="pendingSalary" class="field-input" placeholder="केवल संख्या लिखें (उदा. 4)" required>
-            </div>
+            <!-- डायनेमिक प्रश्न कंटेनर (एडमिन सर्वे बिल्डर द्वारा नियंत्रित) -->
+            <div id="dynamicPsSurveyQuestionsBox"></div>
 
-            <div class="field-group">
-              <label>8. आपके पंचायत भवन में वाई-फ़ाई (Wi-Fi) है? <span class="req">*</span></label>
-              <select id="wifiOption" class="field-input" onchange="toggleSubOption('wifiOption', 'wifiSubBox')" required>
-                <option value="">-- चुनें --</option>
-                <option value="है">है</option>
-                <option value="नहीं है">नहीं है</option>
-              </select>
-              <div id="wifiSubBox" class="sub-option-box">
-                <label>रिचार्ज की स्थिति:</label>
-                <select id="wifiRechargeStatus" class="field-input">
-                  <option value="1- रिचार्ज है">1- रिचार्ज है</option>
-                  <option value="2- रिचार्ज नहीं है">2- रिचार्ज नहीं है</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="field-group">
-              <label>9. आपके मोबाइल में सचिव द्वारा ग्राम निधि से रिचार्ज किया गया है? <span class="req">*</span></label>
-              <select id="gramNidhiOption" class="field-input" onchange="toggleSubOption('gramNidhiOption', 'gramNidhiSubBox')" required>
-                <option value="">-- चुनें --</option>
-                <option value="है">किया गया है</option>
-                <option value="नहीं किया गया है">नहीं किया गया है</option>
-              </select>
-              <div id="gramNidhiSubBox" class="sub-option-box">
-                <label>कितने माह का रिचार्ज किया गया है? (संख्या में लिखें):</label>
-                <input type="number" id="gramNidhiMonths" class="field-input" placeholder="माह की संख्या लिखें">
-              </div>
-            </div>
-
-            <div class="field-group">
-              <label>10. ग्राम पंचायत भवन में वर्तमान में पेयजल की क्या व्यवस्था है? <span class="req">*</span></label>
-              <select id="drinkingWater" class="field-input" required>
-                <option value="">-- चुनें --</option>
-                <option value="i) हैण्डपम्प / इंडिया मार्क हैण्डपम्प द्वारा">i) हैण्डपम्प / इंडिया मार्क हैण्डपम्प द्वारा</option>
-                <option value="ii) RO / वाटर प्यूरिफायर द्वारा">ii) RO / वाटर प्यूरिफायर द्वारा</option>
-                <option value="iii) पाइप लाइन / हर घर नल जल योजना">iii) पाइप लाइन / हर घर नल जल योजना</option>
-                <option value="iv) नहीं है">iv) नहीं है</option>
-              </select>
-            </div>
-
-            <div class="field-group">
-              <label>11. आपके पंचायत भवन में बिजली की व्यवस्था है? <span class="req">*</span></label>
-              <select id="electricity" class="field-input" required>
-                <option value="">-- चुनें --</option>
-                <option value="i) है">i) है</option>
-                <option value="ii) नहीं है">ii) नहीं है</option>
-              </select>
-            </div>
-
-            <div class="field-group">
-              <label>12. आपके पंचायत भवन में प्रिंटर है? <span class="req">*</span></label>
-              <select id="printerOption" class="field-input" onchange="toggleSubOption('printerOption', 'printerSubBox')" required>
-                <option value="">-- चुनें --</option>
-                <option value="है">है</option>
-                <option value="नहीं है">नहीं है</option>
-              </select>
-              <div id="printerSubBox" class="sub-option-box">
-                <label>प्रिंटर की कार्य स्थिति:</label>
-                <select id="printerCondition" class="field-input">
-                  <option value="1- सही है">1- सही है</option>
-                  <option value="2- ख़राब है">2- ख़राब है</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="field-group">
-              <label>13. आपके पंचायत भवन में स्टेशनरी का सामान उपलब्ध है? <span class="req">*</span></label>
-              <select id="stationery" class="field-input" required>
-                <option value="">-- चुनें --</option>
-                <option value="i) है">i) है</option>
-                <option value="ii) नहीं है">ii) नहीं है</option>
-              </select>
-            </div>
-
-            <div class="field-group">
-              <label>14. आपके पंचायत भवन में परिवार रजिस्टर मौजूद है? <span class="req">*</span></label>
-              <select id="parivarRegister" class="field-input" required>
-                <option value="">-- चुनें --</option>
-                <option value="i) है">i) है</option>
-                <option value="ii) नहीं है">ii) नहीं है</option>
-              </select>
-            </div>
-
-            <div class="field-group">
-              <label>15. आपके पंचायत भवन में जन्म-मृत्यु रजिस्टर मौजूद है? <span class="req">*</span></label>
-              <select id="birthDeathRegister" class="field-input" required>
-                <option value="">-- चुनें --</option>
-                <option value="i) है">i) है</option>
-                <option value="ii) नहीं है">ii) नहीं है</option>
-              </select>
-            </div>
-
-            <div class="field-group">
-              <label>16. आपके पंचायत भवन में शौचालय है? <span class="req">*</span></label>
-              <select id="toiletOption" class="field-input" onchange="toggleSubOption('toiletOption', 'toiletSubBox')" required>
-                <option value="">-- चुनें --</option>
-                <option value="है">है</option>
-                <option value="नहीं है">नहीं है</option>
-              </select>
-              <div id="toiletSubBox" class="sub-option-box">
-                <label>शौचालय की साफ़-सफ़ाई की स्थिति:</label>
-                <select id="toiletCleanliness" class="field-input">
-                  <option value="1- साफ़-सफ़ाई रहता है">1- साफ़-सफ़ाई रहता है</option>
-                  <option value="2- साफ़-सफ़ाई नहीं रहता है">2- साफ़-सफ़ाई नहीं रहता है</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="field-group">
-              <label>17. जन्म-मृत्यु व परिवार रजिस्टर का कार्य किसके द्वारा किया जाता है? <span class="req">*</span></label>
-              <select id="registerWorkerOption" class="field-input" onchange="toggleSubOption('registerWorkerOption', 'munshiSubBox')" required>
-                <option value="">-- चुनें --</option>
-                <option value="i) सचिव महोदय के द्वारा">i) सचिव महोदय के द्वारा</option>
-                <option value="ii) पंचायत सहायक के द्वारा">ii) पंचायत सहायक के द्वारा</option>
-                <option value="मुंशी">iii) मुंशी के द्वारा</option>
-              </select>
-              <div id="munshiSubBox" class="sub-option-box">
-                <label>मुंशी का क्या नाम है?:</label>
-                <input type="text" id="munshiName" class="field-input" placeholder="मुंशी का नाम">
-              </div>
-            </div>
-
-            <div class="field-group">
-              <label>18. ग्राम पंचायत का ऑनलाइन भुगतान कार्य किसके द्वारा किया जाता है? <span class="req">*</span></label>
-              <select id="paymentWorkerOption" class="field-input" onchange="toggleSubOption('paymentWorkerOption', 'outsiderSubBox')" required>
-                <option value="">-- चुनें --</option>
-                <option value="i) सचिव महोदय के द्वारा">i) सचिव महोदय के द्वारा</option>
-                <option value="ii) पंचायत सहायक के द्वारा">ii) पंचायत सहायक के द्वारा</option>
-                <option value="बाहरी व्यक्ति">iii) बाहरी व्यक्ति के द्वारा</option>
-              </select>
-              <div id="outsiderSubBox" class="sub-option-box">
-                <label>बाहरी व्यक्ति का क्या नाम है?:</label>
-                <input type="text" id="outsiderName" class="field-input" placeholder="व्यक्ति का नाम">
-              </div>
-            </div>
-
-            <button type="submit" id="btnSubmit" class="submit-btn"><i class="fa-solid fa-paper-plane"></i> सर्वे फ़ॉर्म सबमिट करें</button>
+            <button type="submit" id="btnSubmit" class="submit-btn"><i class="fa-solid fa-paper-plane"></i> <span id="psSurveySubmitBtnText">सर्वे फ़ॉर्म सबमिट करें</span></button>
           </form>
         </div>
 
@@ -2256,6 +2135,7 @@ body.modal-open {
   <!-- ADMIN NAVIGATION TABS (Modern Scrollable Pill Bar) -->
   <div class="admin-tab-bar modern-pill-nav" id="adminPillNavBar">
     <button class="admin-tab-btn active" id="tabSurveyBtn" onclick="switchAdminTab('survey')"><i class="fa-solid fa-poll"></i> मुख्य सर्वे रिपोर्ट</button>
+    <button class="admin-tab-btn" id="tabSurveyBuilderBtn" onclick="switchAdminTab('surveyBuilder')"><i class="fa-solid fa-wand-magic-sparkles"></i> 📋 सर्वे फ़ॉर्म बिल्डर (<span id="activeSurveyFormQCountBadge">12 प्रश्न</span>)</button>
     <button class="admin-tab-btn" id="tabRegisteredBtn" onclick="switchAdminTab('registered')"><i class="fa-solid fa-address-book"></i> पंजीकृत PS (<span id="totalRegTabCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabClusterBtn" onclick="switchAdminTab('cluster')"><i class="fa-solid fa-sitemap"></i> क्लस्टर विवरण (<span id="totalClusterTabCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabExecutivesBtn" onclick="switchAdminTab('executives')"><i class="fa-solid fa-users-gear"></i> 🏛️ कार्यकारिणी प्रबंधन (<span id="totalExecTabCount">7</span>)</button>
@@ -2295,8 +2175,14 @@ body.modal-open {
     </div>
 
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-      <input type="text" id="adminSearchInput" oninput="debounceTableSearch(filterAdminTable, 100)" onkeyup="debounceTableSearch(filterAdminTable, 100)" class="field-input" placeholder="🔍 नाम या ग्राम पंचायत से खोजें..." style="max-width:280px;">
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; flex:1;">
+        <input type="text" id="adminSearchInput" oninput="debounceTableSearch(filterAdminTable, 100)" onkeyup="debounceTableSearch(filterAdminTable, 100)" class="field-input" placeholder="🔍 नाम या ग्राम पंचायत से खोजें..." style="max-width:240px;">
+        <select id="adminSurveyFormFilterSelect" class="field-input" onchange="filterAdminTable()" style="max-width:280px; font-weight:700; color:#1e3a8a;">
+          <option value="ALL">🌐 सभी सर्वे फ़ॉर्म्स के रिकॉर्ड्स</option>
+        </select>
+      </div>
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="submit-btn" style="background:linear-gradient(135deg, #2563eb, #1d4ed8); font-size:12px; padding:8px 14px; width:auto; margin:0;" onclick="switchAdminTab('surveyBuilder')"><i class="fa-solid fa-wand-magic-sparkles"></i> 📋 सर्वे फ़ॉर्म व प्रश्न कंट्रोलर</button>
         <button class="submit-btn" style="background:linear-gradient(135deg, #dc2626, #991b1b); font-size:12px; padding:8px 14px; width:auto; margin:0;" onclick="openMemorandumModal()"><i class="fa-solid fa-file-contract"></i> 📋 आधिकारिक ज्ञापन / समस्या रिपोर्ट (ADO/BDO/DPRO/CDO)</button>
         <button class="submit-btn" style="background:#16a34a; font-size:12px; padding:8px 14px; width:auto; margin:0;" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> Excel (CSV) डाउनलोड</button>
       </div>
@@ -2306,7 +2192,7 @@ body.modal-open {
       <table class="data-table">
         <thead>
           <tr>
-            <th>#</th><th>ग्राम पंचायत</th><th>पंचायत सहायक</th><th>मोबाइल</th><th>मानदेय बकाया</th><th>वाई-फ़ाई</th><th>ग्राम निधि रिचार्ज</th><th>पेयजल</th><th>बिजली</th><th>प्रिंटर</th><th>स्टेशनरी</th><th>परिवार रजि.</th><th>जन्म-मृत्यु</th><th>शौचालय</th><th>रजिस्टर कार्य</th><th>भुगतान कार्य</th><th>समय</th><th>कार्रवाई (Action)</th>
+            <th>#</th><th>ग्राम पंचायत</th><th>पंचायत सहायक</th><th>मोबाइल</th><th>सर्वे फ़ॉर्म / अतिरिक्त उत्तर</th><th>मानदेय बकाया</th><th>वाई-फ़ाई</th><th>ग्राम निधि रिचार्ज</th><th>पेयजल</th><th>बिजली</th><th>प्रिंटर</th><th>स्टेशनरी</th><th>परिवार रजि.</th><th>जन्म-मृत्यु</th><th>शौचालय</th><th>रजिस्टर कार्य</th><th>भुगतान कार्य</th><th>समय</th><th>कार्रवाई (Action)</th>
           </tr>
         </thead>
         <tbody id="adminTableBody"></tbody>
@@ -2658,6 +2544,151 @@ body.modal-open {
       <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #16a34a, #15803d); width:auto; font-size:14px; padding:10px 26px; margin:0;" onclick="savePsPortalConfigFromAdmin()">
         <i class="fa-solid fa-circle-check"></i> PS पोर्टल सेटिंग्स सुरक्षित व लागू करें
       </button>
+    </div>
+  </div>
+
+  <!-- TAB 12B: DYNAMIC SURVEY & MULTI-FORM BUILDER CONTROLLER (📋 PS सर्वे व फ़ॉर्म बिल्डर) -->
+  <div id="surveyBuilderTabContent" style="display:none;">
+    <!-- Top Executive Command Banner -->
+    <div style="background:linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #312e81 100%); color:#ffffff; border-radius:14px; padding:18px 20px; margin-bottom:16px; border:1px solid #3b82f6; box-shadow:0 8px 24px rgba(15,23,42,0.22);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px;">
+        <div style="flex:1; min-width:260px;">
+          <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(56,189,248,0.18); color:#38bdf8; border:1px solid rgba(56,189,248,0.4); padding:3px 11px; border-radius:20px; font-size:11px; font-weight:800; margin-bottom:6px;">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> एडवांस डायनेमिक सर्वे एवं मल्टी-फ़ॉर्म इंजन
+          </div>
+          <h3 style="font-family:'Rozha One', serif; font-size:21px; color:#facc15; margin:0 0 4px 0;">
+            📋 PS पोर्टल सर्वे फ़ॉर्म बिल्डर एवं प्रश्न नियंत्रक
+          </h3>
+          <p style="font-size:12.5px; color:#cbd5e1; margin:0; line-height:1.5;">
+            यहाँ से आप PS पोर्टल के वर्तमान सर्वे फ़ॉर्म में <b>नए प्रश्न जोड़ सकते हैं, पुराने प्रश्न हटा/छुपा सकते हैं, विकल्प बदल सकते हैं</b> या पंचायत सहायकों से भरवाने के लिए <b>कोई बिल्कुल नया दूसरा फ़ॉर्म (2nd Form)</b> 1-क्लिक में बनाकर लाइव कर सकते हैं।
+          </p>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+          <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #f59e0b, #d97706); width:auto; font-size:12.5px; padding:9px 15px; margin:0; box-shadow:0 4px 12px rgba(245,158,11,0.3);" onclick="openCreateNewSurveyFormModal()">
+            <i class="fa-solid fa-folder-plus"></i> + नया दूसरा फ़ॉर्म बनाएं
+          </button>
+          <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #0284c7, #0369a1); width:auto; font-size:12.5px; padding:9px 15px; margin:0;" onclick="openSurveyQuestionModal(-1)">
+            <i class="fa-solid fa-circle-plus"></i> + नया प्रश्न जोड़ें
+          </button>
+          <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9); width:auto; font-size:12.5px; padding:9px 14px; margin:0;" onclick="handleBulkUnlockSurveyForAll('YES')">
+            <i class="fa-solid fa-unlock-keyhole"></i> सभी PS को री-सर्वे अनुमति दें
+          </button>
+          <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #16a34a, #15803d); width:auto; font-size:13px; padding:9px 18px; margin:0; box-shadow:0 4px 14px rgba(22,163,74,0.4);" onclick="saveSurveyFormsConfigFromAdmin()">
+            <i class="fa-solid fa-floppy-disk"></i> सेव व PS पोर्टल पर लागू करें
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1: Multi-Form Passbook / Campaign Selector Cards -->
+    <div style="margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+        <span style="font-size:13.5px; font-weight:800; color:var(--text-main);">
+          <i class="fa-solid fa-layer-group" style="color:#2563eb;"></i> 1. उपलब्ध सर्वे फ़ॉर्म्स (जिस फ़ॉर्म को संपादित या PS पोर्टल पर लाइव करना हो उसे चुनें):
+        </span>
+        <span id="surveyBuilderActiveFormStatusPill" style="font-size:12px; font-weight:800; color:#16a34a; background:rgba(22,163,74,0.12); padding:4px 12px; border-radius:20px;">
+          🟢 वर्तमान लाइव फ़ॉर्म: मुख्य सर्वे
+        </span>
+      </div>
+      <div id="surveyFormsSelectorCardsContainer" style="display:flex; gap:12px; overflow-x:auto; padding-bottom:6px;"></div>
+    </div>
+
+    <!-- Step 2: Selected Form Settings & Metadata Editor -->
+    <div style="background:var(--sub-box-bg); border:1.5px solid var(--input-border); border-radius:12px; padding:14px 16px; margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px; border-bottom:1px dashed var(--input-border); padding-bottom:8px;">
+        <div style="font-size:14px; font-weight:800; color:#1e3a8a;">
+          <i class="fa-solid fa-gear"></i> 2. चयनित फ़ॉर्म की मुख्य सेटिंग्स व नियम (<span id="editingFormIdBadge" style="font-size:11.5px; color:#64748b;">FORM_MAIN_DEFAULT</span>)
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" id="btnSetSelectedFormLive" class="submit-btn" style="background:#16a34a; width:auto; font-size:11.5px; padding:5px 12px; margin:0;" onclick="setEditingFormAsActiveLive()">
+            <i class="fa-solid fa-tower-broadcast"></i> इस फ़ॉर्म को PS पोर्टल पर लाइव (Active) करें
+          </button>
+          <button type="button" id="btnDeleteSelectedForm" class="submit-btn" style="background:#dc2626; width:auto; font-size:11.5px; padding:5px 12px; margin:0; display:none;" onclick="deleteCurrentEditingSurveyForm()">
+            <i class="fa-solid fa-trash"></i> यह फ़ॉर्म हटाएं
+          </button>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:12px;">
+        <div>
+          <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">फ़ॉर्म का मुख्य शीर्षक (Banner Heading) *</label>
+          <input type="text" id="builderFormTitleInput" class="field-input" oninput="syncCurrentFormSettingsFromInputs()" placeholder="फ़ॉर्म का शीर्षक लिखें">
+        </div>
+        <div>
+          <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">पंचायत सहायकों के लिए निर्देश / उप-शीर्षक</label>
+          <input type="text" id="builderFormSubtitleInput" class="field-input" oninput="syncCurrentFormSettingsFromInputs()" placeholder="फ़ॉर्म के ऊपर दिखने वाला निर्देश">
+        </div>
+        <div>
+          <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">सबमिट बटन का टेक्स्ट</label>
+          <input type="text" id="builderFormBtnTextInput" class="field-input" oninput="syncCurrentFormSettingsFromInputs()" placeholder="सर्वे फ़ॉर्म सबमिट करें">
+        </div>
+        <div>
+          <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">सबमिशन नियम (Submission Policy)</label>
+          <select id="builderFormPolicySelect" class="field-input" onchange="syncCurrentFormSettingsFromInputs()">
+            <option value="single">🔒 केवल 1 बार सबमिट (संशोधन हेतु एडमिन अनुमति आवश्यक)</option>
+            <option value="open_update">🔓 खुला अपडेट (PS कभी भी अपना उत्तर संशोधित कर सकें)</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">फ़ॉर्म की स्थिति (Form Status)</label>
+          <select id="builderFormStatusSelect" class="field-input" onchange="syncCurrentFormSettingsFromInputs()">
+            <option value="OPEN">🟢 चालू (OPEN - पंचायत सहायक भर सकते हैं)</option>
+            <option value="CLOSED">🔴 बंद (CLOSED - नए सबमिशन रोकें)</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px; font-weight:700; display:block; margin-bottom:4px;">प्रोफ़ाइल बॉक्स (नाम/GP/मोबाइल) ऊपर दिखाएं?</label>
+          <select id="builderFormShowProfileSelect" class="field-input" onchange="syncCurrentFormSettingsFromInputs()">
+            <option value="true">✅ हाँ, स्वतः भरा प्रोफ़ाइल बॉक्स दिखाएं</option>
+            <option value="false">⚪ नहीं, केवल प्रश्न दिखाएं (प्रोफ़ाइल बैकग्राउंड में सेव होगा)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Questions List & Serial Order Controller Table -->
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+      <div style="font-size:14px; font-weight:800; color:var(--text-main);">
+        <i class="fa-solid fa-list-check" style="color:#16a34a;"></i> 3. इस फ़ॉर्म के प्रश्नों की सूची व क्रम नियंत्रण (<span id="builderQuestionsCountSummary">12 प्रश्न</span>)
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button" class="submit-btn" style="background:#0284c7; width:auto; font-size:12px; padding:6px 13px; margin:0;" onclick="openSurveyQuestionModal(-1)">
+          <i class="fa-solid fa-plus"></i> नया प्रश्न जोड़ें
+        </button>
+        <button type="button" class="submit-btn" style="background:#64748b; width:auto; font-size:12px; padding:6px 13px; margin:0;" onclick="resetCurrentFormToDefaultQuestions()">
+          <i class="fa-solid fa-rotate-left"></i> डिफ़ॉल्ट 12 प्रश्न रीसेट
+        </button>
+      </div>
+    </div>
+
+    <div class="table-responsive" style="margin-bottom:18px;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:60px; text-align:center;">क्रम</th>
+            <th>प्रश्न का शीर्षक (Question) एवं उप-प्रश्न</th>
+            <th>उत्तर का प्रकार व विकल्प</th>
+            <th style="text-align:center;">अनिवार्य (*)</th>
+            <th style="text-align:center;">दृश्यता (Show/Hide)</th>
+            <th style="text-align:center;">क्रम बदलें (Up/Down)</th>
+            <th style="text-align:center;">कार्रवाई (Edit/Delete)</th>
+          </tr>
+        </thead>
+        <tbody id="adminSurveyBuilderQuestionsTbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Step 4: Live Interactive Preview of PS Survey Form -->
+    <div style="background:var(--sub-box-bg); border:2px dashed #2563eb; border-radius:12px; padding:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+        <span style="font-size:14px; font-weight:800; color:#2563eb;">
+          <i class="fa-solid fa-eye"></i> 4. लाइव PS पोर्टल फ़ॉर्म प्रीव्यू (जैसा पंचायत सहायक को स्क्रीन पर दिखेगा):
+        </span>
+        <button type="button" class="submit-btn" style="background:#16a34a; width:auto; font-size:12.5px; padding:7px 16px; margin:0;" onclick="saveSurveyFormsConfigFromAdmin()">
+          <i class="fa-solid fa-floppy-disk"></i> बदलाव सेव व पब्लिश करें
+        </button>
+      </div>
+      <div id="adminSurveyBuilderLivePreviewBox" style="background:var(--card-bg); border:1px solid var(--input-border); border-radius:12px; padding:16px; max-width:720px; margin:0 auto;"></div>
     </div>
   </div>
 
@@ -3413,7 +3444,8 @@ body.modal-open {
       <div class="field-group" style="text-align:left;"><label>जन्म-मृत्यु रजिस्टर</label><input type="text" id="editBirthDeathRegister" class="field-input" required></div>
       <div class="field-group" style="text-align:left;"><label>शौचालय स्वच्छता</label><input type="text" id="editToiletStatus" class="field-input" required></div>
       <div class="field-group" style="text-align:left;"><label>रजिस्टर कार्यकर्ता</label><input type="text" id="editRegisterWorker" class="field-input" required></div>
-      <div class="field-group" style="text-align:left;"><label>भुगतान कार्यकर्ता</label><input type="text" id="editPaymentWorker" class="field-input" required></div>
+      <div class="field-group" style="text-align:left;"><label>भुगतान कार्यकर्ता</label><input type="text" id="editPaymentWorker" class="field-input"></div>
+      <div id="editSurveyCustomFieldsContainer" style="margin-top:10px; border-top:1px dashed var(--input-border); padding-top:10px; text-align:left; display:none;"></div>
       <button type="submit" class="submit-btn" style="background:#16a34a; display:inline-block;">अद्यतन सुरक्षित करें</button>
       <button type="button" class="submit-btn" onclick="closeModal('editSurveyModal')" style="background:#64748b; margin-top:5px; font-size:14px; padding:8px; display:inline-block;">रद्द करें</button>
     </form>
@@ -3657,7 +3689,154 @@ body.modal-open {
 
 <div id="printTemplateArea"></div>
 
- <!-- 1. प्रथम लॉगिन पर पासवर्ड व MPIN बदलने का मॉडर्न पॉपअप -->
+ 
+<!-- 16. ADD / EDIT SURVEY QUESTION MODAL (➕ सर्वे प्रश्न जोड़ें / संपादित करें पॉपअप) -->
+<div class="modal-backdrop" id="surveyQuestionModal">
+  <div class="modal-box" style="max-width:620px; max-height:92vh; overflow-y:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #2563eb; padding-bottom:10px; margin-bottom:14px;">
+      <h3 id="surveyQuestionModalTitle" style="color:#1e3a8a; font-size:17px; margin:0;">
+        <i class="fa-solid fa-circle-question"></i> नया सर्वे प्रश्न जोड़ें
+      </h3>
+      <button type="button" onclick="closeModal('surveyQuestionModal')" style="background:#dc2626; color:#fff; border:none; width:28px; height:28px; border-radius:50%; cursor:pointer; font-weight:bold;">✕</button>
+    </div>
+
+    <input type="hidden" id="sqEditIndexInput" value="-1">
+
+    <div class="field-group">
+      <label>1. प्रश्न का शीर्षक / नाम (Question Label) <span class="req">*</span></label>
+      <input type="text" id="sqLabelInput" class="field-input" placeholder="उदा: आपके ग्राम पंचायत में कुल कितने आयुष्मान कार्ड बने हैं?">
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+      <div class="field-group">
+        <label>2. उत्तर का प्रकार (Input Type) <span class="req">*</span></label>
+        <select id="sqTypeSelect" class="field-input" onchange="handleSqTypeChange()">
+          <option value="dropdown">📋 ड्रॉपडाउन चयन (Dropdown Options)</option>
+          <option value="conditional">🔀 शर्त वाला प्रश्न (हाँ/विकल्प चुनने पर उप-प्रश्न खुले)</option>
+          <option value="text">✍️ छोटा टेक्स्ट उत्तर (Short Text)</option>
+          <option value="number">🔢 संख्या इनपुट (Number Only)</option>
+          <option value="textarea">📝 विस्तृत विवरण (Paragraph / Textarea)</option>
+          <option value="date">📅 तारीख चयन (Date DD/MM/YYYY)</option>
+          <option value="radio">🔘 रेडियो बटन विकल्प (Radio Buttons)</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label>3. क्या यह प्रश्न अनिवार्य (Required *) है?</label>
+        <select id="sqRequiredSelect" class="field-input">
+          <option value="true">✅ हाँ, भरना अनिवार्य है (*)</option>
+          <option value="false">⚪ नहीं, वैकल्पिक (Optional) है</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-group" id="sqPlaceholderBox">
+      <label>सहायक संकेत टेक्स्ट (Placeholder)</label>
+      <input type="text" id="sqPlaceholderInput" class="field-input" placeholder="उदा: यहाँ उत्तर दर्ज करें...">
+    </div>
+
+    <div class="field-group" id="sqOptionsBox">
+      <label>विकल्पों की सूची (Options - कॉमा `,` लगाकर अलग करें) <span class="req">*</span></label>
+      <input type="text" id="sqOptionsInput" class="field-input" placeholder="उदा: हाँ, नहीं  या  सही है, ख़राब है, उपलब्ध नहीं है">
+      <small style="font-size:11px; color:#64748b;">प्रत्येक विकल्प के बीच कॉमा (,) लगाएं।</small>
+    </div>
+
+    <!-- Conditional Sub-Question Configuration Box -->
+    <div id="sqConditionalSubConfigBox" style="display:none; background:var(--sub-box-bg); border:1.5px dashed #2563eb; border-radius:10px; padding:12px; margin-bottom:14px;">
+      <div style="font-size:13px; font-weight:800; color:#2563eb; margin-bottom:8px;">
+        <i class="fa-solid fa-code-branch"></i> उप-प्रश्न (Sub-Question) सेटिंग्स:
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px;">
+        <div class="field-group" style="margin-bottom:0;">
+          <label style="font-size:12px;">किस मुख्य विकल्प को चुनने पर उप-प्रश्न खुलेगा?</label>
+          <input type="text" id="sqTriggerValInput" class="field-input" placeholder="उदा: हाँ  या  है">
+        </div>
+        <div class="field-group" style="margin-bottom:0;">
+          <label style="font-size:12px;">उप-प्रश्न का प्रकार</label>
+          <select id="sqSubTypeSelect" class="field-input" onchange="handleSqSubTypeChange()">
+            <option value="text">छोटा टेक्स्ट (Text)</option>
+            <option value="number">संख्या (Number)</option>
+            <option value="dropdown">ड्रॉपडाउन (Dropdown)</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group" style="margin-top:8px; margin-bottom:0;">
+        <label style="font-size:12px;">उप-प्रश्न का शीर्षक (Sub-Question Label)</label>
+        <input type="text" id="sqSubLabelInput" class="field-input" placeholder="उदा: यदि हाँ, तो विवरण या संख्या दर्ज करें:">
+      </div>
+      <div class="field-group" id="sqSubOptionsBox" style="margin-top:8px; margin-bottom:0; display:none;">
+        <label style="font-size:12px;">उप-प्रश्न के विकल्प (कॉमा `,` से अलग करें)</label>
+        <input type="text" id="sqSubOptionsInput" class="field-input" placeholder="उदा: 1- रिचार्ज है, 2- रिचार्ज नहीं है">
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+      <button type="button" class="submit-btn" style="background:#64748b; width:auto; padding:8px 18px; margin:0;" onclick="closeModal('surveyQuestionModal')">रद्द करें</button>
+      <button type="button" class="submit-btn" style="background:#16a34a; width:auto; padding:8px 22px; margin:0;" onclick="saveQuestionToCurrentDraftForm()">
+        <i class="fa-solid fa-check"></i> प्रश्न जोड़ें / अपडेट करें
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 17. CREATE NEW SURVEY FORM / TEMPLATE SELECTOR MODAL (➕ नया दूसरा फ़ॉर्म बनाएं पॉपअप) -->
+<div class="modal-backdrop" id="createNewSurveyFormModal">
+  <div class="modal-box" style="max-width:650px; max-height:92vh; overflow-y:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #f59e0b; padding-bottom:10px; margin-bottom:14px;">
+      <h3 style="color:#d97706; font-size:17.5px; margin:0;">
+        <i class="fa-solid fa-folder-plus"></i> PS पोर्टल हेतु नया सर्वे फ़ॉर्म बनाएं
+      </h3>
+      <button type="button" onclick="closeModal('createNewSurveyFormModal')" style="background:#dc2626; color:#fff; border:none; width:28px; height:28px; border-radius:50%; cursor:pointer; font-weight:bold;">✕</button>
+    </div>
+
+    <div class="field-group">
+      <label>1. रेडीमेड फ़ॉर्म टेम्पलेट चुनें (या खाली कस्टम फ़ॉर्म चुनें):</label>
+      <select id="newSurveyTemplateSelect" class="field-input" onchange="applyNewSurveyTemplatePreset()" style="font-weight:700; color:#1e3a8a;">
+        <option value="blank">✨ खाली नया कस्टम फ़ॉर्म (अपने अनुसार नए प्रश्न जोड़ें)</option>
+        <option value="crop_survey">🌾 डिजिटल क्रॉप सर्वे (ई-खसरा) एवं फार्मर रजिस्ट्री प्रगति/समस्या फ़ॉर्म</option>
+        <option value="ayushman_family">🏥 आयुष्मान कार्ड, फैमिली आईडी एवं पेंशन सत्यापन अभियान रिपोर्ट</option>
+        <option value="meeting_consent">🤝 यूनियन बैठक उपस्थिति सहमति एवं सुझाव संकलन फ़ॉर्म</option>
+        <option value="main_clone">🏛️ पंचायत भवन एवं मानदेय सर्वे (12 प्रश्नों की नई कॉपी)</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label>2. नए फ़ॉर्म का शीर्षक (Form Title) <span class="req">*</span></label>
+      <input type="text" id="newSurveyFormTitleInput" class="field-input" placeholder="उदा: डिजिटल क्रॉप सर्वे एवं फार्मर रजिस्ट्री स्थिति फ़ॉर्म - 2026">
+    </div>
+
+    <div class="field-group">
+      <label>3. दिशा-निर्देश / नोट (Subtitle)</label>
+      <input type="text" id="newSurveyFormSubtitleInput" class="field-input" placeholder="उदा: सभी पंचायत सहायक अपनी ग्राम पंचायत की सटीक जानकारी आज ही दर्ज करें।">
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+      <div class="field-group">
+        <label>4. सबमिशन नियम</label>
+        <select id="newSurveyFormPolicySelect" class="field-input">
+          <option value="single">🔒 केवल 1 बार सबमिट (अप्रूवल आवश्यक)</option>
+          <option value="open_update">🔓 खुला अपडेट (कभी भी अपडेट कर सकें)</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>5. क्या इसे तुरंत PS पोर्टल पर लाइव (Active) करना है?</label>
+        <select id="newSurveyMakeActiveSelect" class="field-input">
+          <option value="true">🟢 हाँ, बनाते ही PS पोर्टल पर लाइव करें</option>
+          <option value="false">⚪ नहीं, अभी केवल ड्राफ्ट में रखें</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+      <button type="button" class="submit-btn" style="background:#64748b; width:auto; padding:8px 18px; margin:0;" onclick="closeModal('createNewSurveyFormModal')">रद्द करें</button>
+      <button type="button" class="submit-btn" style="background:#d97706; width:auto; padding:8px 22px; margin:0;" onclick="confirmCreateNewSurveyForm()">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> नया फ़ॉर्म तैयार करें
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 1. प्रथम लॉगिन पर पासवर्ड व MPIN बदलने का मॉडर्न पॉपअप -->
 <div id="firstTimeSetupModal" class="custom-modal-overlay" style="display:none;">
   <div class="custom-modal-box">
     <div class="modal-header-modern">
@@ -3897,6 +4076,12 @@ function formatDateToIndian(dateVal) {
         },
         deleteUnionExpenseSecure: function(token, expenseId) {
           this._callApi('deleteUnionExpenseSecure', { token: token, expenseId: expenseId }, [token, expenseId]);
+        },
+        saveSurveyFormsConfigSecure: function(token, configObj) {
+          this._callApi('saveSurveyFormsConfigSecure', { token: token, configObj: configObj }, [token, configObj]);
+        },
+        bulkToggleSurveyUpdateSecure: function(token, formId, allowFlagStr) {
+          this._callApi('bulkToggleSurveyUpdateSecure', { token: token, formId: formId, allowFlagStr: allowFlagStr }, [token, formId, allowFlagStr]);
         }
       }
     }
@@ -4359,6 +4544,9 @@ function openAdminLoginModal() {
     } else {
       applyPsPortalConfigToUI(cachedPsPortalConfig);
     }
+    if (res.surveyFormsConfig && res.surveyFormsConfig.forms) {
+      applySurveyFormsConfigToUI(res.surveyFormsConfig);
+    }
     document.getElementById('homeGpCount').innerText = res.stats.totalGramPanchayat;
     document.getElementById('homeAppointedPsCount').innerText = res.stats.totalAppointedPS;
     document.getElementById('homePortalRegisteredCount').innerText = res.stats.totalRegisteredPS;
@@ -4437,7 +4625,9 @@ function openAdminLoginModal() {
     document.getElementById('modalMsg').innerText = msg;
     var waBtn = document.getElementById('whatsappSendReceiptBtn');
     if (isSuccess && payload) {
+      var waFormName = (payload && payload.formTitle) ? ("• *सर्वे फ़ॉर्म:* " + payload.formTitle + "\n") : "";
       var waText = "नमस्ते,\n\nमैंने अपना विस्तृत सर्वे फ़ॉर्म जमा कर दिया है:\n" +
+        waFormName +
         "• *ग्राम पंचायत:* " + payload.gramPanchayat + "\n" +
         "• *पंचायत सहायक:* " + payload.fullName + "\n" +
         "• *मोबाइल नंबर:* " + payload.mobile + "\n\n" +
@@ -4485,6 +4675,11 @@ function openAdminLoginModal() {
 
     if (res.executives && res.executives.length > 0) {
       applyUnionExecutivesToUI(res.executives);
+    }
+    if (res.surveyFormsConfig && res.surveyFormsConfig.forms) {
+      applySurveyFormsConfigToUI(res.surveyFormsConfig);
+    } else {
+      renderActivePsSurveyFormUI();
     }
     renderPsClusterCard(loggedInPsCluster, loggedInPsUser);
     renderNoticesHTML('psNoticesListContainer', res.notices);
@@ -4677,71 +4872,9 @@ function openAdminLoginModal() {
   }
 
   function prefillSurveyForUpdate() {
+    renderActivePsSurveyFormUI();
     if (loggedInPsUser && loggedInPsUser.previousSurveyData) {
-      var prev = loggedInPsUser.previousSurveyData;
-      document.getElementById('surveyBannerHeading').innerText = "पंचायत भवन सुविधा एवं व्यवस्था - सर्वे फ़ॉर्म अद्यतन (Update)";
-      document.getElementById('pendingSalary').value = prev.pendingSalaryMonths || "";
-      document.getElementById('drinkingWater').value = prev.drinkingWater || "";
-      document.getElementById('electricity').value = prev.electricity || "";
-      document.getElementById('stationery').value = prev.stationery || "";
-      document.getElementById('parivarRegister').value = prev.parivarRegister || "";
-      document.getElementById('birthDeathRegister').value = prev.birthDeathRegister || "";
-
-      // वाई-फ़ाई प्री-फ़िल
-      if (prev.wifiStatus && prev.wifiStatus !== "नहीं है") {
-        document.getElementById('wifiOption').value = "है";
-        document.getElementById('wifiRechargeStatus').value = prev.wifiStatus;
-      } else if (prev.wifiStatus === "नहीं है") {
-        document.getElementById('wifiOption').value = "नहीं है";
-      }
-      toggleSubOption('wifiOption', 'wifiSubBox');
-
-      // ग्राम निधि रिचार्ज प्री-फ़िल
-      if (prev.gramNidhiRecharge && prev.gramNidhiRecharge !== "नहीं किया गया है") {
-        document.getElementById('gramNidhiOption').value = "है";
-        document.getElementById('gramNidhiMonths').value = String(prev.gramNidhiRecharge).replace(/\D/g, "");
-      } else if (prev.gramNidhiRecharge === "नहीं किया गया है") {
-        document.getElementById('gramNidhiOption').value = "नहीं किया गया है";
-      }
-      toggleSubOption('gramNidhiOption', 'gramNidhiSubBox');
-
-      // प्रिंटर प्री-फ़िल
-      if (prev.printerStatus && prev.printerStatus !== "नहीं है") {
-        document.getElementById('printerOption').value = "है";
-        document.getElementById('printerCondition').value = prev.printerStatus;
-      } else if (prev.printerStatus === "नहीं है") {
-        document.getElementById('printerOption').value = "नहीं है";
-      }
-      toggleSubOption('printerOption', 'printerSubBox');
-
-      // शौचालय प्री-फ़िल
-      if (prev.toiletStatus && prev.toiletStatus !== "नहीं है") {
-        document.getElementById('toiletOption').value = "है";
-        document.getElementById('toiletCleanliness').value = prev.toiletStatus;
-      } else if (prev.toiletStatus === "नहीं है") {
-        document.getElementById('toiletOption').value = "नहीं है";
-      }
-      toggleSubOption('toiletOption', 'toiletSubBox');
-
-      // रजिस्टर कार्यकर्ता प्री-फ़िल
-      if (prev.registerWorker && prev.registerWorker.indexOf("मुंशी") === 0) {
-        document.getElementById('registerWorkerOption').value = "मुंशी";
-        var mMatch = prev.registerWorker.match(/\(([^)]*)\)/);
-        document.getElementById('munshiName').value = mMatch ? mMatch[1] : "";
-      } else if (prev.registerWorker) {
-        document.getElementById('registerWorkerOption').value = prev.registerWorker;
-      }
-      toggleSubOption('registerWorkerOption', 'munshiSubBox');
-
-      // भुगतान कार्यकर्ता प्री-फ़िल
-      if (prev.paymentWorker && prev.paymentWorker.indexOf("बाहरी व्यक्ति") === 0) {
-        document.getElementById('paymentWorkerOption').value = "बाहरी व्यक्ति";
-        var oMatch = prev.paymentWorker.match(/\(([^)]*)\)/);
-        document.getElementById('outsiderName').value = oMatch ? oMatch[1] : "";
-      } else if (prev.paymentWorker) {
-        document.getElementById('paymentWorkerOption').value = prev.paymentWorker;
-      }
-      toggleSubOption('paymentWorkerOption', 'outsiderSubBox');
+      prefillDynamicSurveyAnswers(loggedInPsUser.previousSurveyData);
     }
   }
 
@@ -4807,32 +4940,17 @@ function openAdminLoginModal() {
 
   function handleMainSurveySubmit(e) {
     e.preventDefault();
+    var activeForm = getActiveSurveyFormObjClient();
+    if (activeForm && activeForm.status === "CLOSED") {
+      showMsg("फ़ॉर्म बंद है", "यह सर्वे फ़ॉर्म वर्तमान में एडमिन द्वारा बंद कर दिया गया है।", false);
+      return;
+    }
     var btn = document.getElementById('btnSubmit');
     btn.disabled = true;
 
     showLoader("सर्वे फ़ॉर्म डेटा अपलोड हो रहा है...");
 
-    var payload = {
-      email: document.getElementById('email').value,
-      district: document.getElementById('district').value,
-      block: document.getElementById('block').value,
-      gramPanchayat: document.getElementById('gramPanchayat').value,
-      fullName: document.getElementById('fullName').value,
-      guardianName: document.getElementById('guardianName').value,
-      mobile: document.getElementById('mobile').value,
-      pendingSalaryMonths: document.getElementById('pendingSalary').value,
-      wifiStatus: document.getElementById('wifiOption').value === 'है' ? document.getElementById('wifiRechargeStatus').value : 'नहीं है',
-      gramNidhiRecharge: document.getElementById('gramNidhiOption').value === 'है' ? document.getElementById('gramNidhiMonths').value + ' माह' : 'नहीं किया गया है',
-      drinkingWater: document.getElementById('drinkingWater').value,
-      electricity: document.getElementById('electricity').value,
-      printerStatus: document.getElementById('printerOption').value === 'है' ? document.getElementById('printerCondition').value : 'नहीं है',
-      stationery: document.getElementById('stationery').value,
-      parivarRegister: document.getElementById('parivarRegister').value,
-      birthDeathRegister: document.getElementById('birthDeathRegister').value,
-      toiletStatus: document.getElementById('toiletOption').value === 'है' ? document.getElementById('toiletCleanliness').value : 'नहीं है',
-      registerWorker: document.getElementById('registerWorkerOption').value === 'मुंशी' ? 'मुंशी (' + document.getElementById('munshiName').value + ')' : document.getElementById('registerWorkerOption').value,
-      paymentWorker: document.getElementById('paymentWorkerOption').value === 'बाहरी व्यक्ति' ? 'बाहरी व्यक्ति (' + document.getElementById('outsiderName').value + ')' : document.getElementById('paymentWorkerOption').value
-    };
+    var payload = collectDynamicPsSurveyPayload();
 
     google.script.run.withSuccessHandler(function(res) {
       hideLoader();
@@ -4843,7 +4961,7 @@ function openAdminLoginModal() {
         for (var sb = 0; sb < subBoxes.length; sb++) { subBoxes[sb].style.display = 'none'; }
         if (loggedInPsUser) {
           loggedInPsUser.alreadySubmitted = true;
-          loggedInPsUser.canUpdate = false;
+          loggedInPsUser.canUpdate = (activeForm && activeForm.submissionPolicy === 'open_update');
           document.getElementById('email').value = loggedInPsUser.email || "";
           document.getElementById('district').value = loggedInPsUser.district || "बलरामपुर";
           document.getElementById('block').value = loggedInPsUser.block || "उतरौला";
@@ -5187,6 +5305,9 @@ function openAdminLoginModal() {
     } else {
       applyPsPortalConfigToUI(cachedPsPortalConfig);
     }
+    if (res.surveyFormsConfig && res.surveyFormsConfig.forms) {
+      applySurveyFormsConfigToUI(res.surveyFormsConfig);
+    }
     adminDraftPsPortalConfig = JSON.parse(JSON.stringify(cachedPsPortalConfig));
     renderAdminPsPortalControlTable();
     if (res.unionIncomeData) {
@@ -5204,11 +5325,8 @@ function openAdminLoginModal() {
     }
 
     initCharts(res.stats);
-    if (isSilentRefresh && document.getElementById('surveySearchInput') && document.getElementById('surveySearchInput').value.trim()) {
-      filterAdminTable();
-    } else {
-      renderAdminTable(cachedSurveyRecords);
-    }
+    populateAdminSurveyFormFilterDropdown();
+    filterAdminTable();
     if (isSilentRefresh && document.getElementById('regSearchInput') && document.getElementById('regSearchInput').value.trim()) {
       filterRegisteredTable();
     } else {
@@ -5332,6 +5450,9 @@ function openAdminLoginModal() {
     if (document.getElementById('psPortalControlTabContent')) {
       document.getElementById('psPortalControlTabContent').style.display = (tab === 'psPortalControl') ? 'block' : 'none';
     }
+    if (document.getElementById('surveyBuilderTabContent')) {
+      document.getElementById('surveyBuilderTabContent').style.display = (tab === 'surveyBuilder') ? 'block' : 'none';
+    }
     if (document.getElementById('unionIncomeTabContent')) {
       document.getElementById('unionIncomeTabContent').style.display = (tab === 'unionIncome') ? 'block' : 'none';
     }
@@ -5359,6 +5480,9 @@ function openAdminLoginModal() {
     if (document.getElementById('tabPsPortalControlBtn')) {
       document.getElementById('tabPsPortalControlBtn').classList.toggle('active', tab === 'psPortalControl');
     }
+    if (document.getElementById('tabSurveyBuilderBtn')) {
+      document.getElementById('tabSurveyBuilderBtn').classList.toggle('active', tab === 'surveyBuilder');
+    }
     if (document.getElementById('tabUnionIncomeBtn')) {
       document.getElementById('tabUnionIncomeBtn').classList.toggle('active', tab === 'unionIncome');
     }
@@ -5374,6 +5498,9 @@ function openAdminLoginModal() {
     }
     if (tab === 'psPortalControl') {
       renderAdminPsPortalControlTable();
+    }
+    if (tab === 'surveyBuilder') {
+      renderAdminSurveyBuilderMasterView();
     }
     if (tab === 'unionIncome') {
       populateUnionIncomeFilters();
@@ -6173,6 +6300,11 @@ function openAdminLoginModal() {
   }
 
   function initCharts(stats) {
+    if (!stats) return;
+    if (typeof Chart === 'undefined' || !document.getElementById('infraChart') || !document.getElementById('equipChart')) {
+      setTimeout(function() { initCharts(stats); }, 150);
+      return;
+    }
     var isDark = document.body.classList.contains('dark-mode');
     var labelColor = isDark ? '#f1f5f9' : '#0f172a';
 
@@ -6775,6 +6907,13 @@ function viewAdminLeaveModal(rowOrIdx) {
 
     var statusElem = document.getElementById('psScanStatusMessage');
     var laserElem = document.getElementById('psScanLaser');
+    if (typeof Html5Qrcode === 'undefined') {
+      if (statusElem) {
+        statusElem.innerText = "कैमरा स्कैनर लाइब्रेरी लोड हो रही है, कृपया 2 सेकंड बाद पुनः क्लिक करें...";
+        statusElem.style.color = "#2563eb";
+      }
+      return;
+    }
 
     if (statusElem) {
       statusElem.innerText = "कैमरा लोड हो रहा है, कृपया Allow (अनुमति) दें...";
@@ -11154,6 +11293,1090 @@ function exportMadCashbookToCSV() {
   }
   downloadCSVFile(csv, "Utraula_Union_Mad_Wise_Expense_Cashbook.csv");
 }
+
+
+
+// ================= NEW FEATURE 11: DYNAMIC SURVEY & MULTI-FORM BUILDER ENGINE =================
+function getDefaultMainSurveyQuestionsClient() {
+  return [
+    {
+      qId: "pendingSalaryMonths",
+      order: 1,
+      label: "आपका कुल बकाया मानदेय कितने माह का है?",
+      type: "number",
+      placeholder: "केवल संख्या लिखें (उदा. 4)",
+      options: [],
+      required: true,
+      enabled: true,
+      isSystem: true
+    },
+    {
+      qId: "wifiStatus",
+      order: 2,
+      label: "आपके पंचायत भवन में वाई-फ़ाई (Wi-Fi) है?",
+      type: "conditional",
+      options: ["है", "नहीं है"],
+      triggerValue: "है",
+      subLabel: "रिचार्ज की स्थिति:",
+      subType: "dropdown",
+      subOptions: ["1- रिचार्ज है", "2- रिचार्ज नहीं है"],
+      required: true,
+      enabled: true,
+      isSystem: true
+    },
+    {
+      qId: "gramNidhiRecharge",
+      order: 3,
+      label: "आपके मोबाइल में सचिव द्वारा ग्राम निधि से रिचार्ज किया गया है?",
+      type: "conditional",
+      options: ["किया गया है", "नहीं किया गया है"],
+      triggerValue: "किया गया है",
+      subLabel: "कितने माह का रिचार्ज किया गया है? (संख्या में लिखें):",
+      subType: "number",
+      subPlaceholder: "माह की संख्या लिखें",
+      subSuffix: " माह",
+      required: true,
+      enabled: true,
+      isSystem: true
+    },
+    {
+      qId: "drinkingWater",
+      order: 4,
+      label: "ग्राम पंचायत भवन में वर्तमान में पेयजल की क्या व्यवस्था है?",
+      type: "dropdown",
+      options: [
+        "i) हैण्डपम्प / इंडिया मार्क हैण्डपम्प द्वारा",
+        "ii) RO / वाटर प्यूरिफायर द्वारा",
+        "iii) पाइप लाइन / हर घर नल जल योजना",
+        "iv) नहीं है"
+      ],
+      required: true,
+      enabled: true,
+      isSystem: true
+    },
+    {
+      qId: "electricity",
+      order: 5,
+      label: "आपके पंचायत भवन में बिजली की व्यवस्था है?",
+      type: "dropdown",
+      options: ["i) है", "ii) नहीं है"],
+      required: true,
+      enabled: true,
+      isSystem: true
+    },
+    {
+      qId: "printerStatus",
+      order: 6,
+      label: "आपके पंचायत भवन में प्रिंटर है?",
+      type: "conditional",
+      options: ["है", "नहीं है"],
+      triggerValue: "है",
+      subLabel: "प्रिंटर की कार्य स्थिति:",
+      subType: "dropdown",
+      subOptions: ["1- सही है", "2- ख़राब है"],
+      required: true,
+      enabled: true,
+      isSystem: true
+    },
+    {
+      qId: "stationery",
+      order: 7,
+      label: "आपके पंचायत भवन में स्टेशनरी का सामान उपलब्ध है?",
+      type: "dropdown",
+      options: ["i) है", "ii) नहीं है"],
+      required: true,
+      enabled: true,
+      isSystem: true
+    },
+    {
+      qId: "parivarRegister",
+      order: 8,
+      label: "आपके पंचायत भवन में परिवार रजिस्टर मौजूद है?",
+      type: "dropdown",
+      options: ["i) है", "ii) नहीं है"],
+      required: true,
+      enabled: true,
+      isSystem: true
+    },
+    {
+      qId: "birthDeathRegister",
+      order: 9,
+      label: "आपके पंचायत भवन में जन्म-मृत्यु रजिस्टर मौजूद है?",
+      type: "dropdown",
+      options: ["i) है", "ii) नहीं है"],
+      required: true,
+      enabled: true,
+      isSystem: true
+    },
+    {
+      qId: "toiletStatus",
+      order: 10,
+      label: "आपके पंचायत भवन में शौचालय है?",
+      type: "conditional",
+      options: ["है", "नहीं है"],
+      triggerValue: "है",
+      subLabel: "शौचालय की साफ़-सफ़ाई की स्थिति:",
+      subType: "dropdown",
+      subOptions: ["1- साफ़-सफ़ाई रहता है", "2- साफ़-सफ़ाई नहीं रहता है"],
+      required: true,
+      enabled: true,
+      isSystem: true
+    },
+    {
+      qId: "registerWorker",
+      order: 11,
+      label: "जन्म-मृत्यु व परिवार रजिस्टर का कार्य किसके द्वारा किया जाता है?",
+      type: "conditional",
+      options: ["i) सचिव महोदय के द्वारा", "ii) पंचायत सहायक के द्वारा", "iii) मुंशी के द्वारा"],
+      triggerValue: "iii) मुंशी के द्वारा",
+      subLabel: "मुंशी का क्या नाम है?:",
+      subType: "text",
+      subPlaceholder: "मुंशी का नाम लिखें",
+      subFormatPrefix: "मुंशी (",
+      subFormatSuffix: ")",
+      required: true,
+      enabled: true,
+      isSystem: true
+    },
+    {
+      qId: "paymentWorker",
+      order: 12,
+      label: "ग्राम पंचायत का ऑनलाइन भुगतान कार्य किसके द्वारा किया जाता है?",
+      type: "conditional",
+      options: ["i) सचिव महोदय के द्वारा", "ii) पंचायत सहायक के द्वारा", "iii) बाहरी व्यक्ति के द्वारा"],
+      triggerValue: "iii) बाहरी व्यक्ति के द्वारा",
+      subLabel: "बाहरी व्यक्ति का क्या नाम है?:",
+      subType: "text",
+      subPlaceholder: "व्यक्ति का नाम लिखें",
+      subFormatPrefix: "बाहरी व्यक्ति (",
+      subFormatSuffix: ")",
+      required: true,
+      enabled: true,
+      isSystem: true
+    }
+  ];
+}
+
+function getDefaultSurveyFormsConfigClient() {
+  return {
+    activeFormId: "FORM_MAIN_DEFAULT",
+    forms: [
+      {
+        formId: "FORM_MAIN_DEFAULT",
+        title: "पंचायत भवन सुविधा एवं व्यवस्था - विस्तृत सूचना फ़ॉर्म",
+        subtitle: "कृपया अपनी ग्राम पंचायत के सचिवालय की भौतिक सुविधाओं एवं मानदेय की सटीक जानकारी दर्ज करें।",
+        submitBtnText: "सर्वे फ़ॉर्म सबमिट करें",
+        status: "OPEN",
+        submissionPolicy: "single",
+        showProfileFields: true,
+        updatedAt: "",
+        questions: getDefaultMainSurveyQuestionsClient()
+      }
+    ]
+  };
+}
+
+var cachedSurveyFormsConfig = getDefaultSurveyFormsConfigClient();
+var adminDraftSurveyFormsConfig = JSON.parse(JSON.stringify(cachedSurveyFormsConfig));
+var currentEditingSurveyFormId = "FORM_MAIN_DEFAULT";
+
+function getActiveSurveyFormObjClient() {
+  if (!cachedSurveyFormsConfig || !Array.isArray(cachedSurveyFormsConfig.forms) || cachedSurveyFormsConfig.forms.length === 0) {
+    cachedSurveyFormsConfig = getDefaultSurveyFormsConfigClient();
+  }
+  var actId = cachedSurveyFormsConfig.activeFormId;
+  for (var i = 0; i < cachedSurveyFormsConfig.forms.length; i++) {
+    if (cachedSurveyFormsConfig.forms[i].formId === actId) {
+      return cachedSurveyFormsConfig.forms[i];
+    }
+  }
+  return cachedSurveyFormsConfig.forms[0];
+}
+
+function applySurveyFormsConfigToUI(cfg) {
+  if (!cfg || !Array.isArray(cfg.forms) || cfg.forms.length === 0) return;
+  cachedSurveyFormsConfig = JSON.parse(JSON.stringify(cfg));
+  try {
+    safeSetStorage(localStorage, "psk_survey_forms_config_v1", JSON.stringify(cfg));
+  } catch (e) {}
+  adminDraftSurveyFormsConfig = JSON.parse(JSON.stringify(cachedSurveyFormsConfig));
+  var activeForm = getActiveSurveyFormObjClient();
+  if (!currentEditingSurveyFormId || !findDraftFormById(currentEditingSurveyFormId)) {
+    currentEditingSurveyFormId = activeForm.formId;
+  }
+
+  var qBadge = document.getElementById('activeSurveyFormQCountBadge');
+  if (qBadge && activeForm && Array.isArray(activeForm.questions)) {
+    var enCount = activeForm.questions.filter(function(q) { return q.enabled !== false; }).length;
+    qBadge.innerText = enCount + " प्रश्न";
+  }
+
+  renderActivePsSurveyFormUI();
+  populateAdminSurveyFormFilterDropdown();
+}
+
+function populateAdminSurveyFormFilterDropdown() {
+  var sel = document.getElementById('adminSurveyFormFilterSelect');
+  if (!sel) return;
+  var prevVal = sel.value || "ALL";
+  var forms = (cachedSurveyFormsConfig && Array.isArray(cachedSurveyFormsConfig.forms)) ? cachedSurveyFormsConfig.forms : [];
+  var countsByForm = {};
+  for (var r = 0; r < cachedSurveyRecords.length; r++) {
+    var fid = cachedSurveyRecords[r].formId || "FORM_MAIN_DEFAULT";
+    countsByForm[fid] = (countsByForm[fid] || 0) + 1;
+  }
+  var html = '<option value="ALL">🌐 सभी सर्वे फ़ॉर्म्स (' + cachedSurveyRecords.length + ' रिकॉर्ड्स)</option>';
+  for (var i = 0; i < forms.length; i++) {
+    var fm = forms[i];
+    var c = countsByForm[fm.formId] || 0;
+    var isLiveTag = (fm.formId === cachedSurveyFormsConfig.activeFormId) ? " [🟢 LIVE]" : "";
+    html += '<option value="' + escapeHtml(fm.formId) + '">' + escapeHtml(fm.title) + isLiveTag + ' (' + c + ')</option>';
+  }
+  sel.innerHTML = html;
+  sel.value = prevVal;
+  if (!sel.value) sel.value = "ALL";
+}
+
+function buildQuestionFieldHtml(q, displayNum, prefixStr) {
+  var pfx = prefixStr || "ps_dyn_";
+  var domId = pfx + q.qId;
+  var subBoxId = pfx + "subbox_" + q.qId;
+  var subInputId = pfx + "subin_" + q.qId;
+  var reqStar = q.required !== false ? ' <span class="req">*</span>' : '';
+  var reqAttr = q.required !== false ? ' required' : '';
+  var qType = q.type || "text";
+  var opts = Array.isArray(q.options) ? q.options : [];
+
+  var html = '<div class="field-group" data-qid="' + escapeHtml(q.qId) + '" style="margin-bottom:14px;">';
+  html += '<label for="' + escapeHtml(domId) + '">' + displayNum + '. ' + escapeHtml(q.label) + reqStar + '</label>';
+
+  if (qType === "number") {
+    html += '<input type="number" id="' + escapeHtml(domId) + '" class="field-input" placeholder="' + escapeHtml(q.placeholder || "संख्या दर्ज करें") + '"' + reqAttr + '>';
+  } else if (qType === "textarea") {
+    html += '<textarea id="' + escapeHtml(domId) + '" class="field-input" rows="3" placeholder="' + escapeHtml(q.placeholder || "विस्तृत विवरण लिखें...") + '"' + reqAttr + '></textarea>';
+  } else if (qType === "date") {
+    html += '<input type="date" id="' + escapeHtml(domId) + '" class="field-input"' + reqAttr + '>';
+  } else if (qType === "radio") {
+    html += '<div style="display:flex; flex-wrap:wrap; gap:12px; padding:8px 10px; background:var(--input-bg); border:1px solid var(--input-border); border-radius:8px;">';
+    for (var ro = 0; ro < opts.length; ro++) {
+      var rId = domId + "_r_" + ro;
+      html += '<label for="' + escapeHtml(rId) + '" style="display:inline-flex; align-items:center; gap:6px; font-weight:600; margin:0; cursor:pointer;">' +
+        '<input type="radio" name="' + escapeHtml(domId) + '" id="' + escapeHtml(rId) + '" value="' + escapeHtml(opts[ro]) + '"' + (ro === 0 && q.required !== false ? ' required' : '') + '> ' +
+        escapeHtml(opts[ro]) + '</label>';
+    }
+    html += '</div>';
+  } else if (qType === "dropdown" || qType === "conditional") {
+    var trigVal = q.triggerValue || "है";
+    var onChg = (qType === "conditional")
+      ? ' onchange="handleDynamicConditionalToggle(\'' + escapeJsStr(domId) + '\', \'' + escapeJsStr(subBoxId) + '\', \'' + escapeJsStr(trigVal) + '\')"'
+      : '';
+    html += '<select id="' + escapeHtml(domId) + '" class="field-input"' + onChg + reqAttr + '>';
+    html += '<option value="">-- चुनें --</option>';
+    for (var o = 0; o < opts.length; o++) {
+      html += '<option value="' + escapeHtml(opts[o]) + '">' + escapeHtml(opts[o]) + '</option>';
+    }
+    html += '</select>';
+
+    if (qType === "conditional") {
+      var sType = q.subType || "text";
+      var sOpts = Array.isArray(q.subOptions) ? q.subOptions : [];
+      html += '<div id="' + escapeHtml(subBoxId) + '" class="sub-option-box" style="display:none; margin-top:8px;">';
+      html += '<label>' + escapeHtml(q.subLabel || "विवरण दर्ज करें:") + '</label>';
+      if (sType === "dropdown") {
+        html += '<select id="' + escapeHtml(subInputId) + '" class="field-input">';
+        for (var so = 0; so < sOpts.length; so++) {
+          html += '<option value="' + escapeHtml(sOpts[so]) + '">' + escapeHtml(sOpts[so]) + '</option>';
+        }
+        html += '</select>';
+      } else if (sType === "number") {
+        html += '<input type="number" id="' + escapeHtml(subInputId) + '" class="field-input" placeholder="' + escapeHtml(q.subPlaceholder || "संख्या लिखें") + '">';
+      } else {
+        html += '<input type="text" id="' + escapeHtml(subInputId) + '" class="field-input" placeholder="' + escapeHtml(q.subPlaceholder || "विवरण लिखें") + '">';
+      }
+      html += '</div>';
+    }
+  } else {
+    html += '<input type="text" id="' + escapeHtml(domId) + '" class="field-input" placeholder="' + escapeHtml(q.placeholder || "उत्तर लिखें...") + '"' + reqAttr + '>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+function handleDynamicConditionalToggle(selectDomId, subBoxDomId, triggerValue) {
+  var sel = document.getElementById(selectDomId);
+  var box = document.getElementById(subBoxDomId);
+  if (!sel || !box) return;
+  var val = String(sel.value || "").trim();
+  var trig = String(triggerValue || "").trim();
+  var isMatch = (val !== "" && (val === trig || (trig && val.indexOf(trig) !== -1) || val === "है" || val === "हाँ" || val === "किया गया है" || val.indexOf("मुंशी") !== -1 || val.indexOf("बाहरी व्यक्ति") !== -1));
+  box.style.display = isMatch ? "block" : "none";
+}
+
+function renderActivePsSurveyFormUI() {
+  var activeForm = getActiveSurveyFormObjClient();
+  if (!activeForm) return;
+
+  var headingEl = document.getElementById('surveyBannerHeading');
+  var subEl = document.getElementById('surveyBannerSubtitle');
+  var btnTxtEl = document.getElementById('psSurveySubmitBtnText');
+  var btnSubmitEl = document.getElementById('btnSubmit');
+  var closedAlert = document.getElementById('psSurveyClosedAlert');
+  var profileBox = document.getElementById('psSurveyProfileFieldsBox');
+  var policyBadge = document.getElementById('psSurveyPolicyBadge');
+  var activeBadge = document.getElementById('psSurveyActiveBadge');
+
+  if (headingEl) {
+    var isUpd = (loggedInPsUser && loggedInPsUser.canUpdate && loggedInPsUser.alreadySubmitted);
+    headingEl.innerText = activeForm.title + (isUpd ? " (अद्यतन / Update)" : "");
+  }
+  if (subEl) {
+    subEl.innerText = activeForm.subtitle || "";
+    subEl.style.display = activeForm.subtitle ? "block" : "none";
+  }
+  if (btnTxtEl) {
+    btnTxtEl.innerText = activeForm.submitBtnText || "सर्वे फ़ॉर्म सबमिट करें";
+  }
+  if (profileBox) {
+    profileBox.style.display = (activeForm.showProfileFields !== false) ? "block" : "none";
+  }
+  if (policyBadge) {
+    policyBadge.innerText = (activeForm.submissionPolicy === "open_update") ? "🔓 खुला संशोधन मोड" : "🔒 आधिकारिक सत्यापित मोड";
+  }
+  if (activeForm.status === "CLOSED") {
+    if (closedAlert) closedAlert.style.display = "block";
+    if (btnSubmitEl) btnSubmitEl.style.display = "none";
+    if (activeBadge) {
+      activeBadge.style.background = "rgba(239,68,68,0.2)";
+      activeBadge.style.color = "#f87171";
+      activeBadge.innerHTML = '<i class="fa-solid fa-lock"></i> फ़ॉर्म बंद है';
+    }
+  } else {
+    if (closedAlert) closedAlert.style.display = "none";
+    if (btnSubmitEl) btnSubmitEl.style.display = "block";
+    if (activeBadge) {
+      activeBadge.style.background = "rgba(34,197,94,0.2)";
+      activeBadge.style.color = "#4ade80";
+      activeBadge.innerHTML = '<i class="fa-solid fa-circle-dot"></i> लाइव सर्वे फ़ॉर्म';
+    }
+  }
+
+  var qContainer = document.getElementById('dynamicPsSurveyQuestionsBox');
+  if (!qContainer) return;
+
+  var questions = Array.isArray(activeForm.questions) ? activeForm.questions : [];
+  var enabledQs = questions.filter(function(q) { return q.enabled !== false; });
+  var startNum = (activeForm.showProfileFields !== false) ? 7 : 1;
+  var html = "";
+
+  for (var i = 0; i < enabledQs.length; i++) {
+    html += buildQuestionFieldHtml(enabledQs[i], startNum + i, "ps_dyn_");
+  }
+  qContainer.innerHTML = html;
+}
+
+function readDynamicQuestionAnswer(q, prefixStr) {
+  var pfx = prefixStr || "ps_dyn_";
+  var domId = pfx + q.qId;
+  var subBoxId = pfx + "subbox_" + q.qId;
+  var subInputId = pfx + "subin_" + q.qId;
+  var qType = q.type || "text";
+
+  if (qType === "radio") {
+    var checked = document.querySelector('input[name="' + domId + '"]:checked');
+    return checked ? checked.value.trim() : "";
+  }
+
+  var el = document.getElementById(domId);
+  if (!el) return "";
+  var mainVal = String(el.value || "").trim();
+
+  if (qType === "conditional") {
+    var subBox = document.getElementById(subBoxId);
+    var subIn = document.getElementById(subInputId);
+    if (subBox && subBox.style.display !== "none" && subIn) {
+      var subVal = String(subIn.value || "").trim();
+      if (q.qId === "wifiStatus" || q.qId === "printerStatus" || q.qId === "toiletStatus") {
+        return subVal || mainVal;
+      }
+      if (q.qId === "gramNidhiRecharge") {
+        return subVal ? (subVal + (q.subSuffix || " माह")) : mainVal;
+      }
+      if (q.subFormatPrefix || q.subFormatSuffix) {
+        return (q.subFormatPrefix || "") + subVal + (q.subFormatSuffix || "");
+      }
+      return subVal ? (mainVal + " (" + subVal + ")") : mainVal;
+    }
+  }
+  return mainVal;
+}
+
+function collectDynamicPsSurveyPayload() {
+  var activeForm = getActiveSurveyFormObjClient();
+  var payload = {
+    formId: activeForm ? activeForm.formId : "FORM_MAIN_DEFAULT",
+    formTitle: activeForm ? activeForm.title : "पंचायत भवन एवं मानदेय मुख्य सर्वे",
+    email: document.getElementById('email').value,
+    district: document.getElementById('district').value,
+    block: document.getElementById('block').value,
+    gramPanchayat: document.getElementById('gramPanchayat').value,
+    fullName: document.getElementById('fullName').value,
+    guardianName: document.getElementById('guardianName').value,
+    mobile: document.getElementById('mobile').value,
+    pendingSalaryMonths: "-",
+    wifiStatus: "-",
+    gramNidhiRecharge: "-",
+    drinkingWater: "-",
+    electricity: "-",
+    printerStatus: "-",
+    stationery: "-",
+    parivarRegister: "-",
+    birthDeathRegister: "-",
+    toiletStatus: "-",
+    registerWorker: "-",
+    paymentWorker: "-",
+    customAnswers: {}
+  };
+
+  var systemKeys = {
+    pendingSalaryMonths: true,
+    wifiStatus: true,
+    gramNidhiRecharge: true,
+    drinkingWater: true,
+    electricity: true,
+    printerStatus: true,
+    stationery: true,
+    parivarRegister: true,
+    birthDeathRegister: true,
+    toiletStatus: true,
+    registerWorker: true,
+    paymentWorker: true
+  };
+
+  var questions = (activeForm && Array.isArray(activeForm.questions)) ? activeForm.questions : [];
+  for (var i = 0; i < questions.length; i++) {
+    var q = questions[i];
+    if (q.enabled === false) continue;
+    var ans = readDynamicQuestionAnswer(q, "ps_dyn_");
+    if (systemKeys[q.qId]) {
+      payload[q.qId] = ans || "-";
+    } else {
+      payload.customAnswers[q.label] = ans || "-";
+    }
+  }
+  return payload;
+}
+
+function prefillDynamicSurveyAnswers(prev) {
+  if (!prev) return;
+  var activeForm = getActiveSurveyFormObjClient();
+  if (!activeForm || !Array.isArray(activeForm.questions)) return;
+
+  for (var i = 0; i < activeForm.questions.length; i++) {
+    var q = activeForm.questions[i];
+    if (q.enabled === false) continue;
+    var domId = "ps_dyn_" + q.qId;
+    var subBoxId = "ps_dyn_subbox_" + q.qId;
+    var subInputId = "ps_dyn_subin_" + q.qId;
+    var el = document.getElementById(domId);
+    var savedVal = (prev[q.qId] !== undefined) ? prev[q.qId] : ((prev.customAnswers && prev.customAnswers[q.label] !== undefined) ? prev.customAnswers[q.label] : "");
+    if (!savedVal || savedVal === "-") continue;
+
+    if (q.type === "conditional" && el) {
+      var trig = q.triggerValue || "है";
+      var subIn = document.getElementById(subInputId);
+      if (q.qId === "wifiStatus" || q.qId === "printerStatus" || q.qId === "toiletStatus") {
+        if (savedVal !== "नहीं है") {
+          el.value = trig;
+          if (subIn) subIn.value = savedVal;
+        } else {
+          el.value = "नहीं है";
+        }
+      } else if (q.qId === "gramNidhiRecharge") {
+        if (savedVal !== "नहीं किया गया है") {
+          el.value = trig;
+          if (subIn) subIn.value = String(savedVal).replace(/\D/g, "");
+        } else {
+          el.value = "नहीं किया गया है";
+        }
+      } else if (q.qId === "registerWorker" && savedVal.indexOf("मुंशी") === 0) {
+        el.value = trig;
+        var mMatch = savedVal.match(/\(([^)]*)\)/);
+        if (subIn) subIn.value = mMatch ? mMatch[1] : "";
+      } else if (q.qId === "paymentWorker" && savedVal.indexOf("बाहरी व्यक्ति") === 0) {
+        el.value = trig;
+        var oMatch = savedVal.match(/\(([^)]*)\)/);
+        if (subIn) subIn.value = oMatch ? oMatch[1] : "";
+      } else if (savedVal.indexOf(" (") !== -1) {
+        var mainPart = savedVal.split(" (")[0];
+        var subPartMatch = savedVal.match(/\(([^)]*)\)/);
+        el.value = mainPart;
+        if (subIn && subPartMatch) subIn.value = subPartMatch[1];
+      } else {
+        el.value = savedVal;
+      }
+      handleDynamicConditionalToggle(domId, subBoxId, trig);
+    } else if (q.type === "radio") {
+      var radios = document.querySelectorAll('input[name="' + domId + '"]');
+      for (var r = 0; r < radios.length; r++) {
+        radios[r].checked = (radios[r].value === savedVal);
+      }
+    } else if (el) {
+      el.value = savedVal;
+    }
+  }
+}
+
+// ----------------- ADMIN SURVEY BUILDER UI FUNCTIONS -----------------
+function findDraftFormById(formId) {
+  if (!adminDraftSurveyFormsConfig || !Array.isArray(adminDraftSurveyFormsConfig.forms)) return null;
+  for (var i = 0; i < adminDraftSurveyFormsConfig.forms.length; i++) {
+    if (adminDraftSurveyFormsConfig.forms[i].formId === formId) {
+      return adminDraftSurveyFormsConfig.forms[i];
+    }
+  }
+  return null;
+}
+
+function getCurrentEditingDraftForm() {
+  var fm = findDraftFormById(currentEditingSurveyFormId);
+  if (!fm && adminDraftSurveyFormsConfig && adminDraftSurveyFormsConfig.forms.length > 0) {
+    fm = adminDraftSurveyFormsConfig.forms[0];
+    currentEditingSurveyFormId = fm.formId;
+  }
+  return fm;
+}
+
+function renderAdminSurveyBuilderMasterView() {
+  if (!adminDraftSurveyFormsConfig || !Array.isArray(adminDraftSurveyFormsConfig.forms) || adminDraftSurveyFormsConfig.forms.length === 0) {
+    adminDraftSurveyFormsConfig = JSON.parse(JSON.stringify(cachedSurveyFormsConfig || getDefaultSurveyFormsConfigClient()));
+  }
+  var curForm = getCurrentEditingDraftForm();
+  if (!curForm) return;
+
+  // 1. Render Form Selector Passbook Cards
+  var cardsContainer = document.getElementById('surveyFormsSelectorCardsContainer');
+  var livePill = document.getElementById('surveyBuilderActiveFormStatusPill');
+  var activeId = adminDraftSurveyFormsConfig.activeFormId;
+
+  if (cardsContainer) {
+    cardsContainer.innerHTML = "";
+    for (var i = 0; i < adminDraftSurveyFormsConfig.forms.length; i++) {
+      var f = adminDraftSurveyFormsConfig.forms[i];
+      var isSelected = (f.formId === curForm.formId);
+      var isLive = (f.formId === activeId);
+      if (isLive && livePill) {
+        livePill.innerText = "🟢 वर्तमान PS पोर्टल लाइव फ़ॉर्म: " + f.title;
+      }
+      var enQCount = Array.isArray(f.questions) ? f.questions.filter(function(q) { return q.enabled !== false; }).length : 0;
+      var totalQCount = Array.isArray(f.questions) ? f.questions.length : 0;
+
+      var card = document.createElement('div');
+      card.className = 'mad-passbook-card' + (isSelected ? ' active' : '');
+      card.style.minWidth = "250px";
+      card.onclick = (function(fid) {
+        return function() {
+          currentEditingSurveyFormId = fid;
+          renderAdminSurveyBuilderMasterView();
+        };
+      })(f.formId);
+
+      var liveBadgeHtml = isLive
+        ? '<span style="background:#16a34a; color:#fff; padding:2px 8px; border-radius:10px; font-size:10.5px; font-weight:800;">🟢 LIVE (चालू)</span>'
+        : '<span style="background:#64748b; color:#fff; padding:2px 8px; border-radius:10px; font-size:10.5px; font-weight:700;">⚪ ड्राफ्ट / अन्य</span>';
+
+      card.innerHTML = '<div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-bottom:6px;">' +
+        '<span style="font-size:11px; font-weight:800; color:#2563eb;">#' + (i + 1) + ' (' + escapeHtml(f.formId) + ')</span>' +
+        liveBadgeHtml +
+        '</div>' +
+        '<div style="font-size:14px; font-weight:800; color:var(--text-main); line-height:1.35; margin-bottom:6px;">' + escapeHtml(f.title) + '</div>' +
+        '<div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:#64748b; font-weight:700;">' +
+          '<span>सक्रिय प्रश्न: <b style="color:#16a34a;">' + enQCount + '/' + totalQCount + '</b></span>' +
+          '<span>स्थिति: <b>' + (f.status === "CLOSED" ? "🔴 बंद" : "🟢 खुला") + '</b></span>' +
+        '</div>';
+      cardsContainer.appendChild(card);
+    }
+  }
+
+  // 2. Populate Form Settings Inputs
+  document.getElementById('editingFormIdBadge').innerText = curForm.formId;
+  document.getElementById('builderFormTitleInput').value = curForm.title || "";
+  document.getElementById('builderFormSubtitleInput').value = curForm.subtitle || "";
+  document.getElementById('builderFormBtnTextInput').value = curForm.submitBtnText || "सर्वे फ़ॉर्म सबमिट करें";
+  document.getElementById('builderFormPolicySelect').value = curForm.submissionPolicy || "single";
+  document.getElementById('builderFormStatusSelect').value = curForm.status || "OPEN";
+  document.getElementById('builderFormShowProfileSelect').value = (curForm.showProfileFields !== false) ? "true" : "false";
+
+  var btnSetLive = document.getElementById('btnSetSelectedFormLive');
+  if (btnSetLive) {
+    if (curForm.formId === activeId) {
+      btnSetLive.style.background = "#059669";
+      btnSetLive.innerHTML = '<i class="fa-solid fa-circle-check"></i> यह फ़ॉर्म वर्तमान में PS पोर्टल पर लाइव है';
+    } else {
+      btnSetLive.style.background = "#2563eb";
+      btnSetLive.innerHTML = '<i class="fa-solid fa-tower-broadcast"></i> इस फ़ॉर्म को PS पोर्टल पर लाइव (Active) करें';
+    }
+  }
+
+  var btnDelForm = document.getElementById('btnDeleteSelectedForm');
+  if (btnDelForm) {
+    btnDelForm.style.display = (curForm.formId !== "FORM_MAIN_DEFAULT" && adminDraftSurveyFormsConfig.forms.length > 1) ? "inline-block" : "none";
+  }
+
+  // 3. Render Questions Table & Live Preview
+  renderAdminSurveyBuilderQuestionsTable(curForm);
+  renderAdminSurveyBuilderLivePreview(curForm);
+}
+
+function syncCurrentFormSettingsFromInputs() {
+  var curForm = getCurrentEditingDraftForm();
+  if (!curForm) return;
+  curForm.title = document.getElementById('builderFormTitleInput').value;
+  curForm.subtitle = document.getElementById('builderFormSubtitleInput').value;
+  curForm.submitBtnText = document.getElementById('builderFormBtnTextInput').value;
+  curForm.submissionPolicy = document.getElementById('builderFormPolicySelect').value;
+  curForm.status = document.getElementById('builderFormStatusSelect').value;
+  curForm.showProfileFields = (document.getElementById('builderFormShowProfileSelect').value === "true");
+  renderAdminSurveyBuilderLivePreview(curForm);
+}
+
+function setEditingFormAsActiveLive() {
+  var curForm = getCurrentEditingDraftForm();
+  if (!curForm) return;
+  adminDraftSurveyFormsConfig.activeFormId = curForm.formId;
+  curForm.status = "OPEN";
+  renderAdminSurveyBuilderMasterView();
+  showMsg("लाइव फ़ॉर्म चयनित", "'" + curForm.title + "' को लाइव फ़ॉर्म के रूप में चुन लिया गया है। अब ऊपर हरे बटन 'सेव व PS पोर्टल पर लागू करें' को दबाकर इसे पब्लिश करें।", false);
+}
+
+function deleteCurrentEditingSurveyForm() {
+  var curForm = getCurrentEditingDraftForm();
+  if (!curForm || curForm.formId === "FORM_MAIN_DEFAULT") return;
+  adminDraftSurveyFormsConfig.forms = adminDraftSurveyFormsConfig.forms.filter(function(f) {
+    return f.formId !== curForm.formId;
+  });
+  if (adminDraftSurveyFormsConfig.activeFormId === curForm.formId) {
+    adminDraftSurveyFormsConfig.activeFormId = adminDraftSurveyFormsConfig.forms[0].formId;
+  }
+  currentEditingSurveyFormId = adminDraftSurveyFormsConfig.forms[0].formId;
+  renderAdminSurveyBuilderMasterView();
+}
+
+function renderAdminSurveyBuilderQuestionsTable(curForm) {
+  var tbody = document.getElementById('adminSurveyBuilderQuestionsTbody');
+  var countSummary = document.getElementById('builderQuestionsCountSummary');
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  var qs = Array.isArray(curForm.questions) ? curForm.questions : [];
+  var enabledCount = qs.filter(function(q) { return q.enabled !== false; }).length;
+  if (countSummary) countSummary.innerText = "सक्रिय: " + enabledCount + " / कुल: " + qs.length + " प्रश्न";
+
+  if (qs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:22px; color:#64748b;">इस फ़ॉर्म में अभी कोई प्रश्न नहीं है। "+ नया प्रश्न जोड़ें" बटन दबाकर प्रश्न जोड़ें।</td></tr>';
+    return;
+  }
+
+  var typeLabels = {
+    dropdown: "📋 ड्रॉपडाउन (Dropdown)",
+    conditional: "🔀 शर्त व उप-प्रश्न (Conditional)",
+    number: "🔢 संख्या (Number)",
+    text: "✍️ टेक्स्ट (Short Text)",
+    textarea: "📝 विस्तृत विवरण (Textarea)",
+    date: "📅 तारीख (Date)",
+    radio: "🔘 रेडियो बटन (Radio)"
+  };
+
+  var frag = document.createDocumentFragment();
+  for (var i = 0; i < qs.length; i++) {
+    var q = qs[i];
+    var isEnabled = (q.enabled !== false);
+    var isReq = (q.required !== false);
+    var tr = document.createElement('tr');
+    if (!isEnabled) tr.style.opacity = "0.58";
+
+    var subInfoHtml = "";
+    if (q.type === "conditional") {
+      subInfoHtml = '<div style="font-size:11px; color:#2563eb; margin-top:4px; background:rgba(37,99,235,0.08); padding:3px 8px; border-radius:6px; display:inline-block;">' +
+        '<i class="fa-solid fa-code-branch"></i> <b>शर्त (' + escapeHtml(q.triggerValue || "है") + '):</b> ' + escapeHtml(q.subLabel || "") +
+        '</div>';
+    }
+
+    var optsHtml = "";
+    if (Array.isArray(q.options) && q.options.length > 0) {
+      optsHtml = '<div style="font-size:11px; color:#475569; margin-top:3px;">विकल्प: <b>' + escapeHtml(q.options.join(" | ")) + '</b></div>';
+    }
+
+    var reqBtnHtml = isReq
+      ? '<button type="button" onclick="toggleSurveyQuestionRequired(' + i + ')" style="background:#dc2626; color:#fff; border:none; padding:3px 9px; border-radius:12px; font-size:11px; font-weight:700; cursor:pointer;">* अनिवार्य</button>'
+      : '<button type="button" onclick="toggleSurveyQuestionRequired(' + i + ')" style="background:#64748b; color:#fff; border:none; padding:3px 9px; border-radius:12px; font-size:11px; font-weight:700; cursor:pointer;">वैकल्पिक</button>';
+
+    var visBtnHtml = isEnabled
+      ? '<button type="button" onclick="toggleSurveyQuestionEnabled(' + i + ')" style="background:#16a34a; color:#fff; border:none; padding:4px 11px; border-radius:14px; font-size:11.5px; font-weight:700; cursor:pointer;"><i class="fa-solid fa-eye"></i> चालू (Show)</button>'
+      : '<button type="button" onclick="toggleSurveyQuestionEnabled(' + i + ')" style="background:#dc2626; color:#fff; border:none; padding:4px 11px; border-radius:14px; font-size:11.5px; font-weight:700; cursor:pointer;"><i class="fa-solid fa-eye-slash"></i> छुपा हुआ (Hidden)</button>';
+
+    var upDis = (i === 0) ? "disabled style='opacity:0.4; cursor:not-allowed;'" : "style='cursor:pointer; background:#e2e8f0; border:none; padding:4px 8px; border-radius:6px;'";
+    var dnDis = (i === qs.length - 1) ? "disabled style='opacity:0.4; cursor:not-allowed;'" : "style='cursor:pointer; background:#e2e8f0; border:none; padding:4px 8px; border-radius:6px;'";
+
+    tr.innerHTML = '<td style="text-align:center; font-weight:800; font-size:14px;">#' + (i + 1) + '</td>' +
+      '<td style="white-space:normal; min-width:220px;">' +
+        '<div style="font-weight:800; font-size:13.5px; color:var(--text-main);">' + escapeHtml(q.label) + '</div>' +
+        subInfoHtml +
+      '</td>' +
+      '<td style="white-space:normal; min-width:170px;">' +
+        '<span class="badge-exp-cat">' + escapeHtml(typeLabels[q.type] || q.type) + '</span>' +
+        optsHtml +
+      '</td>' +
+      '<td style="text-align:center;">' + reqBtnHtml + '</td>' +
+      '<td style="text-align:center;">' + visBtnHtml + '</td>' +
+      '<td style="text-align:center; white-space:nowrap;">' +
+        '<button type="button" onclick="moveSurveyQuestionOrder(' + i + ', -1)" ' + upDis + ' title="ऊपर ले जाएं"><i class="fa-solid fa-arrow-up"></i></button> ' +
+        '<button type="button" onclick="moveSurveyQuestionOrder(' + i + ', 1)" ' + dnDis + ' title="नीचे ले जाएं"><i class="fa-solid fa-arrow-down"></i></button>' +
+      '</td>' +
+      '<td style="text-align:center; white-space:nowrap;">' +
+        '<button type="button" class="btn-action-edit" title="प्रश्न संपादित करें" onclick="openSurveyQuestionModal(' + i + ')"><i class="fa-solid fa-pen"></i></button> ' +
+        '<button type="button" class="btn-action-delete" title="प्रश्न हटाएं" onclick="deleteSurveyQuestionFromDraft(' + i + ')"><i class="fa-solid fa-trash"></i></button>' +
+      '</td>';
+    frag.appendChild(tr);
+  }
+  tbody.appendChild(frag);
+}
+
+function renderAdminSurveyBuilderLivePreview(curForm) {
+  var box = document.getElementById('adminSurveyBuilderLivePreviewBox');
+  if (!box || !curForm) return;
+  var qs = Array.isArray(curForm.questions) ? curForm.questions.filter(function(q) { return q.enabled !== false; }) : [];
+  var startNum = (curForm.showProfileFields !== false) ? 7 : 1;
+
+  var html = '<div style="background:linear-gradient(135deg, #1e3a8a, #0f172a); color:#fff; padding:12px 16px; border-radius:10px; text-align:center; margin-bottom:14px;">' +
+    '<div style="font-size:16px; font-weight:800;">' + escapeHtml(curForm.title || "सर्वे फ़ॉर्म") + '</div>' +
+    (curForm.subtitle ? '<div style="font-size:11.5px; color:#cbd5e1; margin-top:3px;">' + escapeHtml(curForm.subtitle) + '</div>' : '') +
+    '</div>';
+
+  if (curForm.showProfileFields !== false) {
+    html += '<div style="background:var(--sub-box-bg); border:1px dashed var(--input-border); padding:8px 12px; border-radius:8px; font-size:11.5px; color:#2563eb; font-weight:700; margin-bottom:12px;">' +
+      '✓ 1 से 6: पंचायत सहायक का नाम, ग्राम पंचायत, मोबाइल, ईमेल, विकास खंड व जनपद (स्वतः भरा हुआ)' +
+      '</div>';
+  }
+
+  for (var i = 0; i < qs.length; i++) {
+    html += buildQuestionFieldHtml(qs[i], startNum + i, "adm_prev_");
+  }
+
+  html += '<button type="button" class="submit-btn" style="pointer-events:none; opacity:0.95;"><i class="fa-solid fa-paper-plane"></i> ' + escapeHtml(curForm.submitBtnText || "सर्वे फ़ॉर्म सबमिट करें") + '</button>';
+  box.innerHTML = html;
+}
+
+function toggleSurveyQuestionRequired(qIdx) {
+  var curForm = getCurrentEditingDraftForm();
+  if (!curForm || !curForm.questions[qIdx]) return;
+  curForm.questions[qIdx].required = !(curForm.questions[qIdx].required !== false);
+  renderAdminSurveyBuilderQuestionsTable(curForm);
+  renderAdminSurveyBuilderLivePreview(curForm);
+}
+
+function toggleSurveyQuestionEnabled(qIdx) {
+  var curForm = getCurrentEditingDraftForm();
+  if (!curForm || !curForm.questions[qIdx]) return;
+  curForm.questions[qIdx].enabled = !(curForm.questions[qIdx].enabled !== false);
+  renderAdminSurveyBuilderQuestionsTable(curForm);
+  renderAdminSurveyBuilderLivePreview(curForm);
+  renderAdminSurveyBuilderMasterView();
+}
+
+function moveSurveyQuestionOrder(qIdx, dir) {
+  var curForm = getCurrentEditingDraftForm();
+  if (!curForm || !curForm.questions) return;
+  var targetIdx = qIdx + dir;
+  if (targetIdx < 0 || targetIdx >= curForm.questions.length) return;
+  var temp = curForm.questions[qIdx];
+  curForm.questions[qIdx] = curForm.questions[targetIdx];
+  curForm.questions[targetIdx] = temp;
+  for (var i = 0; i < curForm.questions.length; i++) {
+    curForm.questions[i].order = i + 1;
+  }
+  renderAdminSurveyBuilderQuestionsTable(curForm);
+  renderAdminSurveyBuilderLivePreview(curForm);
+}
+
+function deleteSurveyQuestionFromDraft(qIdx) {
+  var curForm = getCurrentEditingDraftForm();
+  if (!curForm || !curForm.questions[qIdx]) return;
+  curForm.questions.splice(qIdx, 1);
+  for (var i = 0; i < curForm.questions.length; i++) {
+    curForm.questions[i].order = i + 1;
+  }
+  renderAdminSurveyBuilderMasterView();
+}
+
+function resetCurrentFormToDefaultQuestions() {
+  var curForm = getCurrentEditingDraftForm();
+  if (!curForm) return;
+  curForm.questions = getDefaultMainSurveyQuestionsClient();
+  renderAdminSurveyBuilderMasterView();
+  showMsg("डिफ़ॉल्ट प्रश्न लोड", "इस फ़ॉर्म में मूल 12 मानक प्रश्न रीसेट कर दिए गए हैं। लागू करने हेतु 'सेव' बटन दबाएं।", false);
+}
+
+function handleSqTypeChange() {
+  var t = document.getElementById('sqTypeSelect').value;
+  var optBox = document.getElementById('sqOptionsBox');
+  var condBox = document.getElementById('sqConditionalSubConfigBox');
+  var phBox = document.getElementById('sqPlaceholderBox');
+
+  if (t === "dropdown" || t === "radio" || t === "conditional") {
+    optBox.style.display = "block";
+    phBox.style.display = "none";
+  } else {
+    optBox.style.display = "none";
+    phBox.style.display = (t === "date") ? "none" : "block";
+  }
+  condBox.style.display = (t === "conditional") ? "block" : "none";
+  handleSqSubTypeChange();
+}
+
+function handleSqSubTypeChange() {
+  var st = document.getElementById('sqSubTypeSelect').value;
+  var subOptBox = document.getElementById('sqSubOptionsBox');
+  if (subOptBox) {
+    subOptBox.style.display = (st === "dropdown") ? "block" : "none";
+  }
+}
+
+function openSurveyQuestionModal(editIdx) {
+  var curForm = getCurrentEditingDraftForm();
+  if (!curForm) return;
+  document.getElementById('sqEditIndexInput').value = editIdx;
+  var titleEl = document.getElementById('surveyQuestionModalTitle');
+
+  if (editIdx >= 0 && curForm.questions[editIdx]) {
+    var q = curForm.questions[editIdx];
+    if (titleEl) titleEl.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> प्रश्न संपादित करें (#' + (editIdx + 1) + ')';
+    document.getElementById('sqLabelInput').value = q.label || "";
+    document.getElementById('sqTypeSelect').value = q.type || "text";
+    document.getElementById('sqRequiredSelect').value = (q.required !== false) ? "true" : "false";
+    document.getElementById('sqPlaceholderInput').value = q.placeholder || "";
+    document.getElementById('sqOptionsInput').value = Array.isArray(q.options) ? q.options.join(", ") : "";
+    document.getElementById('sqTriggerValInput').value = q.triggerValue || "है";
+    document.getElementById('sqSubTypeSelect').value = q.subType || "text";
+    document.getElementById('sqSubLabelInput').value = q.subLabel || "";
+    document.getElementById('sqSubOptionsInput').value = Array.isArray(q.subOptions) ? q.subOptions.join(", ") : "";
+  } else {
+    if (titleEl) titleEl.innerHTML = '<i class="fa-solid fa-circle-plus"></i> इस फ़ॉर्म में नया प्रश्न जोड़ें';
+    document.getElementById('sqLabelInput').value = "";
+    document.getElementById('sqTypeSelect').value = "dropdown";
+    document.getElementById('sqRequiredSelect').value = "true";
+    document.getElementById('sqPlaceholderInput').value = "";
+    document.getElementById('sqOptionsInput').value = "हाँ, नहीं";
+    document.getElementById('sqTriggerValInput').value = "हाँ";
+    document.getElementById('sqSubTypeSelect').value = "text";
+    document.getElementById('sqSubLabelInput').value = "";
+    document.getElementById('sqSubOptionsInput').value = "";
+  }
+  handleSqTypeChange();
+  openModal('surveyQuestionModal');
+}
+
+function saveQuestionToCurrentDraftForm() {
+  var curForm = getCurrentEditingDraftForm();
+  if (!curForm) return;
+  var editIdx = parseInt(document.getElementById('sqEditIndexInput').value, 10);
+  var lbl = document.getElementById('sqLabelInput').value.trim();
+  var qType = document.getElementById('sqTypeSelect').value;
+  var isReq = (document.getElementById('sqRequiredSelect').value === "true");
+  var ph = document.getElementById('sqPlaceholderInput').value.trim();
+  var rawOpts = document.getElementById('sqOptionsInput').value;
+  var optsList = rawOpts.split(",").map(function(s) { return s.trim(); }).filter(Boolean);
+
+  if (!lbl) {
+    showMsg("ध्यान दें", "कृपया प्रश्न का शीर्षक (Label) लिखें।", false);
+    return;
+  }
+  if ((qType === "dropdown" || qType === "radio" || qType === "conditional") && optsList.length === 0) {
+    showMsg("ध्यान दें", "कृपया कॉमा (,) लगाकर कम से कम 2 विकल्प दर्ज करें।", false);
+    return;
+  }
+
+  var existingQ = (editIdx >= 0 && curForm.questions[editIdx]) ? curForm.questions[editIdx] : null;
+  var newQObj = {
+    qId: existingQ ? existingQ.qId : ("custom_q_" + Date.now() + "_" + Math.floor(Math.random() * 900 + 100)),
+    order: existingQ ? existingQ.order : (curForm.questions.length + 1),
+    label: lbl,
+    type: qType,
+    placeholder: ph,
+    options: optsList,
+    triggerValue: document.getElementById('sqTriggerValInput').value.trim() || (optsList[0] || "हाँ"),
+    subLabel: document.getElementById('sqSubLabelInput').value.trim() || "विवरण दर्ज करें:",
+    subType: document.getElementById('sqSubTypeSelect').value || "text",
+    subPlaceholder: existingQ ? (existingQ.subPlaceholder || "") : "",
+    subSuffix: existingQ ? (existingQ.subSuffix || "") : "",
+    subFormatPrefix: existingQ ? (existingQ.subFormatPrefix || "") : "",
+    subFormatSuffix: existingQ ? (existingQ.subFormatSuffix || "") : "",
+    subOptions: document.getElementById('sqSubOptionsInput').value.split(",").map(function(s) { return s.trim(); }).filter(Boolean),
+    required: isReq,
+    enabled: existingQ ? (existingQ.enabled !== false) : true,
+    isSystem: existingQ ? !!existingQ.isSystem : false
+  };
+
+  if (editIdx >= 0 && curForm.questions[editIdx]) {
+    curForm.questions[editIdx] = newQObj;
+  } else {
+    curForm.questions.push(newQObj);
+  }
+  closeModal('surveyQuestionModal');
+  renderAdminSurveyBuilderMasterView();
+}
+
+function openCreateNewSurveyFormModal() {
+  document.getElementById('newSurveyTemplateSelect').value = "crop_survey";
+  applyNewSurveyTemplatePreset();
+  openModal('createNewSurveyFormModal');
+}
+
+function getPresetTemplateQuestions(templateKey) {
+  if (templateKey === "main_clone") {
+    return getDefaultMainSurveyQuestionsClient();
+  }
+  if (templateKey === "crop_survey") {
+    return [
+      { qId: "crop_q1", order: 1, label: "आपकी ग्राम पंचायत में कुल कितने गाटा (खसरा) डिजिटल क्रॉप सर्वे हेतु आवंटित हैं?", type: "number", placeholder: "कुल गाटा संख्या लिखें", options: [], required: true, enabled: true },
+      { qId: "crop_q2", order: 2, label: "अब तक कुल कितने गाटों का सर्वे पूर्ण हो चुका है?", type: "number", placeholder: "पूर्ण सर्वे संख्या", options: [], required: true, enabled: true },
+      { qId: "crop_q3", order: 3, label: "फार्मर रजिस्ट्री (Farmer Registry) में अब तक कितने किसानों का पंजीकरण हुआ है?", type: "number", placeholder: "किसानों की संख्या", options: [], required: true, enabled: true },
+      { qId: "crop_q4", order: 4, label: "क्या क्रॉप सर्वे / फार्मर रजिस्ट्री करने में कोई तकनीकी या फील्ड समस्या आ रही है?", type: "conditional", options: ["हाँ", "नहीं"], triggerValue: "हाँ", subLabel: "मुख्य समस्या का विवरण लिखें:", subType: "text", required: true, enabled: true }
+    ];
+  }
+  if (templateKey === "ayushman_family") {
+    return [
+      { qId: "ayu_q1", order: 1, label: "इस माह आपकी ग्राम पंचायत में कितने नए आयुष्मान कार्ड बनाए गए?", type: "number", placeholder: "संख्या लिखें", options: [], required: true, enabled: true },
+      { qId: "ayu_q2", order: 2, label: "फैमिली आईडी (Family ID) के कुल कितने आवेदन पूर्ण किए गए?", type: "number", placeholder: "संख्या लिखें", options: [], required: true, enabled: true },
+      { qId: "ayu_q3", order: 3, label: "वृद्धा/निराश्रित/दिव्यांग पेंशन सत्यापन की वर्तमान स्थिति क्या है?", type: "dropdown", options: ["शत-प्रतिशत पूर्ण", "प्रगति पर है", "पोर्टल/OTP समस्या के कारण लंबित"], required: true, enabled: true },
+      { qId: "ayu_q4", order: 4, label: "विशेष टिप्पणी या आवश्यकता (यदि कोई हो)", type: "textarea", placeholder: "यहाँ लिखें...", options: [], required: false, enabled: true }
+    ];
+  }
+  if (templateKey === "meeting_consent") {
+    return [
+      { qId: "meet_q1", order: 1, label: "क्या आप आगामी ब्लॉक यूनियन बैठक में उपस्थित रहेंगे?", type: "dropdown", options: ["हाँ, निश्चित रूप से उपस्थित रहेंगे", "अपरिहार्य कारण से असमर्थ"], required: true, enabled: true },
+      { qId: "meet_q2", order: 2, label: "बैठक के एजेंडे के लिए आपका सबसे प्रमुख मुद्दा / सुझाव क्या है?", type: "textarea", placeholder: "अपना सुझाव या समस्या विस्तार से लिखें...", options: [], required: true, enabled: true }
+    ];
+  }
+  return [
+    { qId: "custom_q_1", order: 1, label: "अपनी ग्राम पंचायत की वर्तमान कार्य स्थिति दर्ज करें", type: "dropdown", options: ["पूर्ण", "प्रगति पर", "लंबित"], required: true, enabled: true }
+  ];
+}
+
+function applyNewSurveyTemplatePreset() {
+  var key = document.getElementById('newSurveyTemplateSelect').value;
+  var titleIn = document.getElementById('newSurveyFormTitleInput');
+  var subIn = document.getElementById('newSurveyFormSubtitleInput');
+  if (key === "crop_survey") {
+    titleIn.value = "डिजिटल क्रॉप सर्वे (ई-खसरा) एवं फार्मर रजिस्ट्री प्रगति रिपोर्ट";
+    subIn.value = "सभी पंचायत सहायक अपनी ग्राम पंचायत के क्रॉप सर्वे एवं फार्मर रजिस्ट्री की अद्यतन संख्या दर्ज करें।";
+  } else if (key === "ayushman_family") {
+    titleIn.value = "आयुष्मान कार्ड, फैमिली आईडी एवं पेंशन सत्यापन अभियान रिपोर्ट";
+    subIn.value = "कृपया अपनी ग्राम पंचायत में किए गए ऑनलाइन कार्यों की प्रगति रिपोर्ट दर्ज करें।";
+  } else if (key === "meeting_consent") {
+    titleIn.value = "ब्लॉक यूनियन बैठक सहमति एवं समस्या/सुझाव संकलन फ़ॉर्म";
+    subIn.value = "आगामी यूनियन बैठक हेतु अपनी उपस्थिति सहमति व प्रमुख सुझाव दर्ज करें।";
+  } else if (key === "main_clone") {
+    titleIn.value = "पंचायत भवन सुविधा एवं मानदेय सर्वे (नया संस्करण)";
+    subIn.value = "कृपया अपनी ग्राम पंचायत के सचिवालय की भौतिक सुविधाओं एवं मानदेय की सटीक जानकारी दर्ज करें।";
+  } else {
+    titleIn.value = "";
+    subIn.value = "कृपया नीचे दिए गए सभी प्रश्नों की सटीक जानकारी दर्ज करें।";
+  }
+}
+
+function confirmCreateNewSurveyForm() {
+  var tKey = document.getElementById('newSurveyTemplateSelect').value;
+  var title = document.getElementById('newSurveyFormTitleInput').value.trim();
+  var sub = document.getElementById('newSurveyFormSubtitleInput').value.trim();
+  var policy = document.getElementById('newSurveyFormPolicySelect').value;
+  var makeActive = (document.getElementById('newSurveyMakeActiveSelect').value === "true");
+
+  if (!title) {
+    showMsg("ध्यान दें", "कृपया नए सर्वे फ़ॉर्म का शीर्षक दर्ज करें।", false);
+    return;
+  }
+
+  var newFormId = "FORM_" + Date.now();
+  var newFormObj = {
+    formId: newFormId,
+    title: title,
+    subtitle: sub,
+    submitBtnText: "सर्वे फ़ॉर्म सबमिट करें",
+    status: "OPEN",
+    submissionPolicy: policy,
+    showProfileFields: true,
+    updatedAt: "",
+    questions: getPresetTemplateQuestions(tKey)
+  };
+
+  adminDraftSurveyFormsConfig.forms.push(newFormObj);
+  currentEditingSurveyFormId = newFormId;
+  if (makeActive) {
+    adminDraftSurveyFormsConfig.activeFormId = newFormId;
+  }
+
+  closeModal('createNewSurveyFormModal');
+  renderAdminSurveyBuilderMasterView();
+  showMsg("नया फ़ॉर्म तैयार!", "नया फ़ॉर्म '" + title + "' तैयार हो गया है। आप इसमें प्रश्न जोड़/हटा सकते हैं और ऊपर हरे 'सेव व PS पोर्टल पर लागू करें' बटन को दबाकर इसे लाइव कर सकते हैं।", false);
+}
+
+function saveSurveyFormsConfigFromAdmin() {
+  if (!adminSessionToken) return;
+  syncCurrentFormSettingsFromInputs();
+  showLoader("सर्वे फ़ॉर्म व प्रश्न सेटिंग्स PS पोर्टल पर लागू की जा रही हैं...");
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    if (res && res.success) {
+      if (res.surveyFormsConfig) {
+        applySurveyFormsConfigToUI(res.surveyFormsConfig);
+      }
+      renderAdminSurveyBuilderMasterView();
+      safeRemoveStorage(sessionStorage, "psk_home_stats_fast_cache");
+      safeRemoveStorage(sessionStorage, "psk_ps_portal_fast_cache");
+      showMsg("सर्वे फ़ॉर्म अपडेट सफल!", res.message || "सर्वे फ़ॉर्म और प्रश्न सफलतापूर्वक सेव होकर PS पोर्टल पर लाइव हो गए हैं!", false);
+    } else {
+      showMsg("त्रुटि", (res ? res.message : "सेव नहीं हो सका"), false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("सर्वर त्रुटि", err.toString(), false);
+  }).saveSurveyFormsConfigSecure(adminSessionToken, adminDraftSurveyFormsConfig);
+}
+
+function handleBulkUnlockSurveyForAll(allowFlag) {
+  if (!adminSessionToken) return;
+  var curForm = getCurrentEditingDraftForm();
+  var fId = curForm ? curForm.formId : "ALL";
+  showLoader("सभी पंचायत सहायकों के लिए री-सर्वे अनुमति अपडेट हो रही है...");
+  google.script.run.withSuccessHandler(function(res) {
+    hideLoader();
+    if (res && res.success) {
+      for (var i = 0; i < cachedSurveyRecords.length; i++) {
+        var rf = cachedSurveyRecords[i].formId || "FORM_MAIN_DEFAULT";
+        if (fId === "ALL" || rf === fId) {
+          cachedSurveyRecords[i].updateAllowed = allowFlag;
+        }
+      }
+      filterAdminTable();
+      loadAdminDashboardData(true);
+      showMsg("बल्क री-सर्वे अपडेट!", res.message, false);
+    } else {
+      showMsg("ध्यान दें", (res ? res.message : "अपडेट विफल"), false);
+    }
+  }).withFailureHandler(function(err) {
+    hideLoader();
+    showMsg("त्रुटि", err.toString(), false);
+  }).bulkToggleSurveyUpdateSecure(adminSessionToken, fId, allowFlag);
+}
+
+try {
+  var savedLocalSurveyCfg = safeGetStorage(localStorage, "psk_survey_forms_config_v1");
+  if (savedLocalSurveyCfg) {
+    applySurveyFormsConfigToUI(JSON.parse(savedLocalSurveyCfg));
+  }
+} catch (e) {}
+renderActivePsSurveyFormUI();
 
 </script>
 </body>
