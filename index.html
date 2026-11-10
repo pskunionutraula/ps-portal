@@ -2126,21 +2126,16 @@ body.modal-open {
 <div class="admin-dashboard-container" id="adminDashboardView">
   <div class="admin-header-bar">
     <h2 style="font-size:18px;"><i class="fa-solid fa-chart-line"></i> उतरौला ब्लॉक - सर्वे एनालिटिक्स व अप्रूवल पोर्टल</h2>
-    <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
-      <span style="font-weight:bold; font-size:13px;" id="adminHeaderPresidentInfo">अध्यक्ष: प्रमोद वर्मा (9119323310)</span>
-      <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #7c3aed, #4f46e5); color:#ffffff; padding:6px 14px; font-size:12.5px; font-weight:800; border:1px solid #c084fc; border-radius:8px; box-shadow:0 3px 10px rgba(124,58,237,0.4); display:inline-flex; align-items:center; gap:6px; width:auto; margin:0; cursor:pointer;" onclick="switchAdminTab('surveyBuilder')">
-        <i class="fa-solid fa-wand-magic-sparkles" style="color:#facc15;"></i> 📋 सर्वे फ़ॉर्म बिल्डर
-      </button>
-      <button class="submit-btn" style="background:#dc2626; padding:6px 12px; font-size:12px; width:auto; display:inline-block; margin:0;" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> लॉगआउट</button>
+    <div>
+      <span style="margin-right:10px; font-weight:bold; font-size:13px;" id="adminHeaderPresidentInfo">अध्यक्ष: प्रमोद वर्मा (9119323310)</span>
+      <button class="submit-btn" style="background:#dc2626; padding:5px 12px; font-size:12px; width:auto; display:inline-block;" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> लॉगआउट</button>
     </div>
   </div>
 
   <!-- ADMIN NAVIGATION TABS (Modern Scrollable Pill Bar) -->
   <div class="admin-tab-bar modern-pill-nav" id="adminPillNavBar">
     <button class="admin-tab-btn active" id="tabSurveyBtn" onclick="switchAdminTab('survey')"><i class="fa-solid fa-poll"></i> मुख्य सर्वे रिपोर्ट</button>
-    <button class="admin-tab-btn" id="tabSurveyBuilderBtn" style="background:linear-gradient(135deg, #3730a3 0%, #6d28d9 100%); color:#ffffff !important; border:1.5px solid #a855f7; font-weight:800; box-shadow:0 4px 12px rgba(109,40,217,0.35);" onclick="switchAdminTab('surveyBuilder')">
-      <i class="fa-solid fa-wand-magic-sparkles" style="color:#facc15;"></i> 📋 सर्वे फ़ॉर्म बिल्डर (<span id="activeSurveyFormQCountBadge" style="background:#facc15; color:#0f172a; padding:1px 6px; border-radius:10px; font-size:11px; font-weight:800;">12 प्रश्न</span>)
-    </button>
+    <button class="admin-tab-btn" id="tabSurveyBuilderBtn" onclick="switchAdminTab('surveyBuilder')"><i class="fa-solid fa-wand-magic-sparkles"></i> 📋 सर्वे फ़ॉर्म बिल्डर (<span id="activeSurveyFormQCountBadge">12 प्रश्न</span>)</button>
     <button class="admin-tab-btn" id="tabRegisteredBtn" onclick="switchAdminTab('registered')"><i class="fa-solid fa-address-book"></i> पंजीकृत PS (<span id="totalRegTabCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabClusterBtn" onclick="switchAdminTab('cluster')"><i class="fa-solid fa-sitemap"></i> क्लस्टर विवरण (<span id="totalClusterTabCount">0</span>)</button>
     <button class="admin-tab-btn" id="tabExecutivesBtn" onclick="switchAdminTab('executives')"><i class="fa-solid fa-users-gear"></i> 🏛️ कार्यकारिणी प्रबंधन (<span id="totalExecTabCount">7</span>)</button>
@@ -2179,24 +2174,6 @@ body.modal-open {
       </div>
     </div>
 
-    <!-- Quick Form Controller Banner on Main Survey Report Tab -->
-    <div style="background:linear-gradient(135deg, #1e1b4b 0%, #312e81 55%, #4338ca 100%); color:#ffffff; border-radius:12px; padding:13px 18px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border:1.5px solid #818cf8; box-shadow:0 4px 16px rgba(49,46,129,0.22);">
-      <div>
-        <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(250,204,21,0.2); color:#facc15; border:1px solid rgba(250,204,21,0.4); padding:2px 8px; border-radius:12px; font-size:10.5px; font-weight:800; margin-bottom:4px;">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> सर्वे फ़ॉर्म प्रबंधन
-        </div>
-        <div style="font-size:15.5px; font-weight:800; color:#ffffff;">
-          📋 PS पोर्टल सर्वे फ़ॉर्म एवं प्रश्न प्रबंधक (Survey & Form Builder)
-        </div>
-        <div style="font-size:12px; color:#c7d2fe; margin-top:2px;">
-          यहाँ से नया दूसरा फ़ॉर्म बनाएं, प्रश्न जोड़ें/हटाएं, विकल्प बदलें या सभी पंचायत सहायकों को री-सर्वे अनुमति दें।
-        </div>
-      </div>
-      <button type="button" class="submit-btn" style="background:linear-gradient(135deg, #f59e0b, #d97706); color:#ffffff; font-size:13px; font-weight:800; padding:9px 20px; width:auto; margin:0; border-radius:9px; box-shadow:0 4px 14px rgba(245,158,11,0.45); cursor:pointer;" onclick="switchAdminTab('surveyBuilder')">
-        <i class="fa-solid fa-sliders"></i> सर्वे फ़ॉर्म व प्रश्न बिल्डर खोलें →
-      </button>
-    </div>
-
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
       <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; flex:1;">
         <input type="text" id="adminSearchInput" oninput="debounceTableSearch(filterAdminTable, 100)" onkeyup="debounceTableSearch(filterAdminTable, 100)" class="field-input" placeholder="🔍 नाम या ग्राम पंचायत से खोजें..." style="max-width:240px;">
@@ -2215,7 +2192,7 @@ body.modal-open {
       <table class="data-table">
         <thead>
           <tr>
-            <th>#</th><th>ग्राम पंचायत</th><th>पंचायत सहायक</th><th>मोबाइल</th><th>मानदेय बकाया</th><th>वाई-फ़ाई</th><th>ग्राम निधि रिचार्ज</th><th>पेयजल</th><th>बिजली</th><th>प्रिंटर</th><th>स्टेशनरी</th><th>परिवार रजि.</th><th>जन्म-मृत्यु</th><th>शौचालय</th><th>रजिस्टर कार्य</th><th>भुगतान कार्य</th><th>समय</th><th>कार्रवाई (Action)</th>
+            <th>#</th><th>ग्राम पंचायत</th><th>पंचायत सहायक</th><th>मोबाइल</th><th>सर्वे फ़ॉर्म / अतिरिक्त उत्तर</th><th>मानदेय बकाया</th><th>वाई-फ़ाई</th><th>ग्राम निधि रिचार्ज</th><th>पेयजल</th><th>बिजली</th><th>प्रिंटर</th><th>स्टेशनरी</th><th>परिवार रजि.</th><th>जन्म-मृत्यु</th><th>शौचालय</th><th>रजिस्टर कार्य</th><th>भुगतान कार्य</th><th>समय</th><th>कार्रवाई (Action)</th>
           </tr>
         </thead>
         <tbody id="adminTableBody"></tbody>
@@ -9013,7 +8990,7 @@ function renderAdminPsPortalControlTable() {
           '<span style="width:30px; height:30px; border-radius:8px; background:rgba(37,99,235,0.12); color:#2563eb; display:inline-flex; align-items:center; justify-content:center; font-size:15px;"><i class="' + escapeHtml(item.icon) + '"></i></span>' +
           '<input type="text" value="' + escapeHtml(item.label) + '" onchange="updatePsButtonLabelDraft(' + i + ', this.value)" class="field-input" style="max-width:240px; padding:5px 10px; font-weight:700; font-size:13px; margin:0;" title="बटन का नाम बदलें">' +
         '</div>' +
-        '<div style="font-size:11.5px; color:#64748b; margin-top:4px; padding-left:38px;">' + escapeHtml(item.desc || "") + (item.tabKey === 'psSurvey' ? ' <button type="button" onclick="switchAdminTab(\'surveyBuilder\')" style="background:linear-gradient(135deg, #4338ca, #6d28d9); color:#fff; border:none; padding:3px 9px; border-radius:6px; font-size:11px; font-weight:800; cursor:pointer; margin-left:8px;"><i class="fa-solid fa-wand-magic-sparkles"></i> 📋 प्रश्न व फ़ॉर्म मैनेज करें →</button>' : '') + '</div>' +
+        '<div style="font-size:11.5px; color:#64748b; margin-top:4px; padding-left:38px;">' + escapeHtml(item.desc || "") + '</div>' +
       '</td>' +
       '<td style="text-align:center;">' + visBtnHtml + '</td>' +
       '<td style="text-align:center;">' + defBtnHtml + '</td>';
